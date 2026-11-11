@@ -170,4 +170,6 @@ Views.trail = eng => `<div class="page-head"><div><h1>Audit trail</h1><div class
   <div class="tbl-wrap"><table><thead><tr><th>When</th><th>Who</th><th>Action</th><th>Detail</th></tr></thead><tbody>${eng.trail.slice().reverse().map(t => `<tr><td class="mono xs" style="white-space:nowrap">${esc(t.t.replace('T', ' ').slice(0, 19))}</td><td class="small" style="white-space:nowrap">${esc(t.u)}</td><td class="small" style="font-weight:600;white-space:nowrap">${esc(t.a)}</td><td class="small muted">${esc(t.d)}</td></tr>`).join('')}</tbody></table></div>`;
 Act['x-trail'] = () => saveFile('audit-trail.csv', toCSV([['when', 'who', 'action', 'detail'], ...E().trail.map(t => [t.t, t.u, t.a, t.d])]));
 
+/* a handle for automated tests and the browser console */
+window.Throughline = { Seed, Agent, Ops, Engine, get S() { return S; }, render };
 boot();

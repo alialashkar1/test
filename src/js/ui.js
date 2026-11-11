@@ -57,19 +57,20 @@ async function saveFile(filename, data) {
 }
 async function copyText(text) { try { await navigator.clipboard.writeText(text); toast('Copied to clipboard'); } catch (e) { toast('Copy was blocked by the browser'); } }
 const toCSV = rows => rows.map(r => r.map(v => { v = String(v ?? ''); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(',')).join('\n');
-async function takeFiles(files) {
+async function takeFiles(files, then) {
   const eng = E(); if (!eng || !files || !files.length) return;
   UI.busy = `Reading ${files.length} file${files.length > 1 ? 's' : ''}…`; render();
-  let n = 0;
+  let n = 0; const got = [];
   for (const f of files) {
     try {
       const buf = await f.slice(0, 8e6).arrayBuffer();
       const c = f.size < 25e6 ? await readContent(f) : { note: 'Too large to read here — filed by name only' };
-      const doc = await Ops.ingest(eng, f.name, f.size, f.type, c.csv != null ? c.csv : null, buf, c); n++;
+      const doc = await Ops.ingest(eng, f.name, f.size, f.type, c.csv != null ? c.csv : null, buf, c); n++; got.push(doc);
       if (/^image\//.test(f.type) && f.size < 15e6) Blobs.set(doc.id, f);
     } catch (e) { toast(`Could not read ${f.name}`); }
   }
-  UI.busy = ''; commit(); toast(`${n} document${n === 1 ? '' : 's'} read, classified and filed`);
+  UI.busy = ''; toast(`${n} document${n === 1 ? '' : 's'} read, classified and filed`);
+  if (got.length) await Agent.files(eng, got, then || ''); else commit();
 }
 async function askAI(prompt, label, opts) {
   if (!Cap.sample) return null;
@@ -90,7 +91,7 @@ function target(eng, c, id) {
 }
 function onChange(ev) {
   const el = ev.target;
-  if (el.matches('input[type=file]')) { takeFiles([...el.files]); return; }
+  if (el.matches('input[type=file]')) { takeFiles([...el.files], el.dataset.then); return; }
   if (el.dataset.change && !el.dataset.f) { Act[el.dataset.change](el.dataset, el, ev); commit(); return; }
   if (!el.dataset.f) return;
   const eng = E(), c = el.dataset.c || '', id = el.dataset.id || '', f = el.dataset.f;
@@ -108,6 +109,7 @@ function onChange(ev) {
 let renderPending = false;
 const pressed = () => UI.ptr && Date.now() - UI.ptr < 600;
 function commit() {
+  const cur = S.ui.view === 'eng' ? E() : null; if (cur) Ops.syncIRL(cur);
   Store.save(); if (renderPending) return; renderPending = true;
   const run = () => { if (pressed()) { setTimeout(run, 40); return; } renderPending = false; render(); };
   setTimeout(run, 0);
@@ -118,12 +120,15 @@ function sig(el) { if (!el || !el.dataset) return ''; const d = el.dataset; retu
 function render() {
   const main = $('.main'), key = S.ui.view + '/' + S.ui.engId + '/' + S.ui.stage + '/' + (S.ui.sub || '') + '/' + (S.ui.ctl || '');
   const top = main && key === UI.lastKey ? main.scrollTop : 0, fs = UI.modal ? '' : sig(document.activeElement);
+  const agFocus = !UI.modal && document.activeElement && document.activeElement.id === 'ag-text', th0 = $('#ag-thread'), agTop = th0 ? th0.scrollTop : 0;
   const railOpen = $('.rail') && $('.rail').classList.contains('open') && key === UI.lastKey;
   UI.lastKey = key;
   $('#app').innerHTML = shell();
   const m2 = $('.main'); if (m2) m2.scrollTop = top;
   if (railOpen) { $('.rail').classList.add('open'); $('.scrim').classList.add('on'); }
   if (fs) { const el = $(fs); if (el) { try { el.focus({ preventScroll: true }); } catch (e) {} } }
+  const th = $('#ag-thread'); if (th) { th.scrollTop = UI.agBottom || !th0 ? th.scrollHeight : agTop; UI.agBottom = false; }
+  if (agFocus) { const a = $('#ag-text'); if (a) { a.focus({ preventScroll: true }); a.setSelectionRange(a.value.length, a.value.length); } }
 }
 function go(view, stage, extra) { S.ui.view = view; if (stage) S.ui.stage = stage; Object.assign(S.ui, extra || {}); Store.save(); render(); }
 Act.nav = d => { if (d.view === 'home') S.ui.engId = S.ui.engId; go(d.view, d.stage); };
@@ -140,6 +145,7 @@ Act.user = () => ask({ title: 'Switch user', text: 'Working papers record who pr
 const tabs = (group, items, def) => { const cur = UI.tab[group] || def; return `<div class="tabs">${items.map(([id, label]) => `<button class="tab ${cur === id ? 'active' : ''}" data-act="tab" data-group="${group}" data-tab="${id}">${esc(label)}</button>`).join('')}</div>`; };
 const curTab = (group, def) => UI.tab[group] || def;
 
+const agentShown = () => S.ui.agentHidden == null ? window.innerWidth >= 1180 : !S.ui.agentHidden;
 function shell() {
   const eng = S.ui.view === 'eng' ? E() : null;
   if (S.ui.view === 'eng' && !eng) S.ui.view = 'home';
@@ -165,15 +171,15 @@ function shell() {
     const v = Views[S.ui.stage] || Views.overview;
     body = (st && st.state === 'locked') ? `<div class="page-head"><div><h1>${esc(st.label)}</h1></div></div>${banner('lock', `<b>Locked.</b>${guardList(st.reasons)}`)}` : v(eng, st);
   } else { crumb = `<b>${S.ui.view === 'kb' ? 'Knowledge base' : S.ui.view === 'method' ? 'Methodology' : 'Engagements'}</b>`; body = (Views[S.ui.view] || Views.home)(); }
-  const q = eng ? Engine.quality(eng) : null;
-  return `<div class="app"><div class="scrim" data-act="menu"></div>
+  const q = eng ? Engine.quality(eng) : null, ag = eng && agentShown();
+  return `<div class="app ${ag ? 'has-agent' : ''}"><div class="scrim" data-act="menu"></div>
     <aside class="rail"><div class="brand"><div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18 9 11l5 3 6-9"/></svg></div><div><div class="brand-name">Throughline</div><div class="brand-sub">Internal audit</div></div></div>
       <nav class="nav">${nav}</nav>
       <div class="rail-foot"><div class="avatar">${esc(u.name.split(/\s+/).map(x => x[0]).join('').slice(0, 2).toUpperCase())}</div><button class="who" data-act="user" title="Switch user"><b>${esc(u.name)}</b><span>${esc(u.role)}</span></button><button class="icon-btn" data-act="theme" title="Toggle theme" aria-label="Toggle theme">${IC.moon}</button></div></aside>
     <main class="main"><div class="topbar"><button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">${IC.menu}</button><div class="crumb">${crumb}</div><span class="sp"></span>
       ${UI.busy ? chip('info', UI.busy) : ''}${eng && eng.sample ? chip('mut', 'Sample data', false) : ''}${q && q.score != null ? `<button class="btn sm ghost" data-act="stage" data-stage="overview" title="File quality score">${chip(q.score >= 85 ? 'good' : q.score >= 60 ? 'warn' : 'crit', `Quality ${q.score}%`)}</button>` : ''}
-      ${Store.memOnly ? chip('warn', 'Large files kept for this session only') : ''}</div>
-      <section class="content">${body}</section></main>${modalHTML()}</div>`;
+      ${Store.memOnly ? chip('warn', 'Large files kept for this session only') : ''}${eng && !ag ? btn('Agent', 'ag-toggle', { cls: 'sm primary', icon: IC.bolt }) : ''}</div>
+      <section class="content">${body}</section></main>${ag ? agentPanel(eng) : ''}${modalHTML()}</div>`;
 }
 
 function boot() {
@@ -183,9 +189,10 @@ function boot() {
   document.addEventListener('change', onChange);
   document.addEventListener('pointerdown', () => { UI.ptr = Date.now(); }, true);
   document.addEventListener('pointerup', () => { setTimeout(() => { UI.ptr = 0; }, 0); }, true);
-  document.addEventListener('dragover', ev => { const z = ev.target.closest && ev.target.closest('.dropzone'); if (z) { ev.preventDefault(); z.classList.add('hot'); } });
-  document.addEventListener('dragleave', ev => { const z = ev.target.closest && ev.target.closest('.dropzone'); if (z) z.classList.remove('hot'); });
-  document.addEventListener('drop', ev => { const z = ev.target.closest && ev.target.closest('.dropzone'); if (z) { ev.preventDefault(); takeFiles([...ev.dataTransfer.files]); } });
+  const zone = ev => ev.target.closest && ev.target.closest('.dropzone, [data-then]');
+  document.addEventListener('dragover', ev => { const z = zone(ev); if (z) { ev.preventDefault(); z.classList.add('hot'); } });
+  document.addEventListener('dragleave', ev => { const z = zone(ev); if (z) z.classList.remove('hot'); });
+  document.addEventListener('drop', ev => { const z = zone(ev); if (z) { ev.preventDefault(); z.classList.remove('hot'); takeFiles([...ev.dataTransfer.files], z.dataset.then); } });
   document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && UI.modal) { closeModal(); render(); } });
   if (window.claude && window.claude.use) { ['sample', 'downloads'].forEach(n => window.claude.use(n).then(x => { Cap[n] = x || null; if (x && n === 'sample') { render(); x.limits().then(l => { Cap.sampleImages = !!(l && l.images); render(); }).catch(() => {}); } }).catch(() => {})); }
   if (first) { render(); Seed.engagement().then(() => { Store.save(); render(); }); } else render();

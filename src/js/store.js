@@ -8,17 +8,26 @@ const Store = {
       meth: JSON.parse(JSON.stringify(DEFAULT_METH)), engs: [], ui: { view: 'home', engId: '', stage: 'overview' } };
   },
   load() {
-    try { const raw = localStorage.getItem(STORE_KEY); if (raw) { const s = JSON.parse(raw); if (s && s.v === 1) { S = s; S.ui = Object.assign({ view: 'home', engId: '', stage: 'overview' }, S.ui || {}); S.ui.modal = null; return false; } } } catch (e) {}
+    try { const raw = localStorage.getItem(STORE_KEY); if (raw) { const s = JSON.parse(raw); if (s && s.v === 1) { S = s; S.engs.forEach(Store.norm); S.ui = Object.assign({ view: 'home', engId: '', stage: 'overview' }, S.ui || {}); S.ui.modal = null; return false; } } } catch (e) {}
     S = Store.fresh(); return true;
   },
   save() {
-    const ui = { view: S.ui.view, engId: S.ui.engId, stage: S.ui.stage, sub: S.ui.sub, ctl: S.ui.ctl };
+    const ui = { view: S.ui.view, engId: S.ui.engId, stage: S.ui.stage, sub: S.ui.sub, ctl: S.ui.ctl, agentHidden: S.ui.agentHidden };
     const snap = Object.assign({}, S, { ui });
     try { localStorage.setItem(STORE_KEY, JSON.stringify(snap)); Store.memOnly = false; }
     catch (e) {
       try { const slim = JSON.parse(JSON.stringify(snap)); slim.engs.forEach(en => en.docs.forEach(d => { if (d.rows && d.rows.length > 400) { d.rowsDropped = d.rows.length; d.rows = d.rows.slice(0, 400); } if (d.text && d.text.length > 3000) d.text = d.text.slice(0, 3000); })); localStorage.setItem(STORE_KEY, JSON.stringify(slim)); } catch (e2) {}
       Store.memOnly = true;
     }
+  },
+  /* Bring an engagement saved by an earlier build up to the current shape. */
+  norm(eng) {
+    eng.irl = eng.irl || { v: eng.requests.length ? 1 : 0, log: [], suppressed: [] };
+    eng.chat = eng.chat || []; eng.undo = eng.undo || [];
+    eng.docs.forEach(d => { if (!d.alloc) d.alloc = d.requestId ? 'approved' : 'pending'; });
+    eng.requests.forEach(q => { if (!q.origin) q.origin = q.derived ? 'scope' : 'manual'; if (!q.key) q.key = (q.derived ? 'lib:' : 'man:') + q.item; if (q.issue == null) q.issue = ''; });
+    eng.steps.forEach(x => { if (!x.type) x.type = 'task'; ['yes', 'no', 'next'].forEach(k => { if (x[k] == null) x[k] = ''; }); });
+    return eng;
   },
   reset() { try { localStorage.removeItem(STORE_KEY); } catch (e) {} S = Store.fresh(); },
 };
@@ -34,6 +43,7 @@ const Ops = {
     const eng = { id: 'E-' + Date.now().toString(36).toUpperCase().slice(-5), sample: false, createdAt: new Date().toISOString(), seq: {},
       scope: { client: '', name: '', type: 'full', objective: '', periodFrom: '', periodTo: '', entities: '', framework: 'coso2013', standard: 'gias2024', reader: '', processes: [], exclusions: [], noExclusions: false },
       cp1: null, cp2: null, itgc: { status: 'pending', note: '' }, requests: [], docs: [], subs: {}, steps: [], risks: [], dismissed: [], controls: [],
+      irl: { v: 0, log: [], suppressed: [] }, chat: [], undo: [],
       dtests: {}, etests: {}, analyses: [], gaps: [], topical: [], report: { overall: '', summary: '', limitations: '', issuedAt: '', issuedBy: '' }, followup: {}, trail: [] };
     S.engs.unshift(eng); Ops.log(eng, 'Engagement created');
     return eng;
@@ -43,22 +53,46 @@ const Ops = {
   confirmScope(eng) {
     if (Engine.guards.cp1(eng).length) return false;
     eng.cp1 = { by: me().name, at: new Date().toISOString() };
-    Ops.deriveRequests(eng);
+    Ops.syncIRL(eng, true);
     eng.scope.processes.forEach(id => { eng.subs[id] = eng.subs[id] || { noProcedure: false, confirmedBy: '', confirmedAt: '', walkthrough: '' }; });
     const itIn = eng.scope.processes.some(id => KB.sub(id).process === 'itgc');
     if (itIn && !eng.topical.length) eng.topical = KB.topical.cyber.items.map(i => ({ id: i.id, status: '', note: '' }));
     if (!itIn) eng.topical = [];
-    Lib.refile(eng);
+    Lib.refile(eng); Ops.syncIRL(eng, true);
     Ops.log(eng, 'Checkpoint 1 — scope confirmed', `${eng.scope.processes.length} sub-processes in scope · ${eng.requests.length} requests derived`);
     return true;
   },
   reopenScope(eng, reason) { eng.cp1 = null; Ops.log(eng, 'Scope reopened', reason); },
-  deriveRequests(eng) {
-    const due = new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10);
-    eng.scope.processes.forEach(sid => KB.sub(sid).requests.forEach(q => {
-      if (eng.requests.some(x => x.item === q.item)) return;
-      eng.requests.push({ id: Ops.id(eng, 'Q'), item: q.item, form: q.form, fields: q.fields.slice(), feeds: q.feeds, sub: sid, owner: '', due, status: 'pending', naReason: '', missing: [], derived: true });
-    }));
+  /* The request list is a living document: re-derived from the scope, the recorded process, the controls and what
+     has arrived. Runs after every change; returns the list of changes it made and versions the list when there are any. */
+  syncIRL(eng, quiet) {
+    if (!eng.cp1) return [];
+    const irl = eng.irl, sig = q => `${q.status}|${(q.missing || []).join(',')}|${q.issue || ''}`, seen = irl.seen || (irl.seen = {}), changes = [];
+    const due = new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10), sup = new Set(irl.suppressed), live = new Set();
+    const add = (key, o) => { live.add(key); if (sup.has(key) || eng.requests.some(q => q.key === key)) return;
+      const q = Object.assign({ id: Ops.id(eng, 'Q'), key, item: '', form: '', fields: [], feeds: 'Testing', sub: '', owner: '', due, status: 'pending', naReason: '', missing: [], issue: '', derived: true, origin: 'scope', why: '' }, o);
+      eng.requests.push(q); changes.push(`Added — ${q.item}`); };
+    eng.scope.processes.forEach(sid => KB.sub(sid).requests.forEach(r => add('lib:' + r.item, { item: r.item, form: r.form, fields: r.fields.slice(), feeds: r.feeds, sub: sid, origin: 'scope', why: `Needed for ${KB.sub(sid).name}` })));
+    const words = t => Engine.norm(t).split('_').filter(w => w.length > 3);
+    const similar = (x, y) => { const A = words(x), B = words(y); return A.length > 0 && A.filter(w => B.some(v => v === w || v.startsWith(w.slice(0, 5)))).length / A.length >= 0.6; };
+    eng.steps.forEach(st => { const ev = String(st.evidence || '').trim(); if (!ev || !eng.scope.processes.includes(st.sub)) return;
+      const key = 'ev:' + st.sub + ':' + Engine.norm(ev);
+      if (eng.requests.some(q => q.key !== key && similar(ev, q.item))) { live.add(key); return; }       // already asked for under another name
+      add(key, { item: `${ev} — for the transaction followed in the walkthrough`, form: 'Copy of the document for that one transaction', feeds: `Walkthrough — ${KB.sub(st.sub).name}`, sub: st.sub, origin: 'process', why: `Named as the evidence at step ${st.n} of ${KB.sub(st.sub).name}` }); });
+    eng.controls.filter(c => !c.absent && c.key && !c.fromLib).forEach(c => { const r = eng.risks.find(x => x.id === c.riskId) || {};
+      add('ctl:' + c.id, { item: `Evidence that ${c.id} operated, for the items sampled`, form: (c.attrs.filter(x => x.trim())[0] || c.desc.slice(0, 90) || 'Documents showing the control was performed'), feeds: `Effectiveness — ${c.id}`, sub: r.sub || '', origin: 'control', why: `${c.id} is a key control with no standing request` }); });
+    eng.requests = eng.requests.filter(q => {
+      const gone = (/^(ev|ctl):/.test(q.key) && !live.has(q.key)) || (q.origin === 'scope' && q.sub && !eng.scope.processes.includes(q.sub));
+      const drop = gone && !q.override && q.status !== 'na' && !eng.docs.some(d => d.requestId === q.id);
+      if (drop) changes.push(`Removed — ${q.item} (what it was for no longer exists)`); return !drop; });
+    const label = { pending: 'pending', received: 'received', incomplete: 'incomplete', na: 'not applicable' };
+    Object.keys(seen).forEach(id => { if (!eng.requests.some(q => q.id === id)) delete seen[id]; });
+    // compared with the state last recorded, so a status that moved when a document arrived is reported here
+    eng.requests.forEach(q => { Ops.refreshRequest(eng, q); const was = seen[q.id], now = sig(q); seen[q.id] = now;
+      if (was !== undefined && was !== now) changes.push(`${q.item} — now ${label[q.status]}${q.issue ? ': ' + q.issue : q.missing.length ? ': missing ' + q.missing.join(', ') : ''}`); });
+    if (changes.length) { irl.v++; irl.log.push({ t: new Date().toISOString(), v: irl.v, changes: changes.slice(0, 14), more: Math.max(0, changes.length - 14) }); if (irl.log.length > 40) irl.log.shift();
+      if (!quiet) Ops.log(eng, 'Request list updated', `v${irl.v} — ${changes.slice(0, 3).join('; ')}${changes.length > 3 ? ` (+${changes.length - 3} more)` : ''}`); }
+    return changes;
   },
 
   /* ----- documents ----- */
@@ -72,38 +106,43 @@ const Ops = {
     doc.tieConf = sug.conf;
     eng.docs.push(doc);
     Ops.log(eng, 'Document received', `${name} · classified as ${doc.docType} (${Math.round(doc.conf * 100)}%)`);
+    doc.alloc = ['Engagement letter / scope', 'Meeting notes / minutes'].includes(doc.docType) ? 'reference' : 'pending';   // the engagement's own papers answer no client request
     if (sug.id && sug.conf >= 0.5) Ops.tie(eng, doc, sug.id, true);
     return doc;
   },
   tie(eng, doc, requestId, auto) {
     const prev = doc.requestId; doc.requestId = requestId || '';
     if (!auto) doc.tieConf = 1;
+    doc.alloc = requestId ? (auto ? 'auto' : 'approved') : 'pending';
     [prev, requestId].filter(Boolean).forEach(id => Ops.refreshRequest(eng, eng.requests.find(q => q.id === id)));
     if (requestId) Ops.log(eng, auto ? 'Document tied automatically' : 'Document tied', `${doc.name} → ${(eng.requests.find(q => q.id === requestId) || {}).item}`);
   },
   refreshRequest(eng, q) {
-    if (!q || q.status === 'na') return;
-    const docs = eng.docs.filter(d => d.requestId === q.id);
-    if (!docs.length) { q.status = 'pending'; q.missing = []; return; }
-    const tabular = docs.filter(d => d.rows);
-    if (q.fields.length && tabular.length) { q.missing = tabular.map(d => Engine.missingFields(q.fields, d.headers)).sort((a, b) => a.length - b.length)[0]; q.status = q.missing.length ? 'incomplete' : 'received'; }
-    else if (q.fields.length) { q.missing = ['not in the required tabular form']; q.status = 'incomplete'; }
-    else { q.missing = []; q.status = 'received'; }
+    if (!q || (q.status === 'na' && !q.override)) return;
+    const docs = eng.docs.filter(d => d.requestId === q.id), tab = docs.filter(d => d.rows);
+    let st = 'pending', missing = [], issue = '';
+    if (docs.length) {
+      if (q.fields.length && tab.length) { missing = tab.map(d => Engine.missingFields(q.fields, d.headers)).sort((x, y) => x.length - y.length)[0]; st = missing.length ? 'incomplete' : 'received'; }
+      else if (q.fields.length) { issue = 'Wrong form — a data export is required and a document arrived'; st = 'incomplete'; }
+      else st = 'received';
+      const pc = Engine.periodCheck(eng, docs); if (pc && pc.k === 'crit') { issue = issue || pc.t; st = 'incomplete'; }
+    }
+    q.computed = st; q.missing = missing; q.issue = issue; q.status = q.override ? q.override.status : st;
   },
   removeDoc(eng, id) { const d = eng.docs.find(x => x.id === id); if (!d) return; eng.docs = eng.docs.filter(x => x.id !== id); Ops.refreshRequest(eng, eng.requests.find(q => q.id === d.requestId)); Ops.log(eng, 'Document removed', d.name); },
 
   /* ----- understanding ----- */
   addStep(eng, sub, init) {
     const n = eng.steps.filter(s => s.sub === sub).length + 1;
-    const st = Object.assign({ id: Ops.id(eng, 'S'), sub, n, actor: '', action: '', system: '', review: '', approval: '', evidence: '', walked: false, docId: '' }, init || {});
+    const st = Object.assign({ id: Ops.id(eng, 'S'), sub, n, actor: '', action: '', system: '', review: '', approval: '', evidence: '', walked: false, docId: '', type: 'task', yes: '', no: '', next: '', draft: false }, init || {});
     eng.steps.push(st); return st;
   },
   renumber(eng, sub) { eng.steps.filter(s => s.sub === sub).sort((a, b) => a.n - b.n).forEach((s, i) => { s.n = i + 1; }); },
   stepFlags(s) {
-    const f = [], a = Engine.norm(s.actor);
-    if (!s.review.trim() && !s.approval.trim()) f.push('No reviewer or approver');
+    const f = [], a = Engine.norm(s.actor), dec = s.type === 'decision', checking = CHECK_VERB.test(s.action || '');   // a step that is itself a review needs no second reviewer
+    if (!dec && !checking && s.type !== 'system' && !s.review.trim() && !s.approval.trim()) f.push('No reviewer or approver');
     if (a && (a === Engine.norm(s.approval) || a === Engine.norm(s.review))) f.push('Same role performs and checks');
-    if (!s.evidence.trim()) f.push('No evidence retained');
+    if (!dec && !s.evidence.trim()) f.push('No evidence retained');
     return f;
   },
 

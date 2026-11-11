@@ -258,7 +258,7 @@ tr.flag td{background:color-mix(in srgb,var(--crit-bg) 55%,transparent)}
 .modal .mh{padding:15px 18px 0;font-size:15px;font-weight:600}
 .modal .mb{padding:12px 18px;display:grid;gap:12px;font-size:13px}
 .modal .mf{padding:12px 18px 16px;display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
-#toasts{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:60;display:grid;gap:8px}
+#toasts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:60;display:grid;gap:8px;justify-items:center;pointer-events:none}
 .toast{background:var(--ink);color:var(--surface);padding:9px 14px;border-radius:9px;font-size:12.5px;font-weight:500;box-shadow:0 6px 24px rgba(0,0,0,.25);max-width:340px}
 .empty{padding:34px 20px;text-align:center;color:var(--ink-2)}
 .empty h3{font-size:15px;color:var(--ink);margin-bottom:5px}
@@ -320,6 +320,64 @@ tr.flag td{background:color-mix(in srgb,var(--crit-bg) 55%,transparent)}
 details.fold{border:1px solid var(--border);border-radius:8px;padding:8px 11px;display:grid;gap:8px}
 details.fold>summary{cursor:pointer;font-size:12.5px;font-weight:600;color:var(--ink-2)}
 details.fold[open]>summary{margin-bottom:8px}
+
+/* flow: decisions, branches, automated steps, systems band, risk and control badges */
+.fl-start{fill:var(--ink-2)} .fl-end{fill:none;stroke:var(--ink-2);stroke-width:2} .fl-term{font-size:10px;font-weight:600;fill:var(--ink-3)}
+.fl-box.dec{fill:var(--warn-bg);stroke:var(--warn)} .fl-box.dec.weak{fill:var(--crit-bg);stroke:var(--crit)}
+.fl-box.draft{stroke-dasharray:6 4}
+.fl-arrow.loop{stroke:var(--warn);stroke-dasharray:5 3} .fl-arrow.no{stroke:var(--crit);stroke-dasharray:5 3}
+.fl-br{font-size:10px;font-weight:700;fill:var(--good)} .fl-br.no{fill:var(--crit)}
+.fl-sysbar{stroke:var(--info);stroke-width:4} .fl-auto{font-size:8px;font-weight:700;letter-spacing:.08em;fill:var(--info)}
+.fl-risk{fill:var(--crit)} .fl-ctl{fill:var(--good)} .fl-ctl.none{fill:var(--surface);stroke:var(--crit);stroke-width:1.5;stroke-dasharray:3 2}
+.fl-badge-t{font-size:9.5px;font-weight:700;fill:#fff;font-family:var(--mono)} .fl-badge-t.none{fill:var(--crit)}
+.fl-ev.linked{fill:var(--good);font-weight:600}
+.fl-band{fill:var(--surface-3)} .fl-sysc{fill:var(--surface);stroke:var(--info);stroke-width:1.2} .fl-sysc.eu{stroke:var(--warn);stroke-dasharray:4 2}
+.fl-sysc-t{font-size:10.5px;font-weight:600;fill:var(--ink)} .fl-hand{font-size:9.5px;font-weight:700;fill:var(--warn)}
+.lg-dec{background:var(--warn-bg);border-color:var(--warn);transform:rotate(45deg) scale(.8);border-radius:2px}
+.lg-loop{border:0;border-top:2px dashed var(--warn);height:0;border-radius:0;vertical-align:3px;background:none}
+.lg-risk{background:var(--crit);border-color:var(--crit)} .lg-ctl{background:var(--good);border-color:var(--good)}
+
+/* agent: the conversation that sits beside every page */
+.app.has-agent{grid-template-columns:252px minmax(0,1fr) 366px}
+.agent{background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;min-height:0;min-width:0;padding-right:env(safe-area-inset-right,0px)}
+.ag-head{display:flex;align-items:center;gap:8px;padding:11px 12px;border-bottom:1px solid var(--border);font-size:13.5px}
+.ag-sugg{display:flex;flex-wrap:wrap;gap:6px;padding:9px 12px;border-bottom:1px solid var(--border);background:var(--surface-2)}
+.ag-sugg .btn{font-weight:500;text-align:left;white-space:normal;line-height:1.25}
+.ag-thread{flex:1;min-height:0;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px;overscroll-behavior:contain}
+.ag-msg{display:flex} .ag-msg.me{justify-content:flex-end}
+.ag-bubble{max-width:100%;min-width:0;background:var(--surface-2);border:1px solid var(--border);border-radius:12px 12px 12px 3px;padding:9px 11px;font-size:12.5px;line-height:1.45;overflow-wrap:anywhere}
+.ag-bubble p{margin:0}
+.ag-msg.me .ag-bubble{background:var(--primary);color:#fff;border-color:transparent;border-radius:12px 12px 3px 12px;max-width:88%;white-space:pre-wrap}
+.ag-bubble.working{display:flex;align-items:center;gap:8px;color:var(--ink-2)}
+.ag-list{margin-top:8px;padding-left:9px;border-left:3px solid var(--border-strong)}
+.ag-list b{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-2)}
+.ag-list ul{margin:3px 0 0;padding-left:15px} .ag-list li{margin:2px 0}
+.ag-list.did{border-color:var(--good)} .ag-list.did b{color:var(--good)}
+.ag-list.irl{border-color:var(--info)} .ag-list.irl b{color:var(--info)}
+.ag-list.ask{border-color:var(--warn)} .ag-list.ask b{color:var(--warn)}
+.ag-list.need{border-color:var(--crit)} .ag-list.need b{color:var(--crit)}
+.ag-foot{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:10.5px;color:var(--ink-3)}
+.ag-empty{margin:auto 4px;font-size:12.5px;color:var(--ink-2);line-height:1.5} .ag-empty p{margin:0 0 8px} .ag-empty b{color:var(--ink)}
+.ag-input.dropzone{border:0;border-top:1px solid var(--border);border-radius:0;background:var(--surface);padding:10px 12px max(10px,env(safe-area-inset-bottom,0px));text-align:left;display:grid;gap:7px}
+.ag-input.dropzone.hot{background:var(--primary-bg);box-shadow:inset 0 0 0 2px var(--primary)}
+.ag-input textarea{width:100%;resize:none;border:1px solid var(--border-strong);border-radius:9px;background:var(--surface);color:var(--ink);padding:8px 10px;font:inherit;font-size:13px;line-height:1.4}
+.ag-input textarea:focus{outline:2px solid var(--primary);outline-offset:0;border-color:transparent}
+.dots{display:inline-flex;gap:3px} .dots i{width:5px;height:5px;border-radius:50%;background:var(--ink-3);animation:dot 1s infinite ease-in-out} .dots i:nth-child(2){animation-delay:.15s} .dots i:nth-child(3){animation-delay:.3s}
+@keyframes dot{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.agentbar{display:flex;align-items:center;gap:10px 12px;flex-wrap:wrap;border:1px solid color-mix(in srgb,var(--primary) 35%,var(--border));background:var(--primary-bg);border-radius:var(--radius);padding:10px 12px}
+.agentbar .ab-ic{width:26px;height:26px;border-radius:7px;background:var(--primary);display:grid;place-items:center;flex:none} .agentbar .ab-ic svg{width:15px;height:15px;stroke:#fff}
+.agentbar .ab-t{flex:1 1 260px;min-width:0;font-size:12.5px;line-height:1.4;color:var(--ink-2)} .agentbar .ab-t b{color:var(--ink)}
+.agentbar.hot,[data-then].hot{outline:2px dashed var(--primary);outline-offset:2px}
+.alloc-row{display:grid;grid-template-columns:minmax(180px,1fr) minmax(0,1.6fr);gap:8px 14px;align-items:center;padding:8px 0;border-top:1px solid var(--border)}
+.alloc-row:first-of-type{border-top:0}
+/* with the agent open the page column is narrower: the sub-process list moves above the work */
+.main{container-type:inline-size}
+@container (max-width:980px){.split{grid-template-columns:1fr}.split>.sticky{position:static}.split>.sticky .list{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}}
+@media (max-width:1180px){
+  .app.has-agent{grid-template-columns:252px minmax(0,1fr)}
+  .agent{position:fixed;inset:0 0 0 auto;width:min(400px,100vw);z-index:45;box-shadow:0 0 40px rgba(0,0,0,.28)}
+}
+@media (max-width:860px){.app.has-agent{grid-template-columns:1fr}.alloc-row{grid-template-columns:1fr}}
 
 .menu-btn{display:none}
 .scrim{display:none}
@@ -405,6 +463,7 @@ const KB = {
     ['Investigation threshold & follow-up', 'When the performer acts, and what happens next'],
   ],
   docTypes: [
+    { t: 'Engagement letter / scope', kw: ['engagement', 'proposal', 'terms of reference', 'scope of work', 'statement of work'], hd: [] },
     { t: 'Payroll register', kw: ['payroll', 'salary', 'register'], hd: ['gross', 'net'] },
     { t: 'Bank transfer file', kw: ['transfer', 'bank', 'wps'], hd: ['amount', 'value_date', 'account'] },
     { t: 'Employee master data', kw: ['employee', 'headcount', 'staff'], hd: ['join_date', 'employee_code'] },
@@ -424,7 +483,7 @@ const KB = {
     { t: 'Bank statement / confirmation', kw: ['statement', 'confirmation', 'swift', 'advice'], hd: [] },
     { t: 'Signed approval / form', kw: ['approval', 'approved', 'signed', 'form'], hd: [] },
     { t: 'Reconciliation', kw: ['recon', 'reconciliation'], hd: [] },
-    { t: 'Meeting notes / minutes', kw: ['minutes', 'notes', 'meeting', 'walkthrough'], hd: [] },
+    { t: 'Meeting notes / minutes', kw: ['minutes', 'notes', 'meeting', 'walkthrough', 'transcript', 'interview', 'onboarding', 'kickoff', 'kick-off'], hd: [] },
     { t: 'Screenshot', kw: ['screenshot', 'screen', 'capture'], hd: [] },
   ],
   topical: {
@@ -786,6 +845,8 @@ const Engine = {
     },
     cp2(eng) {
       const cfg = Engine.typeCfg(eng.scope.type), r = [];
+      const drafts = eng.steps.filter(x => x.draft).length + eng.risks.filter(x => x.draft).length + eng.controls.filter(x => x.draft).length;
+      if (drafts) r.push(`${drafts} agent draft(s) not yet accepted — review and accept them`);
       if (!eng.risks.length) r.push('No risks identified yet');
       eng.risks.forEach(x => {
         if (!x.L || !x.I) r.push(`${x.id}: likelihood and impact not rated`);
@@ -834,8 +895,8 @@ const Engine = {
     add('scope', 'Scope', cp1 ? 'done' : 'active', cp1 ? [] : g1, cp1 ? `Confirmed ${eng.cp1.at.slice(0, 10)}` : 'Checkpoint 1');
     const pend = eng.requests.filter(q => q.status === 'pending' || q.status === 'incomplete').length;
     add('requests', 'Requests & documents', !cp1 ? 'locked' : pend ? 'active' : eng.requests.length ? 'done' : 'active', !cp1 ? needCp1 : [], cp1 ? `${eng.requests.length - pend}/${eng.requests.length} received · ${eng.docs.length} documents` : '');
-    const loose = eng.docs.filter(d => !d.requestId).length;
-    add('library', 'Document library', !eng.docs.length || !cp1 ? 'open' : loose ? 'active' : 'done', cp1 && loose ? [`${loose} document(s) not filed against a request`] : [], `${eng.docs.length} documents`);
+    const loose = eng.docs.filter(d => d.alloc === 'pending').length, unapp = eng.docs.filter(d => d.alloc === 'auto').length;
+    add('library', 'Document library', !eng.docs.length || !cp1 ? 'open' : (loose || unapp) ? 'active' : 'done', !cp1 ? [] : [loose ? `${loose} document(s) pending allocation` : '', unapp ? `${unapp} automatic allocation(s) to approve` : ''].filter(Boolean), `${eng.docs.length} documents`);
     const gu = G.understanding(eng);
     add('understanding', 'Process understanding', !cp1 ? 'locked' : gu.length ? 'active' : 'done', !cp1 ? needCp1 : gu, cp1 ? `${eng.steps.length} steps` : '');
     const anySteps = eng.steps.length > 0, g2 = G.cp2(eng);
@@ -900,21 +961,47 @@ const Engine = {
   },
   fieldMatch(field, headers) { const f = Engine.norm(field); return headers.some(h => h === f || (f.length > 3 && (h.includes(f) || f.includes(h)) && h.length > 3)); },
   missingFields: (fields, headers) => (fields || []).filter(f => !Engine.fieldMatch(f, headers || [])),
-  suggestRequest(doc, requests) {
-    let best = { id: '', score: 0 };
+  /* Every open request scored against a document, best first. */
+  rankRequests(doc, requests) {
     const words = s => String(s).toLowerCase().split(/[^a-z0-9]+/).filter(w => w.length > 3);
     const has = (set, w) => set.has(w) || [...set].some(d => d.startsWith(w.slice(0, 5)));
     const dw = new Set(words(doc.name + ' ' + doc.docType)), tw = new Set(words(String(doc.text || '').slice(0, 400))), tabular = !!(doc.headers && doc.headers.length);
-    requests.forEach(q => {
+    return requests.map(q => {
       // what the file is called counts in full; a word that only appears in its body counts half
       const qw = words(q.item), kw = qw.length ? qw.reduce((n, w) => n + (has(dw, w) ? 1 : has(tw, w) ? 0.5 : 0), 0) / qw.length : 0;
       let s;
       if (q.fields.length && tabular) s = 0.75 * (q.fields.length - Engine.missingFields(q.fields, doc.headers).length) / q.fields.length + 0.25 * kw;
       else if (q.fields.length) s = 0.4 * kw;        // the request wants a data set and this is not one
       else s = (tabular ? 0.6 : 0.9) * kw;           // a document request is matched on what the file says it is
-      if (s > best.score) best = { id: q.id, score: s };
-    });
-    return { id: best.id, conf: Math.min(0.99, Math.round(best.score * 100) / 100) };
+      return { id: q.id, conf: Math.min(0.99, Math.round(s * 100) / 100) };
+    }).filter(x => x.conf > 0).sort((x, y) => y.conf - x.conf);
+  },
+  suggestRequest(doc, requests) { return Engine.rankRequests(doc, requests)[0] || { id: '', conf: 0 }; },
+  /* Does what arrived cover the period under review? Only judged where the data carries a month column or the file states its period. */
+  periodCheck(eng, docs) {
+    const from = (eng.scope.periodFrom || '').slice(0, 7), to = (eng.scope.periodTo || '').slice(0, 7); if (!from || !to) return null;
+    const months = [];
+    docs.filter(d => d.rows).forEach(d => { const h = d.headers.find(x => /^(month|period|year_month)$/.test(x)); if (h) d.rows.forEach(r => { const v = String(r[h] || ''); if (/^\d{4}-\d{2}/.test(v)) months.push(v.slice(0, 7)); }); });
+    if (months.length) { months.sort(); const a = months[0], b = months[months.length - 1];
+      if (b < from || a > to) return { k: 'crit', t: `Wrong period — covers ${a} to ${b}; the period under review is ${from} to ${to}` };
+      if (a > from || b < to) return { k: 'crit', t: `Covers ${a} to ${b} only — the period under review is ${from} to ${to}` };
+      return { k: 'good', t: 'Covers the whole period' }; }
+    const stated = docs.map(d => d.period).filter(p => /^\d{4}/.test(p || ''));
+    if (stated.length && stated.every(p => p.slice(0, 4) < from.slice(0, 4) || p.slice(0, 4) > to.slice(0, 4))) return { k: 'crit', t: `Wrong period — the file is for ${stated[0]}; the period under review is ${from} to ${to}` };
+    return null;
+  },
+  /* What came, what did not, and what is wrong with it — one line per finding, for the living request list. */
+  requestChecks(eng, q) {
+    if (q.status === 'na') return [{ k: 'mut', t: `Not applicable — ${q.naReason}` }];
+    const docs = eng.docs.filter(d => d.requestId === q.id), out = [];
+    if (!docs.length) return [{ k: 'warn', t: q.due && q.due < Engine.today() ? 'Nothing received — overdue' : 'Nothing received yet' }];
+    const tab = docs.filter(d => d.rows);
+    if (q.fields.length) out.push(!tab.length ? { k: 'crit', t: 'Wrong form — a data export is required and a document arrived' } : q.missing.length ? { k: 'crit', t: `Missing fields: ${q.missing.join(', ')}` } : { k: 'good', t: 'Required fields present' });
+    else out.push({ k: 'good', t: `${docs.length} document${docs.length === 1 ? '' : 's'} received` });
+    const pc = Engine.periodCheck(eng, docs); if (pc) out.push(pc);
+    if (docs.some(d => d.alloc === 'auto')) out.push({ k: 'warn', t: 'Linked automatically — allocation not yet approved' });
+    if (docs.some(d => !d.strength)) out.push({ k: 'warn', t: 'Source strength not recorded' });
+    return out;
   },
   async hash(buf) {
     try { const d = await crypto.subtle.digest('SHA-256', buf); return [...new Uint8Array(d)].map(b => b.toString(16).padStart(2, '0')).join(''); }
@@ -957,6 +1044,7 @@ const Engine = {
     const rule = (name, stage, applicable, bad) => { if (applicable) out.push({ name, stage, ok: !bad.length, items: bad }); };
     rule('Scope names its exclusions', 'scope', true, (eng.scope.exclusions.length || eng.scope.noExclusions) ? [] : ['No exclusions recorded']);
     rule('Received requests have a document tied to them', 'requests', eng.requests.length > 0, eng.requests.filter(q => q.status === 'received' && !eng.docs.some(d => d.requestId === q.id)).map(q => q.item));
+    rule('Document allocations are approved by the auditor', 'library', eng.docs.length > 0 && !!eng.cp1, eng.docs.filter(d => d.alloc === 'auto' || d.alloc === 'pending').map(d => d.name));
     rule('Every document records its source strength', 'requests', eng.docs.length > 0, eng.docs.filter(d => !d.strength).map(d => d.name));
     rule('Every in-scope sub-process is understood and confirmed', 'understanding', !!eng.cp1, Engine.guards.understanding(eng));
     rule('Process steps name a role and an evidence trail', 'understanding', eng.steps.length > 0, eng.steps.filter(s => !s.actor.trim() || !s.evidence.trim()).map(s => `${KB.sub(s.sub).name} step ${s.n}`));
@@ -1003,17 +1091,26 @@ const Store = {
       meth: JSON.parse(JSON.stringify(DEFAULT_METH)), engs: [], ui: { view: 'home', engId: '', stage: 'overview' } };
   },
   load() {
-    try { const raw = localStorage.getItem(STORE_KEY); if (raw) { const s = JSON.parse(raw); if (s && s.v === 1) { S = s; S.ui = Object.assign({ view: 'home', engId: '', stage: 'overview' }, S.ui || {}); S.ui.modal = null; return false; } } } catch (e) {}
+    try { const raw = localStorage.getItem(STORE_KEY); if (raw) { const s = JSON.parse(raw); if (s && s.v === 1) { S = s; S.engs.forEach(Store.norm); S.ui = Object.assign({ view: 'home', engId: '', stage: 'overview' }, S.ui || {}); S.ui.modal = null; return false; } } } catch (e) {}
     S = Store.fresh(); return true;
   },
   save() {
-    const ui = { view: S.ui.view, engId: S.ui.engId, stage: S.ui.stage, sub: S.ui.sub, ctl: S.ui.ctl };
+    const ui = { view: S.ui.view, engId: S.ui.engId, stage: S.ui.stage, sub: S.ui.sub, ctl: S.ui.ctl, agentHidden: S.ui.agentHidden };
     const snap = Object.assign({}, S, { ui });
     try { localStorage.setItem(STORE_KEY, JSON.stringify(snap)); Store.memOnly = false; }
     catch (e) {
       try { const slim = JSON.parse(JSON.stringify(snap)); slim.engs.forEach(en => en.docs.forEach(d => { if (d.rows && d.rows.length > 400) { d.rowsDropped = d.rows.length; d.rows = d.rows.slice(0, 400); } if (d.text && d.text.length > 3000) d.text = d.text.slice(0, 3000); })); localStorage.setItem(STORE_KEY, JSON.stringify(slim)); } catch (e2) {}
       Store.memOnly = true;
     }
+  },
+  /* Bring an engagement saved by an earlier build up to the current shape. */
+  norm(eng) {
+    eng.irl = eng.irl || { v: eng.requests.length ? 1 : 0, log: [], suppressed: [] };
+    eng.chat = eng.chat || []; eng.undo = eng.undo || [];
+    eng.docs.forEach(d => { if (!d.alloc) d.alloc = d.requestId ? 'approved' : 'pending'; });
+    eng.requests.forEach(q => { if (!q.origin) q.origin = q.derived ? 'scope' : 'manual'; if (!q.key) q.key = (q.derived ? 'lib:' : 'man:') + q.item; if (q.issue == null) q.issue = ''; });
+    eng.steps.forEach(x => { if (!x.type) x.type = 'task'; ['yes', 'no', 'next'].forEach(k => { if (x[k] == null) x[k] = ''; }); });
+    return eng;
   },
   reset() { try { localStorage.removeItem(STORE_KEY); } catch (e) {} S = Store.fresh(); },
 };
@@ -1029,6 +1126,7 @@ const Ops = {
     const eng = { id: 'E-' + Date.now().toString(36).toUpperCase().slice(-5), sample: false, createdAt: new Date().toISOString(), seq: {},
       scope: { client: '', name: '', type: 'full', objective: '', periodFrom: '', periodTo: '', entities: '', framework: 'coso2013', standard: 'gias2024', reader: '', processes: [], exclusions: [], noExclusions: false },
       cp1: null, cp2: null, itgc: { status: 'pending', note: '' }, requests: [], docs: [], subs: {}, steps: [], risks: [], dismissed: [], controls: [],
+      irl: { v: 0, log: [], suppressed: [] }, chat: [], undo: [],
       dtests: {}, etests: {}, analyses: [], gaps: [], topical: [], report: { overall: '', summary: '', limitations: '', issuedAt: '', issuedBy: '' }, followup: {}, trail: [] };
     S.engs.unshift(eng); Ops.log(eng, 'Engagement created');
     return eng;
@@ -1038,22 +1136,46 @@ const Ops = {
   confirmScope(eng) {
     if (Engine.guards.cp1(eng).length) return false;
     eng.cp1 = { by: me().name, at: new Date().toISOString() };
-    Ops.deriveRequests(eng);
+    Ops.syncIRL(eng, true);
     eng.scope.processes.forEach(id => { eng.subs[id] = eng.subs[id] || { noProcedure: false, confirmedBy: '', confirmedAt: '', walkthrough: '' }; });
     const itIn = eng.scope.processes.some(id => KB.sub(id).process === 'itgc');
     if (itIn && !eng.topical.length) eng.topical = KB.topical.cyber.items.map(i => ({ id: i.id, status: '', note: '' }));
     if (!itIn) eng.topical = [];
-    Lib.refile(eng);
+    Lib.refile(eng); Ops.syncIRL(eng, true);
     Ops.log(eng, 'Checkpoint 1 — scope confirmed', `${eng.scope.processes.length} sub-processes in scope · ${eng.requests.length} requests derived`);
     return true;
   },
   reopenScope(eng, reason) { eng.cp1 = null; Ops.log(eng, 'Scope reopened', reason); },
-  deriveRequests(eng) {
-    const due = new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10);
-    eng.scope.processes.forEach(sid => KB.sub(sid).requests.forEach(q => {
-      if (eng.requests.some(x => x.item === q.item)) return;
-      eng.requests.push({ id: Ops.id(eng, 'Q'), item: q.item, form: q.form, fields: q.fields.slice(), feeds: q.feeds, sub: sid, owner: '', due, status: 'pending', naReason: '', missing: [], derived: true });
-    }));
+  /* The request list is a living document: re-derived from the scope, the recorded process, the controls and what
+     has arrived. Runs after every change; returns the list of changes it made and versions the list when there are any. */
+  syncIRL(eng, quiet) {
+    if (!eng.cp1) return [];
+    const irl = eng.irl, sig = q => `${q.status}|${(q.missing || []).join(',')}|${q.issue || ''}`, seen = irl.seen || (irl.seen = {}), changes = [];
+    const due = new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10), sup = new Set(irl.suppressed), live = new Set();
+    const add = (key, o) => { live.add(key); if (sup.has(key) || eng.requests.some(q => q.key === key)) return;
+      const q = Object.assign({ id: Ops.id(eng, 'Q'), key, item: '', form: '', fields: [], feeds: 'Testing', sub: '', owner: '', due, status: 'pending', naReason: '', missing: [], issue: '', derived: true, origin: 'scope', why: '' }, o);
+      eng.requests.push(q); changes.push(`Added — ${q.item}`); };
+    eng.scope.processes.forEach(sid => KB.sub(sid).requests.forEach(r => add('lib:' + r.item, { item: r.item, form: r.form, fields: r.fields.slice(), feeds: r.feeds, sub: sid, origin: 'scope', why: `Needed for ${KB.sub(sid).name}` })));
+    const words = t => Engine.norm(t).split('_').filter(w => w.length > 3);
+    const similar = (x, y) => { const A = words(x), B = words(y); return A.length > 0 && A.filter(w => B.some(v => v === w || v.startsWith(w.slice(0, 5)))).length / A.length >= 0.6; };
+    eng.steps.forEach(st => { const ev = String(st.evidence || '').trim(); if (!ev || !eng.scope.processes.includes(st.sub)) return;
+      const key = 'ev:' + st.sub + ':' + Engine.norm(ev);
+      if (eng.requests.some(q => q.key !== key && similar(ev, q.item))) { live.add(key); return; }       // already asked for under another name
+      add(key, { item: `${ev} — for the transaction followed in the walkthrough`, form: 'Copy of the document for that one transaction', feeds: `Walkthrough — ${KB.sub(st.sub).name}`, sub: st.sub, origin: 'process', why: `Named as the evidence at step ${st.n} of ${KB.sub(st.sub).name}` }); });
+    eng.controls.filter(c => !c.absent && c.key && !c.fromLib).forEach(c => { const r = eng.risks.find(x => x.id === c.riskId) || {};
+      add('ctl:' + c.id, { item: `Evidence that ${c.id} operated, for the items sampled`, form: (c.attrs.filter(x => x.trim())[0] || c.desc.slice(0, 90) || 'Documents showing the control was performed'), feeds: `Effectiveness — ${c.id}`, sub: r.sub || '', origin: 'control', why: `${c.id} is a key control with no standing request` }); });
+    eng.requests = eng.requests.filter(q => {
+      const gone = (/^(ev|ctl):/.test(q.key) && !live.has(q.key)) || (q.origin === 'scope' && q.sub && !eng.scope.processes.includes(q.sub));
+      const drop = gone && !q.override && q.status !== 'na' && !eng.docs.some(d => d.requestId === q.id);
+      if (drop) changes.push(`Removed — ${q.item} (what it was for no longer exists)`); return !drop; });
+    const label = { pending: 'pending', received: 'received', incomplete: 'incomplete', na: 'not applicable' };
+    Object.keys(seen).forEach(id => { if (!eng.requests.some(q => q.id === id)) delete seen[id]; });
+    // compared with the state last recorded, so a status that moved when a document arrived is reported here
+    eng.requests.forEach(q => { Ops.refreshRequest(eng, q); const was = seen[q.id], now = sig(q); seen[q.id] = now;
+      if (was !== undefined && was !== now) changes.push(`${q.item} — now ${label[q.status]}${q.issue ? ': ' + q.issue : q.missing.length ? ': missing ' + q.missing.join(', ') : ''}`); });
+    if (changes.length) { irl.v++; irl.log.push({ t: new Date().toISOString(), v: irl.v, changes: changes.slice(0, 14), more: Math.max(0, changes.length - 14) }); if (irl.log.length > 40) irl.log.shift();
+      if (!quiet) Ops.log(eng, 'Request list updated', `v${irl.v} — ${changes.slice(0, 3).join('; ')}${changes.length > 3 ? ` (+${changes.length - 3} more)` : ''}`); }
+    return changes;
   },
 
   /* ----- documents ----- */
@@ -1067,38 +1189,43 @@ const Ops = {
     doc.tieConf = sug.conf;
     eng.docs.push(doc);
     Ops.log(eng, 'Document received', `${name} · classified as ${doc.docType} (${Math.round(doc.conf * 100)}%)`);
+    doc.alloc = ['Engagement letter / scope', 'Meeting notes / minutes'].includes(doc.docType) ? 'reference' : 'pending';   // the engagement's own papers answer no client request
     if (sug.id && sug.conf >= 0.5) Ops.tie(eng, doc, sug.id, true);
     return doc;
   },
   tie(eng, doc, requestId, auto) {
     const prev = doc.requestId; doc.requestId = requestId || '';
     if (!auto) doc.tieConf = 1;
+    doc.alloc = requestId ? (auto ? 'auto' : 'approved') : 'pending';
     [prev, requestId].filter(Boolean).forEach(id => Ops.refreshRequest(eng, eng.requests.find(q => q.id === id)));
     if (requestId) Ops.log(eng, auto ? 'Document tied automatically' : 'Document tied', `${doc.name} → ${(eng.requests.find(q => q.id === requestId) || {}).item}`);
   },
   refreshRequest(eng, q) {
-    if (!q || q.status === 'na') return;
-    const docs = eng.docs.filter(d => d.requestId === q.id);
-    if (!docs.length) { q.status = 'pending'; q.missing = []; return; }
-    const tabular = docs.filter(d => d.rows);
-    if (q.fields.length && tabular.length) { q.missing = tabular.map(d => Engine.missingFields(q.fields, d.headers)).sort((a, b) => a.length - b.length)[0]; q.status = q.missing.length ? 'incomplete' : 'received'; }
-    else if (q.fields.length) { q.missing = ['not in the required tabular form']; q.status = 'incomplete'; }
-    else { q.missing = []; q.status = 'received'; }
+    if (!q || (q.status === 'na' && !q.override)) return;
+    const docs = eng.docs.filter(d => d.requestId === q.id), tab = docs.filter(d => d.rows);
+    let st = 'pending', missing = [], issue = '';
+    if (docs.length) {
+      if (q.fields.length && tab.length) { missing = tab.map(d => Engine.missingFields(q.fields, d.headers)).sort((x, y) => x.length - y.length)[0]; st = missing.length ? 'incomplete' : 'received'; }
+      else if (q.fields.length) { issue = 'Wrong form — a data export is required and a document arrived'; st = 'incomplete'; }
+      else st = 'received';
+      const pc = Engine.periodCheck(eng, docs); if (pc && pc.k === 'crit') { issue = issue || pc.t; st = 'incomplete'; }
+    }
+    q.computed = st; q.missing = missing; q.issue = issue; q.status = q.override ? q.override.status : st;
   },
   removeDoc(eng, id) { const d = eng.docs.find(x => x.id === id); if (!d) return; eng.docs = eng.docs.filter(x => x.id !== id); Ops.refreshRequest(eng, eng.requests.find(q => q.id === d.requestId)); Ops.log(eng, 'Document removed', d.name); },
 
   /* ----- understanding ----- */
   addStep(eng, sub, init) {
     const n = eng.steps.filter(s => s.sub === sub).length + 1;
-    const st = Object.assign({ id: Ops.id(eng, 'S'), sub, n, actor: '', action: '', system: '', review: '', approval: '', evidence: '', walked: false, docId: '' }, init || {});
+    const st = Object.assign({ id: Ops.id(eng, 'S'), sub, n, actor: '', action: '', system: '', review: '', approval: '', evidence: '', walked: false, docId: '', type: 'task', yes: '', no: '', next: '', draft: false }, init || {});
     eng.steps.push(st); return st;
   },
   renumber(eng, sub) { eng.steps.filter(s => s.sub === sub).sort((a, b) => a.n - b.n).forEach((s, i) => { s.n = i + 1; }); },
   stepFlags(s) {
-    const f = [], a = Engine.norm(s.actor);
-    if (!s.review.trim() && !s.approval.trim()) f.push('No reviewer or approver');
+    const f = [], a = Engine.norm(s.actor), dec = s.type === 'decision', checking = CHECK_VERB.test(s.action || '');   // a step that is itself a review needs no second reviewer
+    if (!dec && !checking && s.type !== 'system' && !s.review.trim() && !s.approval.trim()) f.push('No reviewer or approver');
     if (a && (a === Engine.norm(s.approval) || a === Engine.norm(s.review))) f.push('Same role performs and checks');
-    if (!s.evidence.trim()) f.push('No evidence retained');
+    if (!dec && !s.evidence.trim()) f.push('No evidence retained');
     return f;
   },
 
@@ -1251,6 +1378,54 @@ const Seed = {
       { name: 'leavers_listing_2024.csv', text: csv(['employee_code', 'leave_date'], emp.filter(e => e.leave).map(e => [e.code, e.leave])) },
     ];
   },
+  /* The engagement's own papers: what the agent builds the scope and the walkthroughs from. */
+  papers() { return [
+    { name: 'engagement_letter_meridian.txt', text: `Engagement letter
+Client: Meridian Industrial Group
+Subject: Payroll & HR controls review
+Date: 5 April 2024
+
+The objective of the engagement is to assess the design and operating effectiveness of controls over payroll for the first quarter, and identify where payments could leave the organisation without authorisation.
+
+The review covers the period 1 January 2024 to 31 March 2024.
+Locations: Head office; Plant 2
+
+The following sub-processes are in scope: system access rights & master data; new joiner processing; payroll sheet preparation & approval; salary transfer & disbursement; resignation, termination & final settlement.
+
+Expatriate tax equalisation is excluded because it is handled by the external tax adviser under a separate mandate.
+
+The report will be addressed to the Audit Committee.
+Fieldwork is planned for three weeks from 15 April 2024. Fees are agreed separately.` },
+    { name: 'meeting_notes_payroll_walkthrough.txt', text: `Meeting notes - payroll process walkthrough
+Date: 14 April 2024
+Attendees: Payroll director, Finance manager, HR systems manager, Internal audit
+
+Sub-process: Payroll sheet preparation & approval
+The payroll system automatically calculates gross pay, deductions and net pay from the employee master data.
+The administration manager extracts the monthly payroll sheet from the payroll system and signs it.
+The payroll manager reviews departmental totals, taxes and deductions against the prior month.
+If the variance against the prior month is above 5%, the sheet is returned to the administration manager for correction.
+The group controller reviews the signed payroll sheet.
+The finance director approves the payroll sheet for payment.
+The signed payroll sheet is kept in the finance archive.
+
+Sub-process: Salary transfer & disbursement
+The payroll director prepares the salary transfer request from the approved payroll sheet in the banking portal. It is reviewed by the group controller.
+If the transfer total differs from the approved payroll sheet, the request is sent back to the payroll director.
+The group controller and the finance director release the transfer in the banking portal.
+The bank confirmation is filed with the transfer request.
+
+Sub-process: System access rights & master data
+The HR systems manager creates and amends user access in the payroll system on request, approved by the payroll director.
+The access request form is kept by the HR systems manager.
+The payroll director maintains employee master data including salary and bank account in the payroll system. Changes are approved by the payroll director.
+
+Open points: Signed access request forms for January were not available at the meeting.` },
+  ]; },
+  async loadPapers(eng, only) { const out = [];
+    for (const f of Seed.papers()) { if ((only && !f.name.includes(only)) || eng.docs.some(d => d.name === f.name)) continue;
+      const d = await Ops.ingest(eng, f.name, f.text.length, 'text/plain', null, new TextEncoder().encode(f.text).buffer, { text: f.text }); d.strength = 'Prepared by the audit team'; out.push(d); }
+    return out; },
   async loadFiles(eng) {
     for (const f of Seed.files()) {
       if (eng.docs.some(d => d.name === f.name)) continue;
@@ -1269,21 +1444,29 @@ const Seed = {
       exclusions: [{ what: 'Expatriate tax equalisation', reason: 'Handled by the external tax adviser under a separate mandate' }] });
     Ops.confirmScope(eng);
     eng.requests.forEach(q => { q.owner = /access/i.test(q.item) ? 'IT manager' : /bank|transfer/i.test(q.item) ? 'Finance manager' : 'Payroll director'; });
-    await Seed.loadFiles(eng);
+    await Seed.loadPapers(eng); await Seed.loadFiles(eng);
+    eng.scope.source = { docId: (eng.docs.find(d => /engagement_letter/.test(d.name)) || {}).id || '', name: 'engagement_letter_meridian.txt', engine: 'Built-in rules' };
+    // the auditor approved most automatic allocations; the access listing is left in the queue to show it
+    eng.docs.forEach(d => { if (d.alloc === 'auto' && !/access/.test(d.name)) d.alloc = 'approved'; });
 
-    const st = (sub, rows) => rows.forEach(r => Ops.addStep(eng, sub, { actor: r[0], action: r[1], system: r[2], review: r[3], approval: r[4], evidence: r[5] }));
-    st('pay-access', [
-      ['HR systems manager', 'Creates and amends user access to the payroll module on request', 'Payroll system', '', 'Payroll director', 'Access request email'],
+    const st = (sub, rows) => { const made = rows.map(r => Ops.addStep(eng, sub, { actor: r[0], action: r[1], system: r[2], review: r[3], approval: r[4], evidence: r[5], type: r[6] || 'task', docId: Agent.matchDoc(eng, r[5]) }));
+      rows.forEach((r, i) => { if (r[7]) { made[i].yes = made[r[7][0] - 1].id; made[i].no = made[r[7][1] - 1].id; } }); return made; };
+    const sA = st('pay-access', [
+      ['HR systems manager', 'Creates and amends user access in the payroll system on request', 'Payroll system', '', 'Payroll director', 'Access request form'],
       ['Payroll director', 'Maintains employee master data including salary and bank account', 'Payroll system', '', 'Payroll director', ''],
     ]);
-    st('pay-sheet', [
-      ['Administration manager', 'Extracts the monthly payroll sheet from the system and signs it', 'Payroll system', 'Payroll manager', '', 'Signed payroll sheet'],
-      ['Payroll manager', 'Reviews departmental totals, taxes and deductions against prior month', '', 'Group controller', 'Finance director', 'Signed payroll sheet'],
-      ['Finance director', 'Approves the payroll sheet for payment', '', '', 'Finance director', 'Signed payroll sheet'],
+    const sS = st('pay-sheet', [
+      ['Payroll system', 'Calculates gross pay, deductions and net pay from the employee master data', 'Payroll system', '', '', 'Payroll register', 'system'],
+      ['Administration manager', 'Extracts the monthly payroll sheet and signs it', 'Payroll system', 'Payroll manager', '', 'Signed payroll sheet'],
+      ['Payroll manager', 'Reviews departmental totals, taxes and deductions against the prior month', 'Spreadsheet', '', '', 'Signed payroll sheet'],
+      ['Payroll manager', 'Variance against the prior month above 5%?', '', '', '', '', 'decision', [2, 5]],
+      ['Group controller', 'Reviews the signed payroll sheet', '', '', '', 'Signed payroll sheet'],
+      ['Finance director', 'Approves the payroll sheet for payment', '', '', '', 'Signed payroll sheet'],
     ]);
-    st('pay-transfer', [
+    const sT = st('pay-transfer', [
       ['Payroll director', 'Prepares the salary transfer request from the approved payroll sheet', 'Banking portal', 'Group controller', '', 'Transfer request'],
-      ['Group controller', 'Approves the transfer request and releases it with the finance director', 'Banking portal', '', 'Finance director', 'Bank confirmation'],
+      ['Group controller', 'Transfer total differs from the approved payroll sheet?', '', '', '', '', 'decision', [1, 3]],
+      ['Group controller', 'Releases the transfer with the finance director', 'Banking portal', '', 'Finance director', 'Bank confirmation'],
     ]);
     ['pay-access', 'pay-sheet', 'pay-transfer'].forEach(s => { eng.subs[s].confirmedBy = 'Payroll director'; eng.subs[s].confirmedAt = Engine.today(); });
     eng.steps.filter(s => s.sub === 'pay-sheet').forEach(s => { s.walked = true; });
@@ -1293,6 +1476,7 @@ const Seed = {
     const c1 = acc('pay-access', 'L-PAY-01', 3, 5, 'Payroll director');
     const c2 = acc('pay-sheet', 'L-PAY-04', 3, 4, 'Finance director');
     const c3 = acc('pay-transfer', 'L-PAY-08', 3, 5, 'Finance director');
+    [[c1, sA[1]], [c2, sS[5]], [c3, sT[2]]].forEach(([c, step]) => { eng.risks.find(r => r.id === c.riskId).stepId = step.id; });
     eng.itgc = { status: 'failed', note: 'IT audit E-198 concluded access management over the payroll system is ineffective.' };
     Ops.approvePlan(eng);
 
@@ -1321,6 +1505,8 @@ const Seed = {
       eng.analyses.push({ id: Ops.id(eng, 'A'), name: 'Payroll register ↔ bank transfer file', cfg, res, count: res.exceptions.length + res.missing.length, runAt: new Date().toISOString(), by: me().name });
       Ops.log(eng, 'Reconciliation run', `${res.matched} matched · ${res.exceptions.length} amount exceptions · ${res.missing.length} unmatched`);
     }
+    Ops.syncIRL(eng, true);
+    Agent.say(eng, 'agent', 'This sample file was built the way a live one is: the scope from the engagement letter, the request list from the scope, and the walkthroughs from the meeting notes. One automatic allocation is waiting for your approval, and new joiners and leavers have no walkthrough yet.', { engine: 'Built-in rules', need: Agent.need(eng, null).slice(0, 5) });
     return eng;
   },
 };
@@ -1384,19 +1570,20 @@ async function saveFile(filename, data) {
 }
 async function copyText(text) { try { await navigator.clipboard.writeText(text); toast('Copied to clipboard'); } catch (e) { toast('Copy was blocked by the browser'); } }
 const toCSV = rows => rows.map(r => r.map(v => { v = String(v ?? ''); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(',')).join('\n');
-async function takeFiles(files) {
+async function takeFiles(files, then) {
   const eng = E(); if (!eng || !files || !files.length) return;
   UI.busy = `Reading ${files.length} file${files.length > 1 ? 's' : ''}…`; render();
-  let n = 0;
+  let n = 0; const got = [];
   for (const f of files) {
     try {
       const buf = await f.slice(0, 8e6).arrayBuffer();
       const c = f.size < 25e6 ? await readContent(f) : { note: 'Too large to read here — filed by name only' };
-      const doc = await Ops.ingest(eng, f.name, f.size, f.type, c.csv != null ? c.csv : null, buf, c); n++;
+      const doc = await Ops.ingest(eng, f.name, f.size, f.type, c.csv != null ? c.csv : null, buf, c); n++; got.push(doc);
       if (/^image\//.test(f.type) && f.size < 15e6) Blobs.set(doc.id, f);
     } catch (e) { toast(`Could not read ${f.name}`); }
   }
-  UI.busy = ''; commit(); toast(`${n} document${n === 1 ? '' : 's'} read, classified and filed`);
+  UI.busy = ''; toast(`${n} document${n === 1 ? '' : 's'} read, classified and filed`);
+  if (got.length) await Agent.files(eng, got, then || ''); else commit();
 }
 async function askAI(prompt, label, opts) {
   if (!Cap.sample) return null;
@@ -1417,7 +1604,7 @@ function target(eng, c, id) {
 }
 function onChange(ev) {
   const el = ev.target;
-  if (el.matches('input[type=file]')) { takeFiles([...el.files]); return; }
+  if (el.matches('input[type=file]')) { takeFiles([...el.files], el.dataset.then); return; }
   if (el.dataset.change && !el.dataset.f) { Act[el.dataset.change](el.dataset, el, ev); commit(); return; }
   if (!el.dataset.f) return;
   const eng = E(), c = el.dataset.c || '', id = el.dataset.id || '', f = el.dataset.f;
@@ -1435,6 +1622,7 @@ function onChange(ev) {
 let renderPending = false;
 const pressed = () => UI.ptr && Date.now() - UI.ptr < 600;
 function commit() {
+  const cur = S.ui.view === 'eng' ? E() : null; if (cur) Ops.syncIRL(cur);
   Store.save(); if (renderPending) return; renderPending = true;
   const run = () => { if (pressed()) { setTimeout(run, 40); return; } renderPending = false; render(); };
   setTimeout(run, 0);
@@ -1445,12 +1633,15 @@ function sig(el) { if (!el || !el.dataset) return ''; const d = el.dataset; retu
 function render() {
   const main = $('.main'), key = S.ui.view + '/' + S.ui.engId + '/' + S.ui.stage + '/' + (S.ui.sub || '') + '/' + (S.ui.ctl || '');
   const top = main && key === UI.lastKey ? main.scrollTop : 0, fs = UI.modal ? '' : sig(document.activeElement);
+  const agFocus = !UI.modal && document.activeElement && document.activeElement.id === 'ag-text', th0 = $('#ag-thread'), agTop = th0 ? th0.scrollTop : 0;
   const railOpen = $('.rail') && $('.rail').classList.contains('open') && key === UI.lastKey;
   UI.lastKey = key;
   $('#app').innerHTML = shell();
   const m2 = $('.main'); if (m2) m2.scrollTop = top;
   if (railOpen) { $('.rail').classList.add('open'); $('.scrim').classList.add('on'); }
   if (fs) { const el = $(fs); if (el) { try { el.focus({ preventScroll: true }); } catch (e) {} } }
+  const th = $('#ag-thread'); if (th) { th.scrollTop = UI.agBottom || !th0 ? th.scrollHeight : agTop; UI.agBottom = false; }
+  if (agFocus) { const a = $('#ag-text'); if (a) { a.focus({ preventScroll: true }); a.setSelectionRange(a.value.length, a.value.length); } }
 }
 function go(view, stage, extra) { S.ui.view = view; if (stage) S.ui.stage = stage; Object.assign(S.ui, extra || {}); Store.save(); render(); }
 Act.nav = d => { if (d.view === 'home') S.ui.engId = S.ui.engId; go(d.view, d.stage); };
@@ -1467,6 +1658,7 @@ Act.user = () => ask({ title: 'Switch user', text: 'Working papers record who pr
 const tabs = (group, items, def) => { const cur = UI.tab[group] || def; return `<div class="tabs">${items.map(([id, label]) => `<button class="tab ${cur === id ? 'active' : ''}" data-act="tab" data-group="${group}" data-tab="${id}">${esc(label)}</button>`).join('')}</div>`; };
 const curTab = (group, def) => UI.tab[group] || def;
 
+const agentShown = () => S.ui.agentHidden == null ? window.innerWidth >= 1180 : !S.ui.agentHidden;
 function shell() {
   const eng = S.ui.view === 'eng' ? E() : null;
   if (S.ui.view === 'eng' && !eng) S.ui.view = 'home';
@@ -1492,15 +1684,15 @@ function shell() {
     const v = Views[S.ui.stage] || Views.overview;
     body = (st && st.state === 'locked') ? `<div class="page-head"><div><h1>${esc(st.label)}</h1></div></div>${banner('lock', `<b>Locked.</b>${guardList(st.reasons)}`)}` : v(eng, st);
   } else { crumb = `<b>${S.ui.view === 'kb' ? 'Knowledge base' : S.ui.view === 'method' ? 'Methodology' : 'Engagements'}</b>`; body = (Views[S.ui.view] || Views.home)(); }
-  const q = eng ? Engine.quality(eng) : null;
-  return `<div class="app"><div class="scrim" data-act="menu"></div>
+  const q = eng ? Engine.quality(eng) : null, ag = eng && agentShown();
+  return `<div class="app ${ag ? 'has-agent' : ''}"><div class="scrim" data-act="menu"></div>
     <aside class="rail"><div class="brand"><div class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18 9 11l5 3 6-9"/></svg></div><div><div class="brand-name">Throughline</div><div class="brand-sub">Internal audit</div></div></div>
       <nav class="nav">${nav}</nav>
       <div class="rail-foot"><div class="avatar">${esc(u.name.split(/\s+/).map(x => x[0]).join('').slice(0, 2).toUpperCase())}</div><button class="who" data-act="user" title="Switch user"><b>${esc(u.name)}</b><span>${esc(u.role)}</span></button><button class="icon-btn" data-act="theme" title="Toggle theme" aria-label="Toggle theme">${IC.moon}</button></div></aside>
     <main class="main"><div class="topbar"><button class="icon-btn menu-btn" data-act="menu" aria-label="Menu">${IC.menu}</button><div class="crumb">${crumb}</div><span class="sp"></span>
       ${UI.busy ? chip('info', UI.busy) : ''}${eng && eng.sample ? chip('mut', 'Sample data', false) : ''}${q && q.score != null ? `<button class="btn sm ghost" data-act="stage" data-stage="overview" title="File quality score">${chip(q.score >= 85 ? 'good' : q.score >= 60 ? 'warn' : 'crit', `Quality ${q.score}%`)}</button>` : ''}
-      ${Store.memOnly ? chip('warn', 'Large files kept for this session only') : ''}</div>
-      <section class="content">${body}</section></main>${modalHTML()}</div>`;
+      ${Store.memOnly ? chip('warn', 'Large files kept for this session only') : ''}${eng && !ag ? btn('Agent', 'ag-toggle', { cls: 'sm primary', icon: IC.bolt }) : ''}</div>
+      <section class="content">${body}</section></main>${ag ? agentPanel(eng) : ''}${modalHTML()}</div>`;
 }
 
 function boot() {
@@ -1510,9 +1702,10 @@ function boot() {
   document.addEventListener('change', onChange);
   document.addEventListener('pointerdown', () => { UI.ptr = Date.now(); }, true);
   document.addEventListener('pointerup', () => { setTimeout(() => { UI.ptr = 0; }, 0); }, true);
-  document.addEventListener('dragover', ev => { const z = ev.target.closest && ev.target.closest('.dropzone'); if (z) { ev.preventDefault(); z.classList.add('hot'); } });
-  document.addEventListener('dragleave', ev => { const z = ev.target.closest && ev.target.closest('.dropzone'); if (z) z.classList.remove('hot'); });
-  document.addEventListener('drop', ev => { const z = ev.target.closest && ev.target.closest('.dropzone'); if (z) { ev.preventDefault(); takeFiles([...ev.dataTransfer.files]); } });
+  const zone = ev => ev.target.closest && ev.target.closest('.dropzone, [data-then]');
+  document.addEventListener('dragover', ev => { const z = zone(ev); if (z) { ev.preventDefault(); z.classList.add('hot'); } });
+  document.addEventListener('dragleave', ev => { const z = zone(ev); if (z) z.classList.remove('hot'); });
+  document.addEventListener('drop', ev => { const z = zone(ev); if (z) { ev.preventDefault(); z.classList.remove('hot'); takeFiles([...ev.dataTransfer.files], z.dataset.then); } });
   document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && UI.modal) { closeModal(); render(); } });
   if (window.claude && window.claude.use) { ['sample', 'downloads'].forEach(n => window.claude.use(n).then(x => { Cap[n] = x || null; if (x && n === 'sample') { render(); x.limits().then(l => { Cap.sampleImages = !!(l && l.images); render(); }).catch(() => {}); } }).catch(() => {})); }
   if (first) { render(); Seed.engagement().then(() => { Store.save(); render(); }); } else render();
@@ -1619,7 +1812,7 @@ const Lib = {
     return { points: c.points, by: 'computed' };
   },
   filing(eng, d) { const q = eng.requests.find(x => x.id === d.requestId), s = q && q.sub ? KB.sub(q.sub) : null; return { q, sub: s }; },
-  refile(eng) { let n = 0; eng.docs.filter(d => !d.requestId).forEach(d => { const s = Engine.suggestRequest(d, eng.requests.filter(q => q.status !== 'na')); d.tieConf = s.conf; if (s.id && s.conf >= 0.5) { Ops.tie(eng, d, s.id, true); n++; } }); return n; },
+  refile(eng) { let n = 0; eng.docs.filter(d => d.alloc === 'pending').forEach(d => { const s = Engine.suggestRequest(d, eng.requests.filter(q => q.status !== 'na')); d.tieConf = s.conf; if (s.id && s.conf >= 0.5) { Ops.tie(eng, d, s.id, true); n++; } }); return n; },
 
   tree(eng, mode) {
     const leaf = d => ({ t: 'doc', d }), by = (f, label) => { const g = {}; eng.docs.forEach(d => { const k = f(d) || label; (g[k] = g[k] || []).push(leaf(d)); }); return Object.keys(g).sort().map(k => ({ t: k === label ? 'unfiled' : 'sub', label: k, kids: g[k] })); };
@@ -1630,7 +1823,8 @@ const Lib = {
     const reqNode = q => ({ t: 'req', label: q.item, q, kids: eng.docs.filter(d => d.requestId === q.id).map(leaf) });
     root.kids = KB.processes.map(p => ({ t: 'proc', label: p.name, kids: p.subs.filter(s => eng.scope.processes.includes(s.id)).map(s => ({ t: 'sub', label: s.name, kids: eng.requests.filter(q => q.sub === s.id).map(reqNode) })) })).filter(p => p.kids.length);
     const other = eng.requests.filter(q => !q.sub); if (other.length) root.kids.push({ t: 'proc', label: 'Other requests', kids: other.map(reqNode) });
-    const loose = eng.docs.filter(d => !d.requestId); if (loose.length) root.kids.push({ t: 'unfiled', label: 'Not filed', kids: loose.map(leaf) });
+    const pend = eng.docs.filter(d => !d.requestId && d.alloc !== 'reference'); if (pend.length) root.kids.push({ t: 'unfiled', label: 'Pending allocation', kids: pend.map(leaf) });
+    const ref = eng.docs.filter(d => !d.requestId && d.alloc === 'reference'); if (ref.length) root.kids.push({ t: 'proc', label: 'Engagement papers — reference only', kids: ref.map(leaf) });
     return root;
   },
   count: n => n.t === 'doc' ? 1 : (n.kids || []).reduce((a, k) => a + Lib.count(k), 0),
@@ -1639,7 +1833,7 @@ const Lib = {
 /* ---------- view ---------- */
 UI.lib = { mode: '', closed: {}, q: '', type: '' };
 const docLeaf = (eng, d) => { const k = Lib.kind(d), p = Lib.points(d);
-  return `<button class="hx-doc" data-act="doc-open" data-id="${d.id}"><span class="kind k-${k}">${Lib.icon(k)}</span><span style="min-width:0"><span class="dn">${esc(d.name)}</span><span class="ds">${esc(p.points[0] || d.note || Lib.kindLabel[k])}</span>${d.requestId && d.tieConf < 1 ? `<span class="ds faint">filed automatically · ${Math.round(d.tieConf * 100)}% match</span>` : ''}</span></button>`; };
+  return `<button class="hx-doc" data-act="doc-open" data-id="${d.id}"><span class="kind k-${k}">${Lib.icon(k)}</span><span style="min-width:0"><span class="dn">${esc(d.name)}</span><span class="ds">${esc(p.points[0] || d.note || Lib.kindLabel[k])}</span>${d.alloc === 'auto' ? `<span class="ds" style="color:var(--info)">linked automatically · ${Math.round(d.tieConf * 100)}% match · to approve</span>` : ''}</span></button>`; };
 function treeHTML(eng, n, path) {
   if (n.t === 'doc') return `<div class="hx">${docLeaf(eng, n.d)}</div>`;
   const key = path + '/' + n.label, kids = n.kids || [], closed = UI.lib.closed[key], c = Lib.count(n);
@@ -1653,43 +1847,68 @@ const filedLine = (eng, d) => { const f = Lib.filing(eng, d); return f.q ? `${f.
 const docCard = (eng, d) => { const k = Lib.kind(d), p = Lib.points(d), filed = filedLine(eng, d);
   return `<article class="card dcard"><div class="row" style="flex-wrap:nowrap;align-items:flex-start"><span class="kind k-${k}">${Lib.icon(k)}</span><div style="min-width:0;flex:1"><div class="dn">${esc(d.name)}</div><div class="xs muted">${esc(Lib.kindLabel[k])} · ${fmtSize(d.size)}${d.period ? ' · ' + esc(d.period) : ''}${d.pages ? ` · ${d.pages} pages` : ''}</div></div></div>
     <div class="row">${chip(d.docType === 'Unclassified' ? 'warn' : 'prim', d.docType, false)}${d.conf < 0.5 && d.docType !== 'Unclassified' ? chip('warn', 'Confirm type', false) : ''}${d.strength ? '' : chip('warn', 'Source not recorded', false)}</div>
-    <div class="xs ${filed ? 'muted' : ''}" ${filed ? '' : 'style="color:var(--warn);font-weight:600"'}>${filed ? 'Filed under ' + filed : 'Not filed against a request'}</div>
+    <div class="xs ${filed || d.alloc === 'reference' ? 'muted' : ''}" ${filed || d.alloc === 'reference' ? '' : 'style="color:var(--warn);font-weight:600"'}>${filed ? 'Filed under ' + filed : d.alloc === 'reference' ? 'Reference only — answers no client request' : 'Pending allocation'}${d.alloc === 'auto' ? ` <span style="color:var(--info);font-weight:600">· linked automatically, to approve</span>` : ''}</div>
     ${p.points.length ? `<ul class="pts">${p.points.slice(0, 6).map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : `<div class="small muted">${esc(d.note || 'No contents read.')}</div>`}
     <div class="row" style="margin-top:auto"><span class="xs faint">${p.points.length ? (p.by === 'assistant' ? 'Main points drafted by the assistant — check against the document' : 'Main points computed from the contents') : ''}</span><span class="sp"></span>${btn('Open', 'doc-open', { cls: 'sm', data: { id: d.id } })}</div></article>`; };
 
+const ALLOC = { pending: ['warn', 'Pending allocation'], auto: ['info', 'Linked automatically'], approved: ['good', 'Approved'], reference: ['mut', 'Reference only'] };
+function allocHTML(eng) {
+  const open = eng.requests.filter(q => q.status !== 'na'), by = k => eng.docs.filter(d => d.alloc === k), pend = by('pending'), auto = by('auto'), done = by('approved'), ref = by('reference');
+  const name = d => `<button class="btn ghost sm mono" style="padding:1px 0;font-weight:600;font-size:12px;text-align:left" data-act="doc-open" data-id="${d.id}">${esc(d.name)}</button><div class="xs muted">${esc(d.docType)}${d.period ? ' · ' + esc(d.period) : ''} · ${esc(Lib.points(d).points[0] || d.note || '')}</div>`;
+  const pick = (d, ph) => `<select class="inp cell" style="max-width:230px" data-change="alloc-pick" data-id="${d.id}" aria-label="${ph}"><option value="">${ph}</option>${open.map(q => `<option value="${q.id}" ${d.requestId === q.id ? 'selected' : ''}>${q.sub ? esc(subName(q.sub)) + ' › ' : ''}${esc(q.item)}</option>`).join('')}</select>`;
+  const sec = (title, sub, acts, body) => `<div class="card pad stack" style="gap:9px"><div class="row"><h3 style="font-size:14px">${title}</h3><span class="xs faint">${sub}</span><span class="sp"></span>${acts}</div>${body}</div>`;
+  if (!eng.cp1) return banner('info', 'The request list is built when the scope is confirmed. Until then documents wait here; they are filed the moment the list exists.') + `<div class="stack" style="margin-top:12px">${eng.docs.map(d => `<div class="alloc-row">${name(d)}</div>`).join('')}</div>`;
+  return `<div class="stack">
+    ${sec(`Pending allocation (${pend.length})`, 'no confident match — choose the request, or mark the document as reference only', pend.length ? btn('Let the agent try', 'ag-run', { cls: 'sm', icon: IC.bolt, data: { what: 'allocate' }, dis: !!Agent.busy }) : '',
+      pend.map(d => { const top = Engine.rankRequests(d, open).slice(0, 3);
+        return `<div class="alloc-row"><div style="min-width:0">${name(d)}</div><div class="row">${top.map(r => { const q = eng.requests.find(x => x.id === r.id); return `<button class="btn sm" data-act="alloc-to" data-id="${d.id}" data-q="${r.id}" title="${esc(q.item)}">${esc(q.item.length > 34 ? q.item.slice(0, 34) + '…' : q.item)} <span class="faint">${Math.round(r.conf * 100)}%</span></button>`; }).join('') || '<span class="xs muted">No request resembles this document.</span>'}${pick(d, 'Other request…')}${btn('Reference only', 'alloc-ref', { cls: 'sm ghost', data: { id: d.id } })}</div></div>`; }).join('') || '<p class="small muted">Nothing is waiting.</p>')}
+    ${sec(`Linked automatically (${auto.length})`, 'the platform filed these as they arrived — approve each link or change it', auto.length ? btn('Approve all', 'alloc-approve-all', { cls: 'sm primary' }) : '',
+      auto.map(d => { const q = eng.requests.find(x => x.id === d.requestId) || {};
+        return `<div class="alloc-row"><div style="min-width:0">${name(d)}</div><div class="row"><span class="small">→ <b>${esc(q.item || '')}</b> <span class="faint">${Math.round(d.tieConf * 100)}% match</span></span>${q.issue ? chip('crit', q.issue.length > 46 ? q.issue.slice(0, 46) + '…' : q.issue, false) : ''}<span class="sp"></span>${btn('Approve', 'alloc-approve', { cls: 'sm primary', data: { id: d.id } })}${pick(d, 'Change…')}${btn('Unlink', 'alloc-reopen', { cls: 'sm ghost', data: { id: d.id } })}</div></div>`; }).join('') || '<p class="small muted">Nothing to approve.</p>')}
+    <details class="fold" ${done.length + ref.length && !pend.length && !auto.length ? 'open' : ''}><summary>Approved (${done.length}) and reference only (${ref.length})</summary><div class="stack" style="gap:6px;margin-top:8px">
+      ${done.map(d => `<div class="alloc-row"><div style="min-width:0">${name(d)}</div><div class="row"><span class="small muted">→ ${esc((eng.requests.find(x => x.id === d.requestId) || {}).item || '')}</span><span class="sp"></span>${btn('Reopen', 'alloc-reopen', { cls: 'sm ghost', data: { id: d.id } })}</div></div>`).join('')}
+      ${ref.map(d => `<div class="alloc-row"><div style="min-width:0">${name(d)}</div><div class="row">${chip('mut', 'Reference only', false)}<span class="sp"></span>${btn('Reopen', 'alloc-reopen', { cls: 'sm ghost', data: { id: d.id } })}</div></div>`).join('')}</div></details></div>`;
+}
 Views.library = eng => {
   const docs = eng.docs, mode = UI.lib.mode || (eng.requests.length ? 'process' : 'type'), t = curTab('lib', 'tree');
-  const read = docs.filter(d => Lib.points(d).points.length).length, loose = docs.filter(d => !d.requestId).length;
+  const read = docs.filter(d => Lib.points(d).points.length).length, n = k => docs.filter(d => d.alloc === k).length, queue = n('pending') + n('auto');
   const canSum = Cap.sample && docs.some(d => !d.summary && (d.text || (Lib.kind(d) === 'image' && Cap.sampleImages && Blobs.has(d.id))));
-  const drop = `<div class="dropzone" ${docs.length ? 'style="padding:14px"' : ''}><h4>Drop everything the client sent</h4><p>Excel, CSV, PDF, Word, text and images. Each file is read, classified, summarised and filed under the request it satisfies.</p>
-    <div class="row" style="justify-content:center"><label class="btn primary" for="file-inp">${IC.up}Choose files</label><input type="file" id="file-inp" multiple hidden>${docs.length ? '' : btn('Load sample files', 'sample-files', { cls: 'ghost' })}</div></div>`;
-  if (!docs.length) return `<div class="page-head"><div><h1>Document library</h1><div class="sub">Every document gets an item card with its main points and a place in the hierarchy.</div></div></div>${drop}`;
+  const drop = `<div class="dropzone" data-then="library" ${docs.length ? 'style="padding:14px"' : ''}><h4>Drop everything the client sent</h4><p>Excel, CSV, PDF, Word, text and images. Each file is read, classified, summarised and linked to the request it satisfies — or left pending for you to allocate.</p>
+    <div class="row" style="justify-content:center"><label class="btn primary" for="file-inp">${IC.up}Choose files</label><input type="file" id="file-inp" data-then="library" multiple hidden>${docs.length ? '' : btn('Load sample files', 'sample-files', { cls: 'ghost' })}</div></div>`;
+  if (!docs.length) return `<div class="page-head"><div><h1>Document library</h1><div class="sub">Everything the agent builds from. Each document gets an item card with its main points and a place in the hierarchy.</div></div></div>${drop}`;
   let body;
-  if (t === 'tree') body = `<div class="row" style="margin-bottom:10px"><span class="small muted">Arrange by</span>${[['process', 'Process and request'], ['type', 'Document type'], ['period', 'Period'], ['source', 'Source strength']].map(m => `<button class="btn sm ${mode === m[0] ? 'primary' : ''}" data-act="lib-mode" data-mode="${m[0]}">${m[1]}</button>`).join('')}<span class="sp"></span>${btn('Expand all', 'tree-all', { cls: 'sm ghost' })}</div>
-    ${mode === 'process' && !eng.cp1 ? banner('info', 'Confirm the scope to derive the request list. Documents are then filed under the process and request they satisfy.') : ''}
+  if (t === 'alloc') body = allocHTML(eng);
+  else if (t === 'tree') body = `<div class="row" style="margin-bottom:10px"><span class="small muted">Arrange by</span>${[['process', 'Process and request'], ['type', 'Document type'], ['period', 'Period'], ['source', 'Source strength']].map(m => `<button class="btn sm ${mode === m[0] ? 'primary' : ''}" data-act="lib-mode" data-mode="${m[0]}">${m[1]}</button>`).join('')}<span class="sp"></span>${btn('Expand all', 'tree-all', { cls: 'sm ghost' })}</div>
+    ${mode === 'process' && !eng.cp1 ? banner('info', 'Confirm the scope to build the request list. Documents are then filed under the process and request they satisfy.') : ''}
     <div class="tree-wrap">${treeHTML(eng, Lib.tree(eng, mode), '')}</div>`;
   else { const q = UI.lib.q.toLowerCase(), list = docs.filter(d => (!UI.lib.type || d.docType === UI.lib.type) && (!q || (d.name + ' ' + d.docType + ' ' + Lib.points(d).points.join(' ') + ' ' + (d.text || '').slice(0, 4000)).toLowerCase().includes(q)));
     body = `<div class="row" style="margin-bottom:12px"><input class="inp" style="max-width:300px" type="search" placeholder="Search names, main points and contents" value="${esc(UI.lib.q)}" data-change="lib-q" aria-label="Search documents"><select class="inp" style="max-width:220px" data-change="lib-type" aria-label="Filter by type"><option value="">All types</option>${[...new Set(docs.map(d => d.docType))].sort().map(x => `<option ${UI.lib.type === x ? 'selected' : ''}>${esc(x)}</option>`).join('')}</select><span class="small muted">${list.length} of ${docs.length}</span></div>
       <div class="dgrid">${list.map(d => docCard(eng, d)).join('') || '<p class="small muted">No documents match.</p>'}</div>`; }
-  return `<div class="page-head"><div><h1>Document library</h1><div class="sub">Every document gets an item card with its main points and a place in the hierarchy.</div></div>
-      <div class="acts">${loose && eng.requests.length ? btn(`File ${loose} automatically`, 'lib-refile', { cls: 'sm' }) : ''}${canSum ? btn('Summarise with assistant', 'doc-sum-all', { cls: 'sm', icon: IC.bolt }) : ''}</div></div>
-    ${drop}<div class="row" style="margin:14px 0 4px">${chip('mut', `${docs.length} documents`, false)}${chip('good', `${docs.length - loose} filed`)}${loose ? chip('warn', `${loose} not filed`) : ''}${chip(read === docs.length ? 'good' : 'info', `${read} read`)}${docs.length - read ? chip('mut', `${docs.length - read} filed by name only`, false) : ''}</div>
-    ${tabs('lib', [['tree', 'Hierarchy'], ['cards', 'Item cards']], 'tree')}${body}`;
+  return `<div class="page-head"><div><h1>Document library</h1><div class="sub">Everything the agent builds from. Each document gets an item card with its main points and a place in the hierarchy.</div></div>
+      <div class="acts">${n('pending') && eng.requests.length ? btn(`Allocate ${n('pending')} pending`, 'ag-run', { cls: 'sm', icon: IC.bolt, data: { what: 'allocate' }, dis: !!Agent.busy }) : ''}${canSum ? btn('Summarise with assistant', 'doc-sum-all', { cls: 'sm', icon: IC.bolt }) : ''}</div></div>
+    ${drop}<div class="row" style="margin:14px 0 4px">${chip('mut', `${docs.length} documents`, false)}${Object.entries(ALLOC).map(([k, v]) => n(k) ? chip(v[0], `${n(k)} ${v[1].toLowerCase()}`) : '').join('')}${chip(read === docs.length ? 'good' : 'info', `${read} read`)}${docs.length - read ? chip('mut', `${docs.length - read} filed by name only`, false) : ''}</div>
+    ${tabs('lib', [['tree', 'Hierarchy'], ['cards', 'Item cards'], ['alloc', `Allocation${queue ? ` (${queue})` : ''}`]], 'tree')}${body}`;
 };
+const allocDoc = d => { const eng = E(); return [eng, eng.docs.find(x => x.id === d.id)]; };
+Act['alloc-to'] = d => { const [eng, doc] = allocDoc(d); Ops.tie(eng, doc, d.q); Ops.log(eng, 'Document allocated by the auditor', `${doc.name} → ${(eng.requests.find(q => q.id === d.q) || {}).item}`); commit(); };
+Act['alloc-pick'] = (d, el) => { if (!el.value) return; const [eng, doc] = allocDoc(d); Ops.tie(eng, doc, el.value); Ops.log(eng, 'Document allocated by the auditor', `${doc.name} → ${(eng.requests.find(q => q.id === el.value) || {}).item}`); };
+Act['alloc-approve'] = d => { const [eng, doc] = allocDoc(d); doc.alloc = 'approved'; Ops.log(eng, 'Automatic allocation approved', `${doc.name} → ${(eng.requests.find(q => q.id === doc.requestId) || {}).item}`); commit(); };
+Act['alloc-approve-all'] = () => { const eng = E(), list = eng.docs.filter(x => x.alloc === 'auto'); list.forEach(x => { x.alloc = 'approved'; }); Ops.log(eng, 'Automatic allocations approved', `${list.length} documents`); commit(); toast(`${list.length} allocation${list.length === 1 ? '' : 's'} approved`); };
+Act['alloc-ref'] = d => { const [eng, doc] = allocDoc(d); Ops.tie(eng, doc, ''); doc.alloc = 'reference'; Ops.log(eng, 'Document marked reference only', doc.name); commit(); };
+Act['alloc-reopen'] = d => { const [eng, doc] = allocDoc(d); Ops.tie(eng, doc, ''); doc.alloc = 'pending'; Ops.log(eng, 'Allocation reopened', doc.name); commit(); };
 Act['lib-mode'] = d => { UI.lib.mode = d.mode; render(); };
 Act['tree-toggle'] = d => { UI.lib.closed[d.k] = !UI.lib.closed[d.k]; render(); };
 Act['tree-all'] = () => { UI.lib.closed = {}; render(); };
 Act['lib-q'] = (d, el) => { UI.lib.q = el.value; };
 Act['lib-type'] = (d, el) => { UI.lib.type = el.value; };
-Act['lib-refile'] = () => { const n = Lib.refile(E()); commit(); toast(n ? `${n} document${n === 1 ? '' : 's'} filed` : 'No confident match — file these by hand from their cards'); };
 
 /* The item card, opened in full. Rendered live so edits made inside it show immediately. */
 Act['doc-open'] = d => ask({ title: 'Item card', ok: false, wide: true, render: () => { const eng = E(), doc = eng.docs.find(x => x.id === d.id); if (!doc) return '<p class="muted">This document was removed.</p>';
   const k = Lib.kind(doc), p = Lib.points(doc), f = Lib.filing(eng, doc), canAI = Cap.sample && (doc.text || doc.rows || (k === 'image' && Cap.sampleImages && Blobs.has(doc.id)));
   return `<div class="row" style="flex-wrap:nowrap;align-items:flex-start"><span class="kind k-${k}" style="width:34px;height:34px">${Lib.icon(k)}</span><div style="min-width:0"><div class="dn" style="font-size:13.5px">${esc(doc.name)}</div><div class="xs muted">${esc(Lib.kindLabel[k])} · ${fmtSize(doc.size)}${doc.pages ? ` · ${doc.pages} pages` : ''}${doc.rows ? ` · ${fmtNum(doc.rowsDropped || doc.rows.length)} rows` : ''} · received ${fmtDT(doc.uploadedAt)} by ${esc(doc.by)}</div>${doc.hash ? `<div class="xs mono faint" style="overflow-wrap:anywhere">sha-256 ${esc(doc.hash)}</div>` : ''}</div></div>
     <div class="form-grid">${fld('Classified as', sel('docs', doc.id, 'docType', doc.docType, ['Unclassified', ...KB.docTypes.map(x => x.t)]), doc.conf ? Math.round(doc.conf * 100) + '% confidence' : '')}${fld('Period', inp('docs', doc.id, 'period', doc.period, { ph: 'e.g. 2024-03' }))}${fld('Source strength', sel('docs', doc.id, 'strength', doc.strength, KB.strengths, { ph: 'Record the source…' }))}</div>
-    ${fld('Filed under', `<select class="inp" data-change="tie-doc" data-id="${doc.id}" aria-label="Filed under"><option value="">Not filed</option>${eng.requests.filter(q => q.status !== 'na').map(q => `<option value="${q.id}" ${doc.requestId === q.id ? 'selected' : ''}>${q.sub ? esc(subName(q.sub)) + ' › ' : ''}${esc(q.item)}</option>`).join('')}</select>`, f.q && doc.tieConf < 1 ? `filed automatically, ${Math.round(doc.tieConf * 100)}% match` : '')}
-    ${f.q && f.q.missing.length ? banner('crit', `<b>Does not meet the request.</b> Missing: ${esc(f.q.missing.join(', '))}`) : ''}
+    ${fld('Filed under', `<select class="inp" data-change="tie-doc" data-id="${doc.id}" aria-label="Filed under"><option value="">Not filed</option>${eng.requests.filter(q => q.status !== 'na').map(q => `<option value="${q.id}" ${doc.requestId === q.id ? 'selected' : ''}>${q.sub ? esc(subName(q.sub)) + ' › ' : ''}${esc(q.item)}</option>`).join('')}</select>`, doc.alloc === 'auto' ? `linked automatically, ${Math.round(doc.tieConf * 100)}% match — approve it in the allocation queue` : doc.alloc === 'reference' ? 'reference only' : doc.alloc === 'pending' ? 'pending allocation' : 'approved')}
+    ${f.q && (f.q.issue || f.q.missing.length) ? banner('crit', `<b>Does not meet the request.</b> ${esc(f.q.issue || 'Missing: ' + f.q.missing.join(', '))}`) : ''}
     <div><div class="row" style="margin-bottom:5px"><b class="small">Main points</b><span class="xs faint">${p.points.length ? (p.by === 'assistant' ? 'drafted by the assistant — check against the document' : 'computed from the contents') : ''}</span><span class="sp"></span>${doc.summary ? btn('Use computed points', 'doc-sum-clear', { cls: 'sm ghost', data: { id: doc.id } }) : ''}${canAI ? btn(k === 'image' ? 'Read with assistant' : 'Summarise with assistant', 'doc-sum', { cls: 'sm', icon: IC.bolt, data: { id: doc.id } }) : ''}</div>
       ${p.points.length ? `<ul class="pts">${p.points.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : `<p class="small muted">${esc(doc.note || 'No contents read.')}</p>`}</div>
     ${doc.rows ? `<div class="tbl-wrap" style="box-shadow:none;max-height:220px"><table><thead><tr>${doc.headers.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${doc.rows.slice(0, 8).map(r => `<tr>${doc.headers.map(h => `<td class="mono xs">${esc(r[h])}</td>`).join('')}</tr>`).join('')}</tbody></table></div>` : doc.text ? `<pre class="excerpt">${esc(doc.text.slice(0, 1500))}${doc.text.length > 1500 ? '…' : ''}</pre>` : ''}
@@ -1715,38 +1934,422 @@ Act['doc-sum-all'] = async () => { const eng = E(), list = eng.docs.filter(d => 
   for (const d of list) { if (await summarise(eng, d)) n++; else break; }
   if (eng.requests.length) Lib.refile(eng); commit(); toast(`${n} document${n === 1 ? '' : 's'} summarised`); };
 
-/* Process flow: a swimlane drawn from the recorded steps. Lanes are roles; each step sits in the lane of the role that performs it. */
+/* Process flow: a swimlane drawn from the recorded steps. One lane per role; tasks, automated steps and decisions with their
+   branches and loops; reviews and approvals by other roles; the systems each step touches and the hand-offs between them;
+   and the risks and controls pinned to the step where they arise. */
+UI.flowZoom = 1;
+function flowModel(eng, sub) {
+  const steps = eng.steps.filter(s => s.sub === sub).sort((a, b) => a.n - b.n), idx = {}; steps.forEach((s, i) => { idx[s.id] = i; });
+  const n = steps.length, edges = [], open = [], res = v => v === 'end' ? 'end' : (v && idx[v] != null ? idx[v] : null);
+  steps.forEach((s, i) => { const nxt = i < n - 1 ? i + 1 : 'end';
+    if (s.type === 'decision') { const y = res(s.yes), no = res(s.no); edges.push({ i, j: y == null ? nxt : y, kind: 'yes' }); if (no != null) edges.push({ i, j: no, kind: 'no' }); else open.push(i); }
+    else { const t = res(s.next); edges.push({ i, j: t == null ? nxt : t, kind: 'seq' }); } });
+  const handoffs = steps.filter((s, i) => i < n - 1 && s.system.trim() && steps[i + 1].system.trim() && Engine.norm(s.system) !== Engine.norm(steps[i + 1].system)).length;
+  return { steps, idx, edges, open, stats: { steps: n, decisions: steps.filter(s => s.type === 'decision').length, loops: edges.filter(e => e.j !== 'end' && e.j <= e.i).length, handoffs, weak: steps.filter(s => Ops.stepFlags(s).some(f => !f.startsWith('No evidence'))).length, seen: steps.filter(s => s.walked).length } };
+}
 function flowSVG(eng, sub, o) {
   o = o || {};
-  const steps = eng.steps.filter(s => s.sub === sub).sort((a, b) => a.n - b.n);
-  if (!steps.length) return '';
+  const M = flowModel(eng, sub), steps = M.steps, n = steps.length; if (!n) return '';
   const lanes = [], lane = r => { r = String(r || '').trim() || 'Role not recorded'; const k = Engine.norm(r); let i = lanes.findIndex(l => l.k === k); if (i < 0) { lanes.push({ k, name: r }); i = lanes.length - 1; } return i; };
   steps.forEach(s => lane(s.actor)); steps.forEach(s => { if (s.review.trim()) lane(s.review); if (s.approval.trim()) lane(s.approval); });
-  const GX = 138, CW = 196, LH = 112, BW = 164, BH = 60, TOP = 6, W = GX + steps.length * CW + 12, H = TOP + lanes.length * LH + 6;
-  const wrap = (t, n, max) => { const out = []; let cur = ''; String(t || '').split(/\s+/).filter(Boolean).forEach(w => { if ((cur + ' ' + w).trim().length > n && cur) { out.push(cur); cur = w; } else cur = (cur + ' ' + w).trim(); }); if (cur) out.push(cur); if (out.length > max) { out.length = max; out[max - 1] = out[max - 1].slice(0, n - 1) + '…'; } return out; };
-  const tx = (x, y, lines, cls, lh) => lines.map((l, i) => `<text x="${x}" y="${y + i * (lh || 13)}" class="${cls}">${esc(l)}</text>`).join('');
-  const bx = i => GX + i * CW + 14, by = l => TOP + l * LH + 12;
-  let bg = '', links = '', boxes = '', pills = '';
-  lanes.forEach((l, i) => { bg += `<rect x="0" y="${TOP + i * LH}" width="${W}" height="${LH}" class="fl-lane${i % 2 ? ' alt' : ''}"/><line x1="${GX}" y1="${TOP + i * LH}" x2="${GX}" y2="${TOP + (i + 1) * LH}" class="fl-rule"/>${tx(12, TOP + i * LH + LH / 2 - (wrap(l.name, 17, 3).length - 1) * 6.5 + 4, wrap(l.name, 17, 3), 'fl-lane-t')}`; });
+  const GX = 138, SX = 58, CW = 204, LH = 140, BW = 166, BH = 62, TOP = 6, SB = 52, W = GX + SX + n * CW + 74, H = TOP + lanes.length * LH + SB + 4;
+  const wrap = (t, c, max) => { const out = []; let cur = ''; String(t || '').split(/\s+/).filter(Boolean).forEach(w => { if ((cur + ' ' + w).trim().length > c && cur) { out.push(cur); cur = w; } else cur = (cur + ' ' + w).trim(); }); if (cur) out.push(cur); if (out.length > max) { out.length = max; out[max - 1] = out[max - 1].slice(0, c - 1) + '…'; } return out; };
+  const tx = (x, y, lines, cls, lh, anchor) => lines.map((l, i) => `<text x="${x}" y="${y + i * (lh || 13)}" class="${cls}"${anchor ? ` text-anchor="${anchor}"` : ''}>${esc(l)}</text>`).join('');
+  const bx = i => GX + SX + i * CW + 12, laneTop = l => TOP + l * LH, by = l => laneTop(l) + 16, L = i => lane(steps[i].actor), isD = i => steps[i].type === 'decision';
+  const cx = i => bx(i) + BW / 2, cy = i => by(L(i)) + BH / 2, endX = GX + SX + n * CW + 34, endY = cy(n - 1), startX = GX + SX / 2 + 6;
+  const edgeY = (i, x, bottom) => isD(i) ? cy(i) + (bottom ? 1 : -1) * (BH / 2 + 6) * (1 - Math.min(1, Math.abs(x - cx(i)) / (BW / 2))) : by(L(i)) + (bottom ? BH : 0);
+  let bg = '', links = '', boxes = '', pills = '', band = '';
+  lanes.forEach((l, i) => { const w = wrap(l.name, 17, 3); bg += `<rect x="0" y="${laneTop(i)}" width="${W}" height="${LH}" class="fl-lane${i % 2 ? ' alt' : ''}"/>${tx(12, laneTop(i) + LH / 2 - (w.length - 1) * 6.5 + 4, w, 'fl-lane-t')}`; });
+  bg += `<line x1="${GX}" y1="${TOP}" x2="${GX}" y2="${H - 4}" class="fl-rule"/>`;
+
+  /* edges: adjacent steps join directly; everything else — the other branch of a decision, a jump, a loop back — runs along a track at the foot of the lane */
+  const track = {}, inbound = {};
+  links += `<circle cx="${startX}" cy="${cy(0)}" r="10" class="fl-start"/><text x="${startX}" y="${cy(0) + 26}" text-anchor="middle" class="fl-term">Start</text><path d="M${startX + 10} ${cy(0)} H${bx(0) - 4}" class="fl-arrow" marker-end="url(#fl-head)"/>`;
+  links += `<circle cx="${endX}" cy="${endY}" r="12" class="fl-end"/><circle cx="${endX}" cy="${endY}" r="7" class="fl-start"/><text x="${endX}" y="${endY + 28}" text-anchor="middle" class="fl-term">End</text>`;
+  M.edges.forEach(e => { const i = e.i, toEnd = e.j === 'end', back = !toEnd && e.j <= i, x1 = bx(i) + BW, y1 = cy(i);
+    const direct = e.kind !== 'no' && (toEnd ? i === n - 1 : e.j === i + 1), cls = `fl-arrow${back ? ' loop' : ''}${e.kind === 'no' ? ' no' : ''}`;
+    if (direct) { const x2 = toEnd ? endX - 12 : bx(e.j), y2 = toEnd ? endY : cy(e.j), mx = toEnd ? x1 + 14 : x1 + (CW - BW) / 2; links += `<path d="M${x1} ${y1} H${mx} V${y2} H${x2 - 4}" class="${cls}" marker-end="url(#fl-head)"/>`; }
+    else { const slot = (track[L(i)] = (track[L(i)] || 0) + 1), ty = laneTop(L(i)) + LH - 8 - 7 * ((slot - 1) % 3), fromSide = e.kind === 'yes' || (e.kind === 'seq' && isD(i));
+      const ex = e.kind === 'no' ? cx(i) : fromSide ? x1 + 12 : x1 - 10, start = e.kind === 'no' ? `M${ex} ${edgeY(i, ex, true)}` : fromSide ? `M${x1} ${y1} H${ex}` : `M${ex} ${by(L(i)) + BH}`;
+      let end; if (toEnd) end = `H${endX} V${endY + (ty > endY ? 16 : -16)}`; else { const k = (inbound[e.j] = (inbound[e.j] || 0) + 1), below = ty > by(L(e.j)) + BH, tgx = below ? bx(e.j) + BW - 8 - 9 * ((k - 1) % 3) : bx(e.j) + 18 + 10 * ((k - 1) % 3); end = `H${tgx} V${edgeY(e.j, tgx, below) + (below ? 4 : -4)}`; }
+      links += `<path d="${start} V${ty} ${end}" class="${cls}" marker-end="url(#fl-head)"/>`; }
+    if (e.kind === 'yes') links += `<text x="${x1 + 5}" y="${y1 - 6}" class="fl-br">Yes</text>`;
+    if (e.kind === 'no') links += `<text x="${cx(i) + 6}" y="${cy(i) + BH / 2 + 20}" class="fl-br no">No</text>`; });
+
   steps.forEach((s, i) => {
-    const li = lane(s.actor), x = bx(i), y = by(li), fl = Ops.stepFlags(s), weak = fl.filter(f => !f.startsWith('No evidence')), hi = o.hi === s.id;
-    if (i < steps.length - 1) { const x2 = bx(i + 1), y1 = y + BH / 2, y2 = by(lane(steps[i + 1].actor)) + BH / 2, mx = x + BW + (CW - BW) / 2; links += `<path d="M${x + BW} ${y1} H${mx} V${y2} H${x2 - 3}" class="fl-arrow" marker-end="url(#fl-head)"/>`; }
+    const li = L(i), x = bx(i), y = by(li), fl = Ops.stepFlags(s), weak = fl.filter(f => !f.startsWith('No evidence')), hi = o.hi === s.id, dec = s.type === 'decision';
     const checks = [['review', 'Reviews'], ['approval', 'Approves']].filter(c => s[c[0]].trim() && lane(s[c[0]]) !== li).map(c => ({ l: lane(s[c[0]]), label: c[1] }));
-    checks.forEach((c, k) => { const same = checks.filter(z => z.l === c.l).length > 1, py = by(c.l) + BH / 2 - 12 + (same ? (k ? 15 : -15) : 0), px = x + BW - 108, down = c.l > li, cx = x + BW - (k ? 22 : 42);
-      links += `<line x1="${cx}" y1="${down ? y + BH : y}" x2="${cx}" y2="${down ? py : py + 24}" class="fl-check"/>`;
+    checks.forEach((c, k) => { const same = checks.filter(z => z.l === c.l).length > 1, py = by(c.l) + BH / 2 - 12 + (same ? (k ? 15 : -15) : 0), px = x + BW - 108, down = c.l > li, lx = x + BW - (k ? 24 : 44);
+      links += `<line x1="${lx}" y1="${edgeY(i, lx, down)}" x2="${lx}" y2="${down ? py : py + 24}" class="fl-check"/>`;
       pills += `<rect x="${px}" y="${py}" width="104" height="24" rx="12" class="fl-pill ${c.label === 'Approves' ? 'ap' : ''}"/><text x="${px + 52}" y="${py + 16}" text-anchor="middle" class="fl-pill-t ${c.label === 'Approves' ? 'ap' : ''}">${c.label} step ${s.n}</text>`; });
-    boxes += `<g ${o.interactive ? `data-act="step-walk" data-id="${s.id}" class="fl-step" role="button" tabindex="0" aria-label="Step ${s.n}: ${esc(s.action)} — ${s.walked ? 'seen in the walkthrough' : 'not yet seen'}"` : ''}>
-      <rect x="${x}" y="${y}" width="${BW}" height="${BH}" rx="9" class="fl-box ${weak.length ? 'weak' : s.walked ? 'seen' : ''} ${hi ? 'hi' : ''}"/>
-      ${tx(x + 20, y + 21, wrap(s.action || '(action not recorded)', 25, 2), 'fl-t')}${s.system.trim() ? tx(x + 20, y + BH - 8, [wrap(s.system, 26, 1)[0]], 'fl-sys') : ''}
-      <circle cx="${x}" cy="${y}" r="11" class="fl-num ${s.walked ? 'seen' : ''}"/><text x="${x}" y="${y + 4}" text-anchor="middle" class="fl-num-t">${s.walked ? '✓' : s.n}</text></g>
-      ${tx(x + 2, y + BH + 14, [s.evidence.trim() ? '▤ ' + wrap(s.evidence, 20, 1)[0] : 'No evidence retained'], s.evidence.trim() ? 'fl-ev' : 'fl-ev warn')}
-      ${weak.length ? tx(x + 2, y + BH + 28, [weak[0]], 'fl-flag') : hi ? tx(x + 2, y + BH + 28, ['Risk arises here'], 'fl-hi-t') : ''}`;
+    const cls = `fl-box ${weak.length ? 'weak' : s.walked ? 'seen' : ''} ${hi ? 'hi' : ''} ${s.draft ? 'draft' : ''}`;
+    const shape = dec ? `<polygon points="${x},${y + BH / 2} ${x + BW / 2},${y - 6} ${x + BW},${y + BH / 2} ${x + BW / 2},${y + BH + 6}" class="${cls} dec"/>`
+      : `<rect x="${x}" y="${y}" width="${BW}" height="${BH}" rx="${s.type === 'system' ? 3 : 9}" class="${cls}"/>${s.type === 'system' ? `<line x1="${x + 7}" y1="${y + 1}" x2="${x + 7}" y2="${y + BH - 1}" class="fl-sysbar"/><text x="${x + BW - 8}" y="${y + 13}" text-anchor="end" class="fl-auto">AUTOMATED</text>` : ''}`;
+    const label = dec ? tx(x + BW / 2, y + BH / 2 - (wrap(s.action, 19, 2).length - 1) * 6.5 + 4, wrap(s.action || '(decision not recorded)', 19, 2), 'fl-t', 13, 'middle') : tx(x + 20, y + (s.type === 'system' ? 27 : 22), wrap(s.action || '(action not recorded)', 25, 2), 'fl-t');
+    const risks = eng.risks.filter(r => r.stepId === s.id), ctls = eng.controls.filter(c => risks.some(r => r.id === c.riskId));
+    const badges = risks.slice(0, 3).map((r, k) => `<g><title>${esc(r.id + ' — ' + r.title)}</title><rect x="${x + BW - 40 * (k + 1) + 2}" y="${y - 11}" width="37" height="17" rx="5" class="fl-risk"/><text x="${x + BW - 40 * (k + 1) + 20.5}" y="${y + 1.5}" text-anchor="middle" class="fl-badge-t">${r.id}</text></g>`).join('')
+      + ctls.slice(0, 3).map((c, k) => `<g><title>${esc(c.absent ? 'No control exists' : c.id + ' — ' + c.desc.slice(0, 120))}</title><rect x="${x + 16 + 40 * k}" y="${y + BH - 7}" width="37" height="17" rx="5" class="fl-ctl ${c.absent ? 'none' : ''}"/><text x="${x + 34.5 + 40 * k}" y="${y + BH + 5.5}" text-anchor="middle" class="fl-badge-t ${c.absent ? 'none' : ''}">${c.absent ? 'none' : c.id}</text></g>`).join('');
+    const below = y + BH + (ctls.length ? 24 : 14);
+    boxes += `<g ${o.interactive ? `data-act="step-walk" data-id="${s.id}" class="fl-step" role="button" tabindex="0" aria-label="Step ${s.n}: ${esc(s.action)} — ${s.walked ? 'seen in the walkthrough' : 'not yet seen'}"` : ''}><title>${esc(`Step ${s.n} — ${s.actor}: ${s.action}`)}</title>${shape}${label}
+      <circle cx="${dec ? x + 26 : x}" cy="${dec ? y + 4 : y}" r="11" class="fl-num ${s.walked ? 'seen' : ''}"/><text x="${dec ? x + 26 : x}" y="${(dec ? y + 4 : y) + 4}" text-anchor="middle" class="fl-num-t">${s.walked ? '✓' : s.n}</text></g>${badges}
+      ${dec ? '' : tx(x + 2, below, [s.evidence.trim() ? '▤ ' + wrap(s.evidence, 20, 1)[0] + (s.docId ? ' ✓' : '') : 'No evidence retained'], s.evidence.trim() ? (s.docId ? 'fl-ev linked' : 'fl-ev') : 'fl-ev warn')}
+      ${weak.length ? tx(x + 2, below + (dec ? 10 : 14), [weak[0]], 'fl-flag') : hi ? tx(x + 2, below + (dec ? 10 : 14), ['Risk arises here'], 'fl-hi-t') : M.open.includes(i) ? tx(x + 2, below + 10, ['Other branch not recorded'], 'fl-ev warn') : ''}`;
   });
-  return `<div class="flow-wrap"><svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" class="flow" role="img" aria-label="Process flow for ${esc(subName(sub))}"><defs><marker id="fl-head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="fl-head"/></marker></defs>${bg}${links}${pills}${boxes}</svg></div>`;
+  const y0 = TOP + lanes.length * LH;
+  band += `<rect x="0" y="${y0}" width="${W}" height="${SB}" class="fl-band"/><text x="12" y="${y0 + SB / 2 + 4}" class="fl-lane-t">Systems</text>`;
+  steps.forEach((s, i) => { const sys = s.system.trim(), x = bx(i) + BW / 2;
+    band += sys ? `<rect x="${x - 72}" y="${y0 + 14}" width="144" height="24" rx="6" class="fl-sysc ${/excel|spreadsheet|workbook/i.test(sys) ? 'eu' : ''}"/><text x="${x}" y="${y0 + 30}" text-anchor="middle" class="fl-sysc-t">${esc(wrap(sys, 22, 1)[0])}</text>` : `<text x="${x}" y="${y0 + 30}" text-anchor="middle" class="fl-sys">manual</text>`;
+    if (i < n - 1 && sys && steps[i + 1].system.trim() && Engine.norm(sys) !== Engine.norm(steps[i + 1].system)) band += `<text x="${bx(i) + BW + (CW - BW) / 2}" y="${y0 + 30}" text-anchor="middle" class="fl-hand">⇄ hand-off</text>`; });
+  const z = o.zoom || 1;
+  return `<div class="flow-wrap"><svg viewBox="0 0 ${W} ${H}" width="${Math.round(W * z)}" height="${Math.round(H * z)}" class="flow" role="img" aria-label="Process flow for ${esc(subName(sub))}"><defs><marker id="fl-head" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" class="fl-head"/></marker></defs>${bg}${band}${links}${pills}${boxes}</svg></div>`;
 }
-const flowLegend = `<div class="row xs muted" style="gap:14px"><span><span class="lg lg-step"></span>Step, in the lane of the role that performs it</span><span><span class="lg lg-pill"></span>Reviewed or approved by another role</span><span><span class="lg lg-seen"></span>Seen in the walkthrough</span><span><span class="lg lg-weak"></span>No independent check</span></div>`;
+const flowLegend = `<div class="row xs muted" style="gap:6px 14px"><span><span class="lg lg-step"></span>Step</span><span><span class="lg lg-dec"></span>Decision</span><span><span class="lg lg-pill"></span>Check by another role</span><span><span class="lg lg-loop"></span>Other branch or loop back</span><span><span class="lg lg-seen"></span>Seen in the walkthrough</span><span><span class="lg lg-weak"></span>No independent check</span><span><span class="lg lg-risk"></span>Risk</span><span><span class="lg lg-ctl"></span>Control</span></div>`;
+const flowStats = (eng, sub) => { const s = flowModel(eng, sub).stats; return [`${s.steps} steps`, s.decisions ? `${s.decisions} decision${s.decisions === 1 ? '' : 's'}` : '', s.loops ? `${s.loops} loop${s.loops === 1 ? '' : 's'} back` : '', s.handoffs ? `${s.handoffs} system hand-off${s.handoffs === 1 ? '' : 's'}` : '', s.weak ? `${s.weak} without an independent check` : ''].filter(Boolean); };
 Act['step-walk'] = d => { const eng = E(), s = eng.steps.find(x => x.id === d.id); if (!s) return; s.walked = !s.walked; Ops.log(eng, s.walked ? 'Step traced in walkthrough' : 'Step trace removed', `${subName(s.sub)} step ${s.n}`); commit(); };
+Act['flow-zoom'] = d => { UI.flowZoom = d.z === 'fit' ? 1 : Math.max(0.5, Math.min(1.6, Math.round((UI.flowZoom + Number(d.z)) * 10) / 10)); render(); };
+Act['flow-export'] = d => { const el = document.querySelector('.flow-wrap svg'); if (!el) return; const css = [...document.styleSheets].flatMap(s => { try { return [...s.cssRules]; } catch (e) { return []; } }).filter(r => /\.fl-|\.flow\b/.test(r.selectorText || '')).map(r => r.cssText).join('');
+  const cs = getComputedStyle(document.documentElement), vars = ['surface', 'surface-2', 'surface-3', 'border', 'border-strong', 'ink', 'ink-2', 'ink-3', 'primary', 'primary-ink', 'primary-bg', 'good', 'good-bg', 'warn', 'warn-bg', 'crit', 'crit-bg', 'info', 'info-bg'].map(v => `--${v}:${cs.getPropertyValue('--' + v).trim()}`).join(';');
+  saveFile(`process-flow-${d.sub}.svg`, el.outerHTML.replace('<svg ', `<svg xmlns="http://www.w3.org/2000/svg" style="${vars};--sans:sans-serif;--mono:monospace;font-family:sans-serif" `).replace('<defs>', `<defs><style>${css}</style>`)); };
 document.addEventListener('keydown', ev => { if ((ev.key === 'Enter' || ev.key === ' ') && ev.target.matches && ev.target.matches('.fl-step')) { ev.preventDefault(); Act['step-walk'](ev.target.dataset); } });
+
+/* The agent: builds each part of the file from the document library, a dropped file or what the auditor says.
+   With a model attached (Cap.sample) the model reads and drafts; without one, built-in rules do. Either way code applies the
+   result through Ops, everything it creates is marked as a draft, and each action can be undone as a whole. */
+const SNAP_KEYS = ['scope', 'cp1', 'cp2', 'requests', 'irl', 'subs', 'steps', 'risks', 'dismissed', 'controls', 'dtests', 'etests', 'gaps', 'report', 'seq', 'topical', 'itgc', 'followup'];
+const cap1 = s => { s = String(s || '').trim(); return s ? s[0].toUpperCase() + s.slice(1) : ''; };
+const ROLE_N = '(?:manager|director|officer|clerk|controller|supervisor|accountant|administrator|head|committee|team|treasurer|cfo|ceo|storekeeper|analyst|executive|partner|lead|department|adviser|advisor|owner)';
+const ROLE = '((?:[A-Za-z&-]+ ){0,3}?' + ROLE_N + ')';
+const DOC_N = '(?:payroll sheet|transfer request|bank confirmation|access request|personnel action form|purchase order|purchase requisition|goods receipt note|comparison sheet|count sheet|reconciliation|invoice|contract|job offer|request form|report|listing|register|email|form|log|voucher|statement|sheet)';
+const CHECK_VERB = /^(reviews?|approves?|checks?|verif\w+|authori[sz]es?|reconciles?|releases?|signs? off|confirms?)\b/i;
+
+/* ---------- built-in rules: used when no model is attached ---------- */
+const Rules = {
+  iso(str) {
+    const M = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'], p = n => String(n).padStart(2, '0'); let m;
+    if ((m = str.match(/(\d{4})-(\d{2})-(\d{2})/))) return m[0];
+    if ((m = str.match(/(\d{1,2})\s+([A-Za-z]{3})[a-z]*\.?,?\s+(\d{4})/)) && M.includes(m[2].toLowerCase())) return `${m[3]}-${p(M.indexOf(m[2].toLowerCase()) + 1)}-${p(m[1])}`;
+    if ((m = str.match(/([A-Za-z]{3})[a-z]*\.?\s+(\d{1,2}),?\s+(\d{4})/)) && M.includes(m[1].toLowerCase())) return `${m[3]}-${p(M.indexOf(m[1].toLowerCase()) + 1)}-${p(m[2])}`;
+    if ((m = str.match(/(\d{1,2})[\/.](\d{1,2})[\/.](\d{4})/))) return `${m[3]}-${p(m[2])}-${p(m[1])}`;
+    return '';
+  },
+  sentences: t => String(t).replace(/\r/g, '').split(/(?<=[.!?])\s+|\n+/).map(x => x.trim()).filter(x => x.length > 3),
+  scope(text) {
+    const out = { client: '', name: '', type: '', objective: '', periodFrom: '', periodTo: '', entities: '', reader: '', processes: [], exclusions: [], open_questions: [] };
+    const line = re => { const m = text.match(re); return m ? m[1].trim().replace(/[.;]$/, '') : ''; };
+    out.client = line(/^\s*(?:client|company|entity)\s*(?:is|[:\-–])\s*(.+)$/im) || line(/\bclient is ([^,.;\n]+)/i);
+    out.name = line(/^\s*(?:subject|re|engagement|title)\s*[:\-–]\s*(.+)$/im);
+    out.entities = line(/^\s*(?:locations?|entities|sites?)\s*[:\-–]\s*(.+)$/im);
+    out.reader = cap1(line(/addressed to (?:the )?([A-Za-z ]+?)(?:[.,\n]|$)/i)) || (/audit committee/i.test(text) ? 'Audit committee' : '');
+    const D = '(\\d{1,2}\\s+[A-Za-z]{3,9}\\.?,?\\s+\\d{4}|\\d{4}-\\d{2}-\\d{2}|\\d{1,2}[\\/.]\\d{1,2}[\\/.]\\d{4}|[A-Za-z]{3,9}\\s+\\d{1,2},?\\s+\\d{4})';
+    const pm = text.match(new RegExp(D + '\\s*(?:to|until|through|[-–—])\\s*' + D, 'i'));
+    if (pm) { out.periodFrom = Rules.iso(pm[1]); out.periodTo = Rules.iso(pm[2]); }
+    else { const y = text.match(/(?:financial|fiscal|calendar)?\s*year(?: ended| ending)?\s*(?:31 December\s*)?(20\d{2})/i); if (y) { out.periodFrom = y[1] + '-01-01'; out.periodTo = y[1] + '-12-31'; } }
+    const low = text.toLowerCase();
+    out.type = /sarbanes|\bsox\b/.test(low) ? 'sox' : /internal control over financial reporting|\bicfr\b/.test(low) ? 'icfr' : /risk assessment/.test(low) && !/control/.test(low) ? 'risk' : /\bit audit|information technology audit/.test(low) ? 'it' : /matrix build|\brcm\b only/.test(low) ? 'rcm' : /internal audit|audit|review/.test(low) ? 'full' : '';
+    const sents = Rules.sentences(text), isEx = s => /\b(exclud\w+|out of scope|not (?:be )?covered|outside the scope)\b/i.test(s);
+    sents.filter(isEx).forEach(s => { const m = s.match(/^(?:exclusions?\.?\s*)?(.+?)\s+(?:is|are|will be|were)\s+(?:excluded|out of scope|not (?:be )?covered|outside the scope)(?:\s+(?:because|as|since)\s+(.+))?/i);
+      if (m) out.exclusions.push({ what: cap1(m[1].replace(/^the\s+/i, '')), reason: m[2] ? cap1(m[2].replace(/[.;]$/, '')) : 'Stated in the engagement letter' }); });
+    const body = sents.filter(s => !isEx(s)).join(' ').toLowerCase().replace(/&/g, 'and');
+    const kw = { payroll: /payroll|human resources|\bhr\b/, procurement: /procure|purchas/, inventory: /inventor|warehouse|stock/, o2c: /order to cash|receivable|revenue|collection/, treasury: /treasury|bank|cash management/, fa: /fixed asset/, itgc: /it general|access management|change management|information technology/ };
+    KB.processes.forEach(p => { const hit = p.subs.filter(s => body.includes(s.name.toLowerCase().replace(/&/g, 'and'))); if (hit.length) out.processes.push(...hit.map(s => s.id)); else if (kw[p.id] && kw[p.id].test(body) && !sents.some(s => isEx(s) && kw[p.id].test(s.toLowerCase()))) out.processes.push(...p.subs.map(s => s.id)); });
+    const ob = sents.find(s => /\b(objective|purpose|aim)\b/i.test(s)) || sents.find(s => /\b(assess|evaluate|review)\b/i.test(s) && s.length > 40);
+    if (ob) out.objective = cap1(ob.replace(/^.*?\b(?:objective|purpose|aim)\b[^.]*?\bis to\s+/i, '').replace(/^\s*(?:objective|purpose)\s*[:.\-–]\s*/i, ''));
+    if (!out.name && out.processes.length) out.name = [...new Set(out.processes.map(id => KB.sub(id).processName))].join(' and ') + ' review';
+    if (!out.client) out.open_questions.push('Who is the client?'); if (!out.periodFrom) out.open_questions.push('What is the period under review?');
+    if (!out.processes.length) out.open_questions.push('Which processes are in scope?');
+    return out;
+  },
+  /* Notes may carry "Sub-process: X" headers; text under a header belongs to that sub-process. */
+  sections(eng, text, subs) {
+    const out = {}, lines = String(text).split(/\n/); let cur = '', any = false;
+    const match = h => { const n = Engine.norm(h); return subs.find(id => { const k = Engine.norm(KB.sub(id).name); return n.includes(k) || k.includes(n) || k.split('_').filter(w => w.length > 3).filter(w => n.includes(w)).length >= 2; }) || ''; };
+    lines.forEach(l => { const m = l.match(/^\s*(?:sub-?process|process|area|topic)\s*[:\-–]\s*(.+)$/i); if (m) { cur = match(m[1]); any = true; return; } if (cur) out[cur] = (out[cur] || '') + l + '\n'; });
+    return any ? out : null;
+  },
+  walk(text) {
+    const steps = [], open = [], role = new RegExp('^(?:the |an? )?' + ROLE + '(?:\\s+and\\s+(?:the )?' + ROLE + ')?\\s+(.+)$', 'i');
+    const pick = (s, verbs) => { const m = s.match(new RegExp('(?:' + verbs + ')\\s+by\\s+(?:the\\s+)?' + ROLE, 'i')); return m ? cap1(m[1]) : ''; };
+    const sys = s => { const m = s.match(/\b(?:in|into|from|on|using|through|via)\s+the\s+([a-z][a-z ]{2,28}?(?:system|portal|erp|application|platform|module|spreadsheet|workbook))\b/i); return m ? cap1(m[1]) : ''; };
+    const evid = s => { const m = s.match(new RegExp('((?:[a-z]+ ){0,2}?' + DOC_N + ')\\b', 'i')); if (!m) return ''; const d = m[1].replace(/^.*?\b(?:the|a|an|its|their)\s+/i, '').replace(/^(?:[a-z]+s)\s+(?=\S+\s)/i, x => /^(?:signed|approved)\b/i.test(x) ? x : /^(?:reviews|approves|prepares|extracts|enters|checks|creates|signs|files|sends|issues|posts|raises|receives|keeps|submits|updates)\b/i.test(x) ? '' : x); return cap1((/\bsign(?:s|ed)?\b/i.test(s) && !/^signed/i.test(d) ? 'signed ' : '') + d); };
+    const clean = a => cap1(a.replace(/,?\s*(?:and (?:is )?)?(?:reviewed|checked|verified|approved|authori[sz]ed|signed off)\s+by\s+.+$/i, '').replace(/[.;]\s*$/, ''));
+    const sing = a => a.replace(/^([A-Za-z]+)/, w => /s$/i.test(w) ? w : w + 's');
+    const make = (s, m) => ({ type: /\b(automatically|the system (?:blocks|calculates|posts|rejects))\b/i.test(s) ? 'system' : 'task', actor: cap1(m[1]), action: m[2] ? sing(clean(m[3])) + ` with the ${m[2].toLowerCase()}` : clean(m[3]), system: sys(s), review: pick(s, 'reviewed|checked|verified'), approval: pick(s, 'approved|authori[sz]ed|signed off') || (m[2] && /\b(release|approve)/i.test(m[3]) ? cap1(m[2]) : ''), evidence: evid(m[3]) });
+    Rules.sentences(text).forEach(raw => {
+      if (/^(meeting notes|date|attendees|present|sub-?process|process|topic|area)\b/i.test(raw)) return;
+      if (/^(open points?|outstanding|to follow up|follow-?ups?|actions?)\s*[:\-–]/i.test(raw)) { open.push(cap1(raw.replace(/^[^:\-–]+[:\-–]\s*/, '').replace(/[.;]$/, ''))); return; }
+      const s = raw.replace(/^(?:then|next|after that|afterwards|first|finally|each month|monthly|subsequently),?\s+/i, ''), prev = steps[steps.length - 1];
+      const cond = s.match(/^if\s+(.+?),\s*(.+)$/i);
+      if (cond) { const d = { type: 'decision', actor: prev ? prev.actor : '', action: cap1(cond[1].replace(/[.;]$/, '').replace(/^the\s+/i, '').replace(/\s+(?:is|are)\s+/i, ' ')) + '?', system: '', review: '', approval: '', evidence: '', yes: '', no: 'NEXT' };
+        steps.push(d); const back = cond[2].match(new RegExp('(?:returned|sent back|goes back|referred back|escalated)\\s+to\\s+(?:the\\s+)?' + ROLE, 'i')), m2 = cond[2].replace(/^the\s+/i, 'The ').match(role);
+        if (back) { const t = steps.find(x => x !== d && Engine.norm(x.actor) === Engine.norm(back[1])); if (t) d.yes = t; else { const y = { type: 'task', actor: cap1(back[1]), action: cap1(cond[2].replace(/[.;]$/, '')), system: '', review: '', approval: '', evidence: '' }; steps.push(y); d.yes = y; d.no = 'AFTER'; } }
+        else if (m2) { const y = make(cond[2], m2); steps.push(y); d.yes = y; d.no = 'AFTER'; }
+        return; }
+      const au = s.match(/^the\s+([a-z][a-z ]{1,28}?(?:system|portal|erp|application|platform))\s+(?:automatically\s+)?((?:calculates|blocks|posts|rejects|generates|validates|matches|sends|locks)\b.+)$/i);
+      if (au) { steps.push({ type: 'system', actor: cap1(au[1]), action: clean(au[2]), system: cap1(au[1]), review: '', approval: '', evidence: evid(au[2]) }); return; }
+      const m = s.match(role);
+      if (m) { steps.push(make(s, m)); return; }
+      if (!prev) return;
+      const rv = pick(s, 'reviewed|checked|verified'), ap = pick(s, 'approved|authori[sz]ed|signed off'), kept = s.match(/^(?:the\s+)?(.+?)\s+(?:is|are)\s+(?:kept|retained|filed|stored|archived)\b/i);
+      if (rv && !prev.review) prev.review = rv; if (ap && !prev.approval) prev.approval = ap; if (kept && !prev.evidence) prev.evidence = cap1(kept[1]);
+    });
+    steps.forEach((x, i) => { if (x.type !== 'decision') return; const after = k => steps[k] || 'end';
+      x.no = x.no === 'AFTER' ? after(steps.indexOf(x.yes) + 1) : x.no === 'NEXT' ? after(i + 1) : x.no; if (!x.yes) x.yes = after(i + 1); });
+    const idx = t => t === 'end' ? 'end' : t ? steps.indexOf(t) + 1 : null;
+    return { steps: steps.map(x => Object.assign({}, x, { yes_step: x.type === 'decision' ? idx(x.yes) : null, no_step: x.type === 'decision' ? idx(x.no) : null, yes: undefined, no: undefined })), open_questions: open };
+  },
+  /* Risks from the recorded steps and the library; the control is described from what the steps show, or recorded as absent. */
+  matrix(eng, sub) {
+    const steps = eng.steps.filter(s => s.sub === sub).sort((a, b) => a.n - b.n), out = [];
+    const checked = steps.filter(s => { const a = Engine.norm(s.actor); return [s.review, s.approval].some(r => r.trim() && Engine.norm(r) !== a); }).concat(steps.filter(s => CHECK_VERB.test(s.action)));
+    const words = t => Engine.norm(t).split('_').filter(w => w.length > 4);
+    const nearest = t => { const W = words(t); let best = null, sc = 0; steps.forEach(s => { const k = words(s.action + ' ' + s.evidence).filter(w => W.includes(w)).length; if (k > sc) { sc = k; best = s; } }); return best; };
+    KB.sub(sub).risks.forEach(L => {
+      if (eng.risks.some(r => r.libId === L.id) || eng.dismissed.some(d => d.libId === L.id)) return;
+      const st = nearest(L.title + ' ' + L.desc + ' ' + L.ctl.desc), by = [...new Set(checked.flatMap(s => [s.review, s.approval, CHECK_VERB.test(s.action) ? s.actor : '']).filter(x => x.trim()))];
+      const control = checked.length ? { exists: true, owner: by[0] || L.ctl.owner, nature: L.ctl.nature, type: L.ctl.type, frequency: L.ctl.freq,
+        desc: checked.map(s => CHECK_VERB.test(s.action) ? `The ${s.actor.toLowerCase()} ${lower1(s.action)}` : `${cap1(s.action)} (${s.actor.toLowerCase()}) is ${[s.review && 'reviewed by the ' + s.review.toLowerCase(), s.approval && 'approved by the ' + s.approval.toLowerCase()].filter(Boolean).join(' and ')}`).join('. ') + '.' + ([...new Set(checked.map(s => s.evidence).filter(Boolean))].length ? ` Evidenced by: ${[...new Set(checked.map(s => s.evidence).filter(Boolean))].join(', ').toLowerCase()}.` : ''),
+        attributes: [...new Set(checked.flatMap(s => [s.review && `Reviewed by the ${s.review.toLowerCase()}`, s.approval && `Approved by the ${s.approval.toLowerCase()}`, CHECK_VERB.test(s.action) && `${cap1(s.action)} — evidenced by the ${s.actor.toLowerCase()}`]).filter(Boolean))].slice(0, 5) } : { exists: false };
+      out.push({ sub_id: sub, lib_id: L.id, title: L.title, desc: L.desc, cause: L.cause, impact: L.impact || '', category: L.cat, fraud: !!L.fraud, owner: '', step: st ? st.n : null, control });
+    });
+    steps.forEach(s => { const fl = Ops.stepFlags(s);
+      if (fl.includes('Same role performs and checks')) out.push({ sub_id: sub, lib_id: '', auto: 'sod:' + s.id, title: `One role performs and approves — step ${s.n}`, desc: `The ${s.actor.toLowerCase()} both performs and approves "${lower1(s.action)}", so an error or irregularity at this step would not be seen by anyone else.`, cause: KB.rootCauses[1], impact: 'Errors or unauthorised transactions pass unchallenged', category: 'Operational', fraud: true, owner: '', step: s.n, control: { exists: false } }); });
+    return { risks: out, needs: [] };
+  },
+};
+
+/* ---------- prompts: one per builder; each opens with its task name ---------- */
+const catalogue = ids => KB.processes.flatMap(p => p.subs.filter(s => !ids || ids.includes(s.id)).map(s => `${s.id} — ${p.name} › ${s.name}`)).join('\n');
+const docIndex = eng => eng.docs.map(d => `${d.id} — ${d.name} — ${d.docType}${d.period ? ' — ' + d.period : ''}`).join('\n') || '(none)';
+const PRE = 'You are the engine of an internal audit platform. Reply with only JSON in the shape given. Use only the material supplied: where it is silent leave the field "" and raise a question instead. Never invent a name, date or amount.';
+const STEP_SHAPE = '{"type":"task|decision|system","actor":"the role that performs it, never a person\'s name","action":"what they do; for a decision, the question being decided","system":"application used or \\"\\"","review":"role that checks it, if another role does","approval":"role that approves it","evidence":"document or record kept","doc_id":"id of a library document that is this evidence, or \\"\\"","yes_step":"step number or \\"end\\", decisions only","no_step":"step number or \\"end\\", decisions only"}';
+const RISK_SHAPE = '{"sub_id":"","lib_id":"id of the library risk this corresponds to, or \\"\\"","title":"","desc":"the condition in this process, resulting in the consequence","cause":"root cause, distinct from the risk","impact":"in business terms","category":"Strategic|Operational|Reporting|Compliance|Financial","fraud":false,"likelihood":"1-5","impact_rating":"1-5","owner":"role","step":"number of the step where it arises","control":{"exists":true,"desc":"the control as performed today, from the steps: who does what and what evidences it","owner":"role","nature":"Preventive|Detective","type":"Manual|Automated|IT-dependent manual","frequency":"annual|halfyearly|quarterly|monthly|weekly|daily|recurring|adhoc","attributes":["a yes/no check that names who or what"]}}';
+const P = {
+  scope: text => `TASK scope\n${PRE}\nRead the engagement letter and fill the scope of work.\n{"client":"","name":"engagement title","type":"full|icfr|sox|it|rcm|risk","objective":"one or two sentences","periodFrom":"YYYY-MM-DD","periodTo":"YYYY-MM-DD","entities":"entities and locations","reader":"who the report is addressed to","processes":["catalogue ids the letter puts in scope"],"exclusions":[{"what":"","reason":""}],"open_questions":["what the letter leaves unsettled"]}\nA sub-process the letter excludes goes under exclusions, never under processes.\n\nCATALOGUE (id — process › sub-process)\n${catalogue()}\n\nLETTER\n${text.slice(0, 14000)}`,
+  walk: (eng, subs, text) => `TASK walkthrough\n${PRE}\nTurn the meeting notes into the step-by-step process for each sub-process listed.\n{"processes":[{"sub_id":"","narrative":"two or three sentences on the transaction followed, if the notes describe one","steps":[${STEP_SHAPE}]}],"open_questions":["what an auditor needs answered that the notes do not answer"],"requests":[{"item":"a document the notes mention that is not in the library","why":""}]}\nSteps are in order and numbered from 1 within each sub-process. A return for correction is a decision whose branch points back to the earlier step. Only include a sub-process the notes actually describe.\n\nSUB-PROCESSES\n${catalogue(subs)}\n\nLIBRARY DOCUMENTS (id — name — type)\n${docIndex(eng)}\n\nNOTES\n${text.slice(0, 16000)}`,
+  matrix: (eng, subs) => `TASK matrix\n${PRE}\nFor each sub-process identify the risks that arise from the recorded steps and document the control as it operates today.\n{"risks":[${RISK_SHAPE}],"needs":[{"item":"evidence or data still needed to test these controls","why":""}]}\nDerive risks from THESE steps. Use a library risk where it applies, rewritten in this organisation's terms. Where the steps show no control for a risk, set control.exists false; never describe a control the steps do not show. Likelihood and impact are proposals the auditor will confirm with the process owner.\n\nSTEPS\n${subs.map(id => `${id} — ${KB.sub(id).name}\n` + eng.steps.filter(s => s.sub === id).sort((a, b) => a.n - b.n).map(s => `  ${s.n}. [${s.type}] ${s.actor}: ${s.action}${s.system ? ' | system: ' + s.system : ''}${s.review ? ' | reviewed by: ' + s.review : ''}${s.approval ? ' | approved by: ' + s.approval : ''}${s.evidence ? ' | evidence: ' + s.evidence : ''}`).join('\n')).join('\n\n')}\n\nLIBRARY RISKS\n${subs.flatMap(id => KB.sub(id).risks.map(r => `${r.id} (${id}) — ${r.title}: ${r.desc} Expected control: ${r.ctl.desc}`)).join('\n')}\n\nALREADY RECORDED — do not repeat\n${eng.risks.filter(r => subs.includes(r.sub)).map(r => `${r.libId || r.id} ${r.title}`).join('\n') || '(none)'}`,
+  allocate: (eng, docs) => `TASK allocate\n${PRE}\nFile each document under the request it satisfies.\n{"links":[{"doc_id":"","request_id":"or \\"\\" when none fits","confidence":"0 to 1","reason":"a few words"}]}\n\nREQUESTS (id — item — required form)\n${eng.requests.filter(q => q.status !== 'na').map(q => `${q.id} — ${q.item} — ${q.form}`).join('\n')}\n\nDOCUMENTS (id — name — type — main points)\n${docs.map(d => `${d.id} — ${d.name} — ${d.docType} — ${Lib.points(d).points.slice(0, 3).join('; ')}`).join('\n')}`,
+  irl: (eng, notes) => `TASK requests\n${PRE}\nReview the information request list against what the meeting notes and the recorded process say is needed, and add what is missing.\n{"requests":[{"item":"","form":"the form it must arrive in","why":"","sub_id":"catalogue id or \\"\\""}],"comments":["an observation about something received that looks wrong or incomplete"]}\nDo not repeat a request already on the list.\n\nCURRENT LIST\n${eng.requests.map(q => `${q.id} — ${q.item} — ${q.status}${q.issue ? ' — ' + q.issue : ''}`).join('\n')}\n\nEVIDENCE NAMED IN THE PROCESS\n${eng.steps.filter(s => s.evidence).map(s => `${KB.sub(s.sub).name} step ${s.n}: ${s.evidence}`).join('\n') || '(none)'}\n\nSUB-PROCESSES\n${catalogue(eng.scope.processes)}\n\nNOTES\n${notes.slice(0, 9000) || '(none)'}`,
+  chat: (eng, text) => { const sub = eng.scope.processes.includes(S.ui.sub) ? S.ui.sub : '';
+    const state = { page: S.ui.stage, current_sub_process: sub, scope: Object.assign({}, eng.scope, { confirmed: !!eng.cp1 }), plan_approved: !!eng.cp2,
+      requests: eng.requests.map(q => ({ id: q.id, item: q.item, status: q.status, issue: q.issue || undefined })), steps: eng.steps.filter(s => !sub || s.sub === sub).map(s => ({ sub_id: s.sub, n: s.n, type: s.type, actor: s.actor, action: s.action, review: s.review, approval: s.approval, evidence: s.evidence })),
+      risks: eng.risks.map(r => ({ id: r.id, sub_id: r.sub, title: r.title, L: r.L, I: r.I, controls: eng.controls.filter(c => c.riskId === r.id).map(c => c.absent ? 'none' : c.id) })), gaps: eng.gaps.map(g => ({ id: g.id, title: g.title, rating: g.rating })) };
+    return `TASK chat\n${PRE}\nYou are the agent inside the platform, working on one engagement with the auditor. Reply with only JSON {"reply":"short and plain","actions":[...]}.\nActions, applied in order (return none when the auditor only asks a question):\n{"do":"set_scope", plus any scope fields to change, "processes":[catalogue ids], "exclusions":[{"what":"","reason":""}]}\n{"do":"add_steps","sub_id":"","replace":false,"steps":[${STEP_SHAPE}]}\n{"do":"add_risks","risks":[${RISK_SHAPE}]}\n{"do":"add_requests","requests":[{"item":"","form":"","why":"","sub_id":""}]}\n{"do":"link","doc_id":"","request_id":""}\n{"do":"build","what":"scope|walkthrough|matrix|requests|allocate","sub_ids":[],"doc_ids":[]}\n{"do":"goto","stage":"scope|requests|library|understanding|risks|plan|testing|analysis|gaps|outputs"}\nUse "build" when the answer is in a library document, and the edit actions for what the auditor tells you directly. The scope cannot change once confirmed, and risks and controls cannot change once the plan is approved: say so instead.\n\nSTATE\n${JSON.stringify(state)}\n\nLIBRARY DOCUMENTS (id — name — type)\n${docIndex(eng)}\n\nCATALOGUE\n${catalogue()}\n\nAUDITOR\n${text.slice(0, 6000)}`; },
+};
+
+const Agent = {
+  busy: '',
+  on: () => !!Cap.sample,
+  engine: () => Cap.sample ? 'Claude' : 'Built-in rules',
+  say(eng, role, text, extra) { eng.chat.push(Object.assign({ id: 'm' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), role, text, at: new Date().toISOString() }, extra || {})); if (eng.chat.length > 60) eng.chat.shift(); UI.agBottom = true; },
+  snap(eng, label) { const id = 'u' + Date.now().toString(36), data = {}; SNAP_KEYS.forEach(k => { data[k] = eng[k]; });
+    eng.undo.push({ id, label, at: new Date().toISOString(), data: JSON.stringify(data), docs: eng.docs.map(d => ({ id: d.id, requestId: d.requestId, alloc: d.alloc, tieConf: d.tieConf, docType: d.docType, period: d.period, summary: d.summary || null })) });
+    if (eng.undo.length > 4) eng.undo.shift(); return id; },
+  undo(eng, id) { const i = eng.undo.findIndex(u => u.id === id); if (i < 0) return false; const u = eng.undo[i];
+    Object.assign(eng, JSON.parse(u.data)); u.docs.forEach(m => { const d = eng.docs.find(x => x.id === m.id); if (d) Object.assign(d, m, { summary: m.summary || undefined }); });
+    eng.undo.length = i; Ops.log(eng, 'Agent action undone', u.label); Agent.say(eng, 'agent', `Undone — “${u.label}”. The file is as it was before.`, {}); return true; },
+  /* Run one builder as a single undoable action and report it in the thread. */
+  async act(eng, label, fn) {
+    if (Agent.busy) return; Agent.busy = label; UI.agBottom = true; render();
+    const undo = Agent.snap(eng, label);
+    try { const r = await fn() || { text: 'Nothing to do.' }, changed = (r.did || []).length > 0, irl = Ops.syncIRL(eng);
+      if (!changed) eng.undo = eng.undo.filter(u => u.id !== undo);
+      Agent.say(eng, 'agent', r.text, { did: r.did || [], ask: r.ask || [], need: r.need || [], irl, undo: changed ? undo : '', engine: r.engine || Agent.engine(), stage: r.stage || '' });
+      if (changed) Ops.log(eng, `Agent — ${label}`, `${r.engine || Agent.engine()}: ${(r.did || []).slice(0, 3).join('; ')}`);
+      if (r.stage && r.stage !== S.ui.stage && Engine.stages(eng).some(s => s.id === r.stage && s.state !== 'locked')) { S.ui.stage = r.stage; if (r.sub) S.ui.sub = r.sub; } }
+    catch (e) { eng.undo = eng.undo.filter(u => u.id !== undo); Agent.say(eng, 'agent', 'That did not work, and nothing was changed.', {}); }
+    finally { Agent.busy = ''; commit(); }
+  },
+  async llm(prompt, label) { return Agent.on() ? askAI(prompt, label) : null; },
+  letter: eng => eng.docs.filter(d => d.text && d.docType === 'Engagement letter / scope').pop() || eng.docs.filter(d => d.text && /engagement|proposal|scope of work/i.test(d.name)).pop() || null,
+  notes: eng => eng.docs.filter(d => d.text && (d.docType === 'Meeting notes / minutes' || /notes|minutes|walkthrough|interview|transcript/i.test(d.name))),
+  matchDoc(eng, evidence) { const W = Engine.norm(evidence).split('_').filter(w => w.length > 3); if (!W.length) return ''; let best = '', sc = 0.59;
+    eng.docs.forEach(d => { const n = Engine.norm(d.name + ' ' + d.docType), k = W.filter(w => n.includes(w.slice(0, 6))).length / W.length; if (k > sc) { sc = k; best = d.id; } }); return best; },
+  need(eng, subs) { const out = eng.requests.filter(q => (q.status === 'pending' || q.status === 'incomplete') && (!subs || !q.sub || subs.includes(q.sub))).map(q => `${q.item} — ${q.status === 'pending' ? 'not received' : (q.issue || 'missing ' + q.missing.join(', '))}`);
+    eng.steps.filter(s => (!subs || subs.includes(s.sub)) && s.evidence && !s.docId).slice(0, 4).forEach(s => out.push(`${s.evidence} for ${KB.sub(s.sub).name} step ${s.n} — not yet linked to a document`)); return out.slice(0, 9); },
+
+  /* ----- appliers: the only way a draft reaches the file ----- */
+  applyScope(eng, o) { const s = eng.scope, did = [], set = (k, label, v) => { v = String(v == null ? '' : v).trim(); if (v && s[k] !== v) { s[k] = v; did.push(`${label}: ${v.length > 70 ? v.slice(0, 70) + '…' : v}`); } };
+    set('client', 'Client', o.client); set('name', 'Engagement', o.name); set('objective', 'Objective', o.objective); set('entities', 'Entities', o.entities); set('reader', 'Addressee', o.reader);
+    if (KB.types.some(t => t.on && t.id === o.type) && s.type !== o.type) { s.type = o.type; did.push(`Type: ${KB.types.find(t => t.id === o.type).name}`); }
+    ['periodFrom', 'periodTo'].forEach(k => { if (/^\d{4}-\d{2}-\d{2}$/.test(o[k] || '') && s[k] !== o[k]) { s[k] = o[k]; did.push(`${k === 'periodFrom' ? 'Period from' : 'Period to'}: ${o[k]}`); } });
+    const add = (o.processes || []).filter(id => KB.sub(id) && !s.processes.includes(id)); if (add.length) { s.processes.push(...add); did.push(`${add.length} sub-process${add.length === 1 ? '' : 'es'} in scope: ${add.map(id => KB.sub(id).name).join('; ')}`); }
+    (o.exclusions || []).forEach(x => { if (x && x.what && !s.exclusions.some(e => Engine.norm(e.what) === Engine.norm(x.what))) { s.exclusions.push({ what: String(x.what), reason: String(x.reason || 'Stated by the client') }); s.noExclusions = false; did.push(`Excluded: ${x.what}`); } });
+    return did; },
+  applySteps(eng, sub, steps, o) { o = o || {}; const old = eng.steps.filter(s => s.sub === sub), did = [];
+    if (old.length && (o.replace || old.every(s => s.draft))) { eng.steps = eng.steps.filter(s => s.sub !== sub); eng.risks.forEach(r => { if (old.some(s => s.id === r.stepId)) r.stepId = ''; }); did.push(`Replaced ${old.length} earlier draft step${old.length === 1 ? '' : 's'}`); }
+    const T = v => String(v == null ? '' : v).trim(), made = (steps || []).filter(x => x && T(x.action)).map(x => Ops.addStep(eng, sub, { type: ['task', 'decision', 'system'].includes(x.type) ? x.type : 'task', actor: cap1(T(x.actor)), action: cap1(T(x.action)), system: T(x.system), review: cap1(T(x.review)), approval: cap1(T(x.approval)), evidence: cap1(T(x.evidence)), docId: eng.docs.some(d => d.id === x.doc_id) ? x.doc_id : Agent.matchDoc(eng, T(x.evidence)), draft: true, src: o.src || '' }));
+    const ref = v => v === 'end' ? 'end' : (made[Number(v) - 1] || {}).id || '';
+    (steps || []).filter(x => x && T(x.action)).forEach((x, i) => { if (made[i].type === 'decision') { made[i].yes = ref(x.yes_step); made[i].no = ref(x.no_step); } });
+    Ops.renumber(eng, sub);
+    if (made.length) { const dec = made.filter(s => s.type === 'decision').length, weak = made.filter(s => Ops.stepFlags(s).some(f => !f.startsWith('No evidence'))).length;
+      did.push(`${KB.sub(sub).name}: ${made.length} steps recorded${dec ? `, ${dec} decision point${dec === 1 ? '' : 's'}` : ''}, flow chart drawn`); if (weak) did.push(`${weak} step${weak === 1 ? ' has' : 's have'} no independent check — flagged on the flow`);
+      const linked = made.filter(s => s.docId).length; if (linked) did.push(`${linked} step${linked === 1 ? '' : 's'} linked to documents in the library`); }
+    return did; },
+  applyRisks(eng, risks) { const did = [], cfg = Engine.typeCfg(eng.scope.type), n15 = v => { v = Math.round(Number(v)); return v >= 1 && v <= 5 ? v : 0; }; let nr = 0, nc = 0, na = 0;
+    (risks || []).forEach(x => { if (!x || !x.title || !eng.scope.processes.includes(x.sub_id)) return;
+      if ((x.lib_id && eng.risks.some(r => r.libId === x.lib_id)) || (x.auto && eng.risks.some(r => r.autoKey === x.auto)) || eng.risks.some(r => r.sub === x.sub_id && Engine.norm(r.title) === Engine.norm(x.title))) return;
+      const L = x.lib_id ? KB.libRisk(x.lib_id) : null, st = eng.steps.find(s => s.sub === x.sub_id && s.n === Number(x.step));
+      const r = Ops.addRisk(eng, x.sub_id, { title: String(x.title), desc: String(x.desc || ''), cause: String(x.cause || ''), impact: String(x.impact || ''), cat: KB.categories.includes(x.category) ? x.category : 'Operational', fraud: !!x.fraud, owner: cap1(x.owner || ''), L: n15(x.likelihood), I: n15(x.impact_rating), stepId: st ? st.id : '', source: L ? 'library' : 'agent', libId: L ? L.id : '', principle: L ? L.principle : 10, assertion: L ? L.assertion : '', autoKey: x.auto || '', draft: true });
+      nr++; if (!cfg.controls) return; const c = x.control || {};
+      if (c.exists && String(c.desc || '').trim()) { const k = Ops.addControl(eng, r.id, false); Object.assign(k, { desc: String(c.desc), owner: cap1(c.owner || ''), nature: KB.natures.includes(c.nature) ? c.nature : 'Preventive', type: KB.ctlTypes.includes(c.type) ? c.type : 'Manual', freq: FREQS.some(f => f[0] === c.frequency) ? c.frequency : '', attrs: (c.attributes || []).map(String).filter(a => a.trim()).slice(0, 6), draft: true }); if (!k.attrs.length) k.attrs = ['']; k.fromLib = !!L; if (k.type === 'Automated') k.itDep = true; nc++; }
+      else { Ops.recordAbsence(eng, r.id).draft = true; na++; } });
+    if (nr) did.push(`${nr} risk${nr === 1 ? '' : 's'} identified from the recorded steps`); if (nc) did.push(`${nc} control${nc === 1 ? '' : 's'} documented as performed`); if (na) did.push(`${na} risk${na === 1 ? ' has' : 's have'} no control — recorded as absent and raised as gap${na === 1 ? '' : 's'}`);
+    return did; },
+  applyRequests(eng, reqs) { const did = [], due = new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10);
+    (reqs || []).forEach(x => { const item = String((x && x.item) || '').trim(); if (!item || eng.requests.some(q => Engine.norm(q.item) === Engine.norm(item))) return;
+      eng.requests.push({ id: Ops.id(eng, 'Q'), key: 'ag:' + Engine.norm(item), item, form: String(x.form || 'As described'), fields: [], feeds: 'Raised by the agent', sub: eng.scope.processes.includes(x.sub_id) ? x.sub_id : '', owner: '', due, status: 'pending', naReason: '', missing: [], issue: '', derived: false, origin: 'agent', why: String(x.why || ''), draft: true });
+      did.push(`Request added: ${item}`); }); return did; },
+
+  /* ----- builders ----- */
+  async scope(eng, src) {
+    if (eng.cp1) return { text: 'The scope is confirmed. Reopen it first if it needs to change.' };
+    const doc = src.docId ? eng.docs.find(d => d.id === src.docId) : null, text = doc ? doc.text : src.text;
+    if (!text) return { text: 'I need the engagement letter. Drop it here, add it to the document library, or tell me the client, the period and what is in scope.', stage: 'scope' };
+    let out = await Agent.llm(P.scope(text), 'Reading the engagement letter…'); const engine = out ? 'Claude' : 'Built-in rules'; if (!out) out = Rules.scope(text);
+    const did = Agent.applyScope(eng, out); if (did.length) eng.scope.source = { docId: doc ? doc.id : '', name: doc ? doc.name : 'the conversation', engine };
+    const left = Engine.guards.cp1(eng);
+    return { engine, did, stage: 'scope', ask: (out.open_questions || []).map(String).concat(left).slice(0, 7),
+      text: did.length ? `I drafted the scope from ${doc ? doc.name : 'what you told me'}. ${left.length ? 'A few things still need you.' : 'Check each field, then confirm it — nothing is derived until you do.'}` : `I read ${doc ? doc.name : 'that'} and found nothing new for the scope.` };
+  },
+  async walkthrough(eng, subs, src) {
+    if (!eng.cp1) return { text: 'Confirm the scope first — the walkthrough is built for the sub-processes in scope.', stage: 'scope' };
+    subs = (subs && subs.length ? subs : eng.scope.processes).filter(id => eng.scope.processes.includes(id));
+    const docs = src.docIds ? eng.docs.filter(d => src.docIds.includes(d.id) && d.text) : [], text = src.text || docs.map(d => d.text).join('\n\n');
+    if (!text.trim()) return { text: 'I need the meeting notes. Drop them here, add them to the document library, or describe the process to me step by step.', stage: 'understanding' };
+    let out = await Agent.llm(P.walk(eng, subs, text), 'Building the walkthrough…'); const engine = out ? 'Claude' : 'Built-in rules', did = [], ask = [];
+    if (!out) { const sec = Rules.sections(eng, text, eng.scope.processes), target = eng.scope.processes.includes(S.ui.sub) ? S.ui.sub : subs[0]; out = { processes: [], open_questions: [] };
+      (sec ? Object.keys(sec).filter(id => subs.includes(id)) : [target]).forEach(id => { const w = Rules.walk(sec ? sec[id] : text); out.processes.push({ sub_id: id, steps: w.steps, narrative: '' }); out.open_questions.push(...w.open_questions); });
+      const tail = text.match(/^\s*(?:open points?|outstanding|to follow up)\s*[:\-–]\s*(.+)$/im); if (tail && !out.open_questions.length) out.open_questions.push(cap1(tail[1])); }
+    let first = '';
+    (out.processes || []).forEach(p => { if (!eng.scope.processes.includes(p.sub_id) || !(p.steps || []).length) return; first = first || p.sub_id;
+      did.push(...Agent.applySteps(eng, p.sub_id, p.steps, { src: docs[0] ? docs[0].id : '' })); const m = eng.subs[p.sub_id] || (eng.subs[p.sub_id] = { noProcedure: false, confirmedBy: '', confirmedAt: '', walkthrough: '' }); if (p.narrative && !m.walkthrough) m.walkthrough = String(p.narrative);
+      eng.steps.filter(s => s.sub === p.sub_id).forEach(s => { if (s.type === 'task' && !s.review && !s.approval && !CHECK_VERB.test(s.action)) ask.push(`${KB.sub(p.sub_id).name} step ${s.n}: who reviews or approves “${lower1(s.action).slice(0, 50)}”?`); if (s.type === 'decision' && !s.no) ask.push(`${KB.sub(p.sub_id).name} step ${s.n}: what happens on the other branch?`); }); });
+    did.push(...Agent.applyRequests(eng, (out.requests || []).map(r => Object.assign({ form: 'Copy of the document' }, r))));
+    ask.unshift(...(out.open_questions || []).map(String));
+    return { engine, did, ask: ask.slice(0, 8), need: did.length ? Agent.need(eng, subs) : [], stage: 'understanding', sub: first,
+      text: did.length ? `I built the walkthrough from ${docs.length ? docs.map(d => d.name).join(', ') : 'what you told me'}. The steps are drafts: check them against what the process owner said, then accept them and have the owner confirm.` : 'I could not find process steps in that. Notes that say who does what, who reviews it and what is kept work best.' };
+  },
+  async matrix(eng, subs) {
+    if (eng.cp2) return { text: 'The procedure plan is approved, so risks and controls are fixed. Reopen the plan to change them.' };
+    subs = (subs && subs.length ? subs : eng.scope.processes).filter(id => eng.scope.processes.includes(id));
+    const ready = subs.filter(id => eng.steps.some(s => s.sub === id)), wait = subs.filter(id => !ready.includes(id));
+    if (!ready.length) return { text: 'No process has been recorded yet. Risks are derived from the walkthrough, so build or record that first.', stage: 'understanding', ask: wait.map(id => `${KB.sub(id).name}: no steps recorded`) };
+    let out = await Agent.llm(P.matrix(eng, ready), 'Identifying risks and controls…'); const engine = out ? 'Claude' : 'Built-in rules';
+    if (!out) { out = { risks: [], needs: [] }; ready.forEach(id => out.risks.push(...Rules.matrix(eng, id).risks)); }
+    const did = Agent.applyRisks(eng, out.risks), ask = wait.map(id => `${KB.sub(id).name}: no walkthrough yet, so no risks were derived`);
+    const unrated = eng.risks.filter(r => ready.includes(r.sub) && (!r.L || !r.I)).length; if (unrated) ask.push(`${unrated} risk${unrated === 1 ? '' : 's'} to rate with the process owner — likelihood and impact are yours to decide`);
+    const noOwner = eng.risks.filter(r => ready.includes(r.sub) && !r.owner).length; if (noOwner) ask.push(`${noOwner} risk${noOwner === 1 ? '' : 's'} without an owner`);
+    Ops.syncIRL(eng);
+    return { engine, did, ask, need: (out.needs || []).map(n => `${n.item}${n.why ? ' — ' + n.why : ''}`).concat(Agent.need(eng, ready)).slice(0, 9), stage: 'risks', sub: ready[0],
+      text: did.length ? 'I built the risks and controls from the recorded steps. Each one is a draft: the control is described as the steps show it operating, and where the steps show no control I recorded an absence.' : 'Nothing new to add: the risks that arise from the recorded steps are already on the file.' };
+  },
+  async allocate(eng) {
+    const docs = eng.docs.filter(d => d.alloc === 'pending'); if (!docs.length) return { text: 'Every document is already allocated.' };
+    if (!eng.requests.length) return { text: 'There is no request list yet. Confirm the scope and I will file what has arrived.', stage: 'scope' };
+    const out = await Agent.llm(P.allocate(eng, docs), 'Allocating documents…'), engine = out ? 'Claude' : 'Built-in rules', did = [];
+    docs.forEach(d => { const hit = out ? (out.links || []).find(l => l.doc_id === d.id && eng.requests.some(q => q.id === l.request_id) && Number(l.confidence) >= 0.6) : null, r = hit ? { id: hit.request_id, conf: Math.min(0.99, Number(hit.confidence)) } : (out ? null : Engine.rankRequests(d, eng.requests.filter(q => q.status !== 'na'))[0]);
+      if (r && r.conf >= (out ? 0.6 : 0.4)) { d.tieConf = r.conf; Ops.tie(eng, d, r.id, true); did.push(`${d.name} → ${eng.requests.find(q => q.id === r.id).item} (${Math.round(r.conf * 100)}%${hit && hit.reason ? ', ' + hit.reason : ''})`); } });
+    const left = eng.docs.filter(d => d.alloc === 'pending').length;
+    return { engine, did, stage: 'library', text: did.length ? `I filed ${did.length} document${did.length === 1 ? '' : 's'}. Each is linked automatically and waits for your approval.${left ? ` ${left} had no confident match and stay pending.` : ''}` : `No confident match for the ${left} pending document${left === 1 ? '' : 's'}. Allocate them by hand, or mark them reference only.` };
+  },
+  async requests(eng) {
+    if (!eng.cp1) return { text: 'The request list is built from the confirmed scope. Confirm the scope first.', stage: 'scope' };
+    const did = Ops.syncIRL(eng).map(c => c), notes = Agent.notes(eng).map(d => d.text).join('\n\n');
+    const out = await Agent.llm(P.irl(eng, notes), 'Reviewing the request list…'), engine = out ? 'Claude' : 'Built-in rules', ask = [];
+    if (out) { did.push(...Agent.applyRequests(eng, out.requests)); ask.push(...(out.comments || []).map(String)); }
+    else { const open = []; Agent.notes(eng).forEach(d => (d.text.match(/^\s*(?:open points?|outstanding|to follow up)\s*[:\-–]\s*(.+)$/gim) || []).forEach(l => open.push(cap1(l.replace(/^[^:\-–]+[:\-–]\s*/, '').replace(/[.;]$/, '')))));
+      did.push(...Agent.applyRequests(eng, open.map(o => ({ full: o, item: o.replace(/\s+(?:were|was|is|are|has|have)\s+(?:not\s+(?:been\s+)?(?:available|provided|received|seen|supplied)|outstanding|missing|to be (?:provided|sent)).*$/i, '') })).filter(o => o.item !== o.full || new RegExp(DOC_N, 'i').test(o.item)).map(o => ({ item: o.item, form: 'To be provided', why: `Open point in the meeting notes: “${o.full}”` })))); }
+    const c = k => eng.requests.filter(q => q.status === k).length, bad = eng.requests.filter(q => q.status === 'incomplete').map(q => `${q.item}: ${q.issue || 'missing ' + q.missing.join(', ')}`);
+    return { engine, did, ask: ask.concat(bad).slice(0, 8), stage: 'requests', text: `The request list is at version ${eng.irl.v}: ${c('received')} received, ${c('incomplete')} received but not usable, ${c('pending')} not yet received${c('na') ? `, ${c('na')} not applicable` : ''}.` };
+  },
+  next(eng) { const st = Engine.stages(eng), s = st.find(x => x.state === 'active') || st.find(x => x.state === 'open');
+    if (!s) return { text: 'Every stage is complete.' };
+    const hint = { scope: 'Give me the engagement letter and I will draft it.', requests: 'Upload what the client has sent; I file it and update the list.', library: 'I can allocate what is pending; you approve.', understanding: 'Give me the meeting notes and I will build the walkthrough and its flow.', risks: 'I can build the risks and controls from the walkthrough.', plan: 'Review the sample sizes and approve the plan.', testing: 'Conclude design, then test the sample.', gaps: 'Complete each gap and clear it with the owner.', outputs: 'Decide the overall rating and issue.' }[s.id] || '';
+    return { text: `Next is ${s.label.toLowerCase()}. ${hint}`, ask: s.reasons.slice(0, 6), stage: s.id }; },
+
+  /* ----- conversation ----- */
+  async chat(eng, text) {
+    Agent.say(eng, 'user', text); const t = text.toLowerCase(), sub = eng.scope.processes.includes(S.ui.sub) ? S.ui.sub : '', long = text.length > 140;
+    if (/^\s*undo\b/.test(t)) { const u = eng.undo[eng.undo.length - 1]; if (u) Agent.undo(eng, u.id); else Agent.say(eng, 'agent', 'There is nothing to undo.'); return commit(); }
+    if (Agent.on()) return Agent.act(eng, text.length > 48 ? text.slice(0, 48) + '…' : text, async () => {
+      const out = await askAI(P.chat(eng, text), 'Thinking…'); if (!out) return { text: 'I could not reach the model just now. Try again, or use the buttons above — they work without it.' };
+      const r = { engine: 'Claude', text: String(out.reply || ''), did: [], ask: [], need: [] };
+      for (const a of (out.actions || []).slice(0, 8)) { let x = null;
+        if (a.do === 'set_scope') { if (eng.cp1) r.ask.push('The scope is confirmed — reopen it to change it.'); else { r.did.push(...Agent.applyScope(eng, a)); r.stage = 'scope'; } }
+        else if (a.do === 'add_steps' && eng.scope.processes.includes(a.sub_id)) { r.did.push(...Agent.applySteps(eng, a.sub_id, a.steps, { replace: !!a.replace })); r.stage = 'understanding'; r.sub = a.sub_id; }
+        else if (a.do === 'add_risks') { if (eng.cp2) r.ask.push('The plan is approved — reopen it to change risks and controls.'); else { r.did.push(...Agent.applyRisks(eng, a.risks)); r.stage = 'risks'; } }
+        else if (a.do === 'add_requests' && eng.cp1) r.did.push(...Agent.applyRequests(eng, a.requests));
+        else if (a.do === 'link') { const d = eng.docs.find(k => k.id === a.doc_id), q = eng.requests.find(k => k.id === a.request_id); if (d && q) { Ops.tie(eng, d, q.id, true); r.did.push(`${d.name} → ${q.item}`); } }
+        else if (a.do === 'goto') r.stage = a.stage;
+        else if (a.do === 'build') { const ids = (a.doc_ids || []).filter(id => eng.docs.some(d => d.id === id));
+          x = a.what === 'scope' ? await Agent.scope(eng, { docId: ids[0] || (Agent.letter(eng) || {}).id }) : a.what === 'walkthrough' ? await Agent.walkthrough(eng, a.sub_ids, { docIds: ids.length ? ids : Agent.notes(eng).map(d => d.id) }) : a.what === 'matrix' ? await Agent.matrix(eng, a.sub_ids) : a.what === 'requests' ? await Agent.requests(eng) : a.what === 'allocate' ? await Agent.allocate(eng) : null; }
+        if (x) { r.did.push(...(x.did || [])); r.ask.push(...(x.ask || [])); r.need.push(...(x.need || [])); r.stage = x.stage || r.stage; r.sub = x.sub || r.sub; if (!r.text) r.text = x.text; } }
+      return r; });
+    /* no model attached: route by what was asked and where the auditor is */
+    const run = (label, fn) => Agent.act(eng, label, fn);
+    if (/\bwhat('?s| is| do i| should i)?\b.*\b(next|do now)\b|\bnext step/.test(t)) { Agent.say(eng, 'agent', '', Object.assign(Agent.next(eng), { engine: 'Built-in rules' })); const m = eng.chat[eng.chat.length - 1]; m.text = m.text || ''; return commit(); }
+    if (/\b(need|missing|outstanding|still)\b/.test(t) && !long) { const n = Agent.need(eng, null); Agent.say(eng, 'agent', n.length ? 'This is what is still outstanding.' : 'Nothing is outstanding on the request list.', { need: n, engine: 'Built-in rules' }); return commit(); }
+    if (/\b(allocat|file (the|these|them)|link (the|these|them))/.test(t)) return run('Allocate documents', () => Agent.allocate(eng));
+    if (/\b(request list|requests?|irl|information request)\b/.test(t) && !long) return run('Update the request list', () => Agent.requests(eng));
+    if ((/\b(scope|engagement letter)\b/.test(t) || S.ui.stage === 'scope') && !eng.cp1) return run('Build scope', () => Agent.scope(eng, long || !Agent.letter(eng) || /\b(client|period|in scope)\b/.test(t) ? { text } : { docId: Agent.letter(eng).id }));
+    if (/\b(risks?|controls?|matrix|rcm)\b/.test(t) && !long) return run('Build risks and controls', () => Agent.matrix(eng, /\b(all|whole|every\w*|matrix|rcm)\b/.test(t) || !sub ? null : [sub]));
+    if (/\b(walk-?through|process|steps?|flow|meeting)\b/.test(t) || (S.ui.stage === 'understanding' && long)) return run('Build walkthrough', () => Agent.walkthrough(eng, long ? (sub ? [sub] : null) : null, long ? { text } : { docIds: Agent.notes(eng).map(d => d.id) }));
+    if (/\b(summary|report)\b/.test(t) && Act.compose) { Act.compose(); Agent.say(eng, 'agent', 'I composed the executive summary from the findings on the file. It is on the report page for you to edit.', { stage: 'outputs', engine: 'Built-in rules' }); return commit(); }
+    Agent.say(eng, 'agent', 'Without a model attached I work from documents and from the buttons above: build the scope from an engagement letter, build a walkthrough from meeting notes, build risks and controls, allocate documents, update the request list, or tell you what is still needed. Open this in claude.ai and I can also follow free-form instructions.', { engine: 'Built-in rules' }); commit();
+  },
+  /* Files dropped on a page or on the chat: read and file them, then build from them where the context says so. */
+  async files(eng, docs, then) {
+    const irl = Ops.syncIRL(eng), line = d => `${d.name} — ${d.docType}${d.requestId ? ', filed under ' + (eng.requests.find(q => q.id === d.requestId) || {}).item : eng.cp1 ? ', pending allocation' : ''}`;
+    const letter = docs.find(d => d.text && d.docType === 'Engagement letter / scope'), text = docs.filter(d => d.text), here = then === 'chat' ? S.ui.stage : then;
+    Agent.say(eng, 'agent', `${docs.length} document${docs.length === 1 ? '' : 's'} read and filed.`, { did: docs.map(line), irl, engine: 'Built-in rules' });
+    if (here === 'scope' && !eng.cp1 && (letter || text[0])) return Agent.act(eng, 'Build scope', () => Agent.scope(eng, { docId: (letter || text[0]).id }));
+    if ((here === 'walkthrough' || here === 'understanding') && eng.cp1 && text.length) return Agent.act(eng, 'Build walkthrough', () => Agent.walkthrough(eng, then === 'chat' ? null : null, { docIds: text.map(d => d.id) }));
+    commit();
+  },
+  suggest(eng) { const s = S.ui.stage, out = [], sub = eng.scope.processes.includes(S.ui.sub) ? S.ui.sub : '', pend = eng.docs.filter(d => d.alloc === 'pending').length, L = Agent.letter(eng), N = Agent.notes(eng);
+    if (!eng.cp1) { if (L) out.push(['Build the scope from the engagement letter', 'scope']); }
+    else { if (pend && eng.requests.length) out.push([`Allocate ${pend} pending document${pend === 1 ? '' : 's'}`, 'allocate']);
+      if ((s === 'understanding' || s === 'overview') && N.length) out.push(['Build the walkthrough from the meeting notes', 'walk']);
+      if ((s === 'risks' || s === 'understanding' || s === 'plan') && !eng.cp2 && eng.steps.length) out.push([sub && s === 'risks' ? 'Build risks and controls for this sub-process' : 'Build the whole matrix', 'matrix', sub && s === 'risks' ? sub : '']);
+      if (s === 'requests' || s === 'library') out.push(['Update the request list', 'requests']);
+      if (s === 'outputs' && !eng.report.issuedAt) out.push(['Compose the executive summary', 'summary']); }
+    out.push(['What is still needed?', 'need']); out.push(['What should I do next?', 'next']); return out.slice(0, 4); },
+};
+
+/* ---------- the panel ---------- */
+function agentPanel(eng) {
+  const last = eng.undo.length ? eng.undo[eng.undo.length - 1].id : '';
+  const list = (title, items, cls) => items && items.length ? `<div class="ag-list ${cls || ''}"><b>${title}</b><ul>${items.map(x => `<li>${esc(x)}</li>`).join('')}</ul></div>` : '';
+  const msg = m => m.role === 'user' ? `<div class="ag-msg me"><div class="ag-bubble">${esc(m.text)}</div></div>`
+    : `<div class="ag-msg"><div class="ag-bubble">${m.text ? `<p>${esc(m.text)}</p>` : ''}${list('Done', m.did, 'did')}${list('Request list updated', m.irl, 'irl')}${list('For you to settle', m.ask, 'ask')}${list('Still needed', m.need, 'need')}
+        <div class="ag-foot"><span>${esc(m.engine || '')}${m.engine ? ' · ' : ''}${fmtDT(m.at)}</span><span class="sp"></span>${m.stage && m.stage !== S.ui.stage ? `<button class="btn ghost sm" data-act="stage" data-stage="${m.stage}">Open</button>` : ''}${m.undo && m.undo === last ? `<button class="btn sm" data-act="ag-undo" data-id="${m.undo}">Undo</button>` : m.undo ? '<span class="xs faint">kept</span>' : ''}</div></div></div>`;
+  return `<aside class="agent" aria-label="Agent"><div class="ag-head"><span class="logo" style="width:24px;height:24px;border-radius:7px">${IC.bolt}</span><b>Agent</b>${chip(Agent.on() ? 'prim' : 'mut', Agent.engine(), false)}<span class="sp"></span><button class="icon-btn sm" data-act="ag-toggle" title="Hide the agent" aria-label="Hide the agent">${IC.x}</button></div>
+    <div class="ag-sugg">${Agent.suggest(eng).map(x => `<button class="btn sm" data-act="ag-run" data-what="${x[1]}" ${x[2] ? `data-sub="${x[2]}"` : ''} ${Agent.busy ? 'disabled' : ''}>${esc(x[0])}</button>`).join('')}</div>
+    <div class="ag-thread" id="ag-thread">${eng.chat.length ? eng.chat.map(msg).join('') : `<div class="ag-empty"><p><b>Tell me what to build, or drop the documents here.</b></p><p>I read what is in the document library, draft the scope, the walkthrough, the risks and controls and the request list, and tell you what is still missing. Everything I draft is marked, and every action can be undone.</p></div>`}
+      ${Agent.busy ? `<div class="ag-msg"><div class="ag-bubble working"><span class="dots"><i></i><i></i><i></i></span>${esc(UI.busy || Agent.busy)}</div></div>` : ''}</div>
+    <div class="ag-input dropzone" data-then="chat"><textarea id="ag-text" rows="2" placeholder="Ask, instruct, or drop files here" aria-label="Message the agent">${esc(UI.agDraft || '')}</textarea>
+      <div class="row"><label class="btn ghost sm" for="ag-file" title="Attach documents">${IC.up}Attach</label><input type="file" id="ag-file" data-then="chat" multiple hidden><span class="sp"></span><button class="btn primary sm" data-act="ag-send" ${Agent.busy ? 'disabled' : ''}>Send</button></div></div></aside>`;
+}
+const agentBar = (text, buttons) => `<div class="agentbar"><span class="ab-ic">${IC.bolt}</span><div class="ab-t">${text}</div><div class="row">${buttons || ''}</div></div>`;
+const draftChip = x => x && x.draft ? chip('info', 'Agent draft', false) : '';
+Act['ag-toggle'] = () => { S.ui.agentHidden = agentShown(); Store.save(); render(); };
+Act['ag-send'] = () => { const el = $('#ag-text'), v = (el ? el.value : '').trim(); if (!v || Agent.busy) return; UI.agDraft = ''; Agent.chat(E(), v); };
+Act['ag-undo'] = d => ask({ title: 'Undo this agent action?', text: 'The file returns to how it was before the action. Edits you made by hand since then are discarded too.', ok: 'Undo', danger: true }, () => { Agent.undo(E(), d.id); });
+Act['ag-run'] = d => { const eng = E(), w = d.what, sub = d.sub || '';
+  if (w === 'scope') return Agent.act(eng, 'Build scope', () => Agent.scope(eng, { docId: d.doc || (Agent.letter(eng) || {}).id }));
+  if (w === 'walk') return Agent.act(eng, 'Build walkthrough', () => Agent.walkthrough(eng, sub ? [sub] : null, { docIds: Agent.notes(eng).map(x => x.id) }));
+  if (w === 'matrix') return Agent.act(eng, sub ? `Build risks and controls — ${KB.sub(sub).name}` : 'Build the matrix', () => Agent.matrix(eng, sub ? [sub] : null));
+  if (w === 'allocate') return Agent.act(eng, 'Allocate documents', () => Agent.allocate(eng));
+  if (w === 'requests') return Agent.act(eng, 'Update the request list', () => Agent.requests(eng));
+  if (w === 'summary') { Act.compose(); Agent.say(eng, 'agent', 'I composed the executive summary from the findings on the file. Edit it on the report page.', { stage: 'outputs', engine: 'Built-in rules' }); return commit(); }
+  if (w === 'need') { const n = Agent.need(eng, null); Agent.say(eng, 'agent', n.length ? 'This is what is still outstanding.' : 'Nothing is outstanding on the request list.', { need: n, engine: 'Built-in rules' }); return commit(); }
+  if (w === 'next') { const n = Agent.next(eng); Agent.say(eng, 'agent', n.text, { ask: n.ask, stage: n.stage, engine: 'Built-in rules' }); return commit(); } };
+Act['ag-paste'] = d => ask({ title: 'Build the walkthrough from notes', text: 'Paste the notes of the process-owner meeting. Notes that say who does what, who reviews it and what is kept work best.', fields: [{ id: 'n', label: 'Meeting notes', type: 'textarea' }], ok: 'Build walkthrough' }, v => { const eng = E(); setTimeout(() => Agent.act(eng, 'Build walkthrough', () => Agent.walkthrough(eng, d.sub ? [d.sub] : null, { text: v.n })), 0); });
+Act['accept-drafts'] = d => { const eng = E(), sub = d.sub || '', hit = x => x.draft && (!sub || x.sub === sub || (x.riskId && (eng.risks.find(r => r.id === x.riskId) || {}).sub === sub)); let n = 0;
+  [eng.steps, eng.risks, eng.controls].forEach(c => c.forEach(x => { if (hit(x)) { x.draft = false; n++; } })); if (!sub) eng.requests.forEach(q => { if (q.draft) { q.draft = false; n++; } });
+  Ops.log(eng, 'Agent drafts accepted', `${n} item${n === 1 ? '' : 's'}${sub ? ' in ' + KB.sub(sub).name : ''}`); commit(); toast(`${n} draft${n === 1 ? '' : 's'} accepted`); };
+document.addEventListener('input', ev => { if (ev.target.id === 'ag-text') UI.agDraft = ev.target.value; });
+document.addEventListener('keydown', ev => { if (ev.target.id === 'ag-text' && ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); Act['ag-send'](); } });
 
 /* Screens: engagements, overview, scope, requests & documents, process understanding, knowledge base, methodology. */
 const typeName = id => (KB.types.find(t => t.id === id) || { name: id }).name;
@@ -1798,6 +2401,8 @@ Views.scope = eng => {
   const s = eng.scope, lock = !!eng.cp1, g = Engine.guards.cp1(eng), o = { dis: lock };
   return `<div class="page-head"><div><h1>Scope</h1><div class="sub">Checkpoint 1 — nothing is derived until the scope is confirmed.</div></div><div class="acts">${lock ? btn('Reopen scope', 'reopen-scope') : ''}</div></div>
     ${lock ? banner('good', `<b>Confirmed</b> by ${esc(eng.cp1.by)} on ${fmtDate(eng.cp1.at)}. The request list was derived from these sub-processes.`) : ''}
+    ${lock ? '' : (L => `<div class="agentbar" data-then="scope"><span class="ab-ic">${IC.bolt}</span><div class="ab-t">${L ? `Engagement letter in the library: <b>${esc(L.name)}</b>.` : 'Drop the engagement letter on this bar, upload it, or tell the agent the client, the period and what is in scope.'}</div><div class="row">${L ? btn('Build the scope from it', 'ag-run', { cls: 'sm primary', icon: IC.bolt, data: { what: 'scope' }, dis: !!Agent.busy }) : ''}<label class="btn sm" for="scope-file">${IC.up}Upload the letter</label><input type="file" id="scope-file" data-then="scope" hidden></div></div>`)(Agent.letter(eng))}
+    ${!lock && s.source ? banner('info', `<b>Drafted by the agent</b> (${esc(s.source.engine)}) from ${esc(s.source.name)}. Check each field before you confirm.`) : ''}
     <div class="stack" style="margin-top:14px"><div class="card pad"><div class="form-grid">
       ${fld('Client', inp('', '', 'scope.client', s.client, o))}${fld('Engagement name', inp('', '', 'scope.name', s.name, o))}
       ${fld('Engagement type', sel('', '', 'scope.type', s.type, KB.types.map(t => [t.id, t.name + (t.on ? '' : ' — engine not in this build'), !t.on]), o))}
@@ -1820,47 +2425,49 @@ Act['toggle-sub'] = (d, el) => { const p = E().scope.processes, i = p.indexOf(d.
 Act['all-subs'] = d => { const eng = E(), ids = KB.processes.find(p => p.id === d.p).subs.map(s => s.id), all = ids.every(i => eng.scope.processes.includes(i)); eng.scope.processes = eng.scope.processes.filter(i => !ids.includes(i)); if (!all) eng.scope.processes.push(...ids); commit(); };
 Act['add-excl'] = () => { E().scope.exclusions.push({ what: '', reason: '' }); E().scope.noExclusions = false; commit(); };
 Act['del-excl'] = d => { E().scope.exclusions.splice(+d.i, 1); commit(); };
-Act['confirm-scope'] = () => { const eng = E(); if (Ops.confirmScope(eng)) { toast(`Scope confirmed — ${eng.requests.length} requests derived`); go('eng', 'requests'); } };
+Act['confirm-scope'] = () => { const eng = E(); if (Ops.confirmScope(eng)) { toast(`Scope confirmed — ${eng.requests.length} requests derived`); const p = eng.docs.filter(d => d.alloc === 'pending').length; Agent.say(eng, 'agent', `Scope confirmed. I built the request list: ${eng.requests.length} items across ${eng.scope.processes.length} sub-processes.${eng.docs.some(d => d.alloc !== 'reference') ? ` I also went through what was already in the library: ${eng.docs.filter(d => d.requestId).length} linked to a request, ${p} pending allocation.` : ''}`, { engine: 'Built-in rules', stage: 'requests' }); go('eng', 'requests'); } };
 Act['reopen-scope'] = () => ask({ title: 'Reopen the scope?', text: 'Work already derived from the scope is kept. The reason is recorded in the audit trail.', fields: [{ id: 'r', label: 'Reason', type: 'textarea' }], ok: 'Reopen' }, v => Ops.reopenScope(E(), v.r));
 
 /* ---------- requests & documents ---------- */
-const REQ_ST = { pending: ['warn', 'Pending'], received: ['good', 'Received'], incomplete: ['crit', 'Incomplete'], na: ['mut', 'Not applicable'] };
+const REQ_ST = { pending: ['warn', 'Pending'], received: ['good', 'Received'], incomplete: ['crit', 'Not usable'], na: ['mut', 'Not applicable'] };
+const REQ_ORIGIN = { scope: 'From the scope', process: 'From the walkthrough', control: 'From a control', agent: 'Raised by the agent', manual: 'Added by the auditor' };
 Views.requests = eng => {
-  const today = Engine.today(), cnt = k => eng.requests.filter(q => q.status === k).length;
+  const cnt = k => eng.requests.filter(q => q.status === k).length, irl = eng.irl, last = irl.log[irl.log.length - 1], t = curTab('req', 'list');
   const blocked = {}; eng.requests.filter(q => q.status === 'pending' || q.status === 'incomplete').forEach(q => { (blocked[q.feeds] = blocked[q.feeds] || []).push(q.item); });
-  const untied = eng.docs.filter(d => !d.requestId);
-  return `<div class="page-head"><div><h1>Requests &amp; documents</h1><div class="sub">Derived from the sub-processes in scope. Each item states the form it must arrive in.</div></div><div class="acts">${btn('Open document library', 'stage', { cls: 'ghost', data: { stage: 'library' } })}${btn('Add request', 'add-req', { icon: IC.plus })}</div></div>
-    <div class="row" style="margin-bottom:12px">${Object.entries(REQ_ST).map(([k, v]) => chip(v[0], `${cnt(k)} ${v[1].toLowerCase()}`)).join('')}</div>
-    <div class="tbl-wrap"><table><thead><tr><th>Item and required form</th><th>Client owner</th><th>Due</th><th>Status</th><th>Documents</th><th>Feeds</th><th></th></tr></thead><tbody>
-    ${eng.requests.map(q => { const docs = eng.docs.filter(d => d.requestId === q.id), late = q.status === 'pending' && q.due && q.due < today;
-    return `<tr><td style="min-width:260px"><b style="font-weight:600">${esc(q.item)}</b><div class="xs muted">${esc(q.form)}</div>${q.fields.length ? `<div class="xs mono faint" style="margin-top:2px">${esc(q.fields.join(' · '))}</div>` : ''}
-        ${q.status === 'incomplete' ? `<div class="xs" style="color:var(--crit);margin-top:3px">Missing: ${esc(q.missing.join(', '))}</div>` : ''}${q.status === 'na' ? `<div class="xs muted" style="margin-top:3px">Reason: ${esc(q.naReason)}</div>` : ''}</td>
-      <td class="tight" style="min-width:130px">${inp('requests', q.id, 'owner', q.owner, { cls: 'cell', ph: 'Role' })}</td><td class="tight">${inp('requests', q.id, 'due', q.due, { cls: 'cell', type: 'date' })}</td>
-      <td>${chip(...REQ_ST[q.status])}${late ? `<div class="xs" style="color:var(--crit);margin-top:3px">Overdue — chase</div>` : ''}</td>
-      <td class="small">${docs.map(d => `<div class="mono xs">${esc(d.name)}</div>`).join('') || '<span class="faint">—</span>'}</td><td><span class="xs muted">${esc(q.feeds)}</span></td>
-      <td class="tight" style="white-space:nowrap">${q.status === 'na' ? btn('Reinstate', 'req-reinstate', { cls: 'ghost sm', data: { id: q.id } }) : btn('N/A', 'req-na', { cls: 'ghost sm', data: { id: q.id }, title: 'Mark not applicable — requires a reason' })}${q.derived ? '' : `<button class="icon-btn sm" data-act="req-del" data-id="${q.id}" aria-label="Delete">${IC.x}</button>`}</td></tr>`; }).join('')}
+  const pend = eng.docs.filter(d => d.alloc === 'pending').length, unapp = eng.docs.filter(d => d.alloc === 'auto').length, tone = { good: 'var(--good)', crit: 'var(--crit)', warn: 'var(--warn)', mut: 'var(--ink-3)' };
+  const list = `<div class="tbl-wrap"><table><thead><tr><th>Item and required form</th><th>Client owner</th><th>Due</th><th>Status</th><th>What arrived</th><th></th></tr></thead><tbody>
+    ${eng.requests.map(q => { const docs = eng.docs.filter(d => d.requestId === q.id), checks = Engine.requestChecks(eng, q);
+    return `<tr><td style="min-width:270px"><b style="font-weight:600">${esc(q.item)}</b> ${q.draft ? chip('info', 'Agent draft', false) : ''}<div class="xs muted">${esc(q.form)}</div>${q.fields.length ? `<div class="xs mono faint" style="margin-top:2px">${esc(q.fields.join(' · '))}</div>` : ''}
+        <div class="xs faint" style="margin-top:4px">${esc(REQ_ORIGIN[q.origin] || '')}${q.why ? ' — ' + esc(q.why) : ''}</div></td>
+      <td class="tight" style="min-width:120px">${inp('requests', q.id, 'owner', q.owner, { cls: 'cell', ph: 'Role' })}</td><td class="tight">${inp('requests', q.id, 'due', q.due, { cls: 'cell', type: 'date' })}</td>
+      <td>${chip(...REQ_ST[q.status])}${q.override ? `<div class="xs" style="margin-top:4px;color:var(--info)">Set by ${esc(q.override.by)} — ${esc(q.override.reason)}<br><span class="faint">computed: ${esc((REQ_ST[q.computed] || ['', ''])[1].toLowerCase())}</span></div>` : ''}</td>
+      <td class="small" style="min-width:250px">${checks.map(c => `<div style="color:${tone[c.k]};${c.k === 'crit' ? 'font-weight:600' : ''}">${c.k === 'good' ? '✓' : c.k === 'crit' ? '✕' : '•'} ${esc(c.t)}</div>`).join('')}${docs.map(d => `<button class="btn ghost sm mono" style="padding:1px 0;font-weight:500;font-size:11px" data-act="doc-open" data-id="${d.id}">${esc(d.name)}</button>`).join('<br>')}</td>
+      <td class="tight" style="white-space:nowrap">${q.override ? btn('Clear override', 'req-clear', { cls: 'ghost sm', data: { id: q.id } }) : q.status === 'na' ? btn('Reinstate', 'req-reinstate', { cls: 'ghost sm', data: { id: q.id } }) : btn('Override', 'req-override', { cls: 'ghost sm', data: { id: q.id } }) + btn('N/A', 'req-na', { cls: 'ghost sm', data: { id: q.id }, title: 'Mark not applicable — requires a reason' })}<button class="icon-btn sm" data-act="req-del" data-id="${q.id}" title="Remove from the list" aria-label="Remove">${IC.x}</button></td></tr>`; }).join('')}
     </tbody></table></div>
-    ${Object.keys(blocked).length ? `<div style="margin-top:12px">${banner('warn', `<b>Work blocked by outstanding items</b>${guardList(Object.entries(blocked).map(([f, items]) => `${f} — waiting on ${items.length} item(s): ${items.join('; ')}`))}`)}</div>` : ''}
-    <div class="h-sec"><h2>Documents</h2><span class="hint">${eng.docs.length} received${untied.length ? ` · ${untied.length} not tied to a request` : ''}</span><span class="line"></span></div>
-    <div class="dropzone"><h4>Drop files here</h4><p>Any format. CSV exports are parsed, checked against the required fields and made available for sampling and reconciliation.</p>
-      <div class="row" style="justify-content:center"><label class="btn primary" for="file-inp">${IC.up}Choose files</label><input type="file" id="file-inp" multiple hidden>${btn('Load sample files', 'sample-files', { cls: 'ghost' })}</div></div>
-    ${eng.docs.length ? `<div class="tbl-wrap" style="margin-top:12px"><table><thead><tr><th>Document</th><th>Classified as</th><th class="num">Rows</th><th>Satisfies request</th><th>Source strength</th><th>Received</th><th></th></tr></thead><tbody>
-    ${eng.docs.map(d => `<tr><td><b class="mono small">${esc(d.name)}</b><div class="xs faint">${fmtSize(d.size)}${d.period ? ' · period ' + esc(d.period) : ''}${d.hash ? ' · sha ' + esc(d.hash.slice(0, 10)) : ''}</div></td>
-      <td class="tight" style="min-width:170px">${sel('docs', d.id, 'docType', d.docType, ['Unclassified', ...KB.docTypes.map(x => x.t)], { cls: 'cell' })}${d.conf < 0.5 ? `<div class="xs" style="color:var(--warn);padding-left:6px">Low confidence — confirm</div>` : ''}</td>
-      <td class="num">${d.rows ? `<button class="btn ghost sm" data-act="preview" data-id="${d.id}">${fmtNum(d.rowsDropped || d.rows.length)}</button>` : '<span class="faint">—</span>'}</td>
-      <td class="tight" style="min-width:200px"><select class="inp cell" data-change="tie-doc" data-id="${d.id}" aria-label="Satisfies request"><option value="">Not tied</option>${eng.requests.filter(q => q.status !== 'na').map(q => `<option value="${q.id}" ${d.requestId === q.id ? 'selected' : ''}>${esc(q.item)}</option>`).join('')}</select>${d.requestId && d.tieConf < 1 ? `<div class="xs faint" style="padding-left:6px">Tied automatically · ${Math.round(d.tieConf * 100)}% match</div>` : ''}</td>
-      <td class="tight" style="min-width:190px">${sel('docs', d.id, 'strength', d.strength, KB.strengths, { cls: 'cell', ph: 'Record the source…' })}</td>
-      <td class="xs muted" style="white-space:nowrap">${fmtDT(d.uploadedAt)}<br>${esc(d.by)}</td><td class="tight"><button class="icon-btn sm" data-act="doc-del" data-id="${d.id}" aria-label="Remove document">${IC.trash}</button></td></tr>`).join('')}</tbody></table></div>` : ''}`;
+    ${Object.keys(blocked).length ? `<div style="margin-top:12px">${banner('warn', `<b>Work blocked by outstanding items</b>${guardList(Object.entries(blocked).slice(0, 8).map(([f, items]) => `${f} — waiting on ${items.length}: ${items.join('; ')}`))}`)}</div>` : ''}`;
+  const hist = `<div class="stack">${irl.log.slice().reverse().map(l => `<div class="card pad"><div class="row"><span class="tag">v${l.v}</span><span class="xs faint">${fmtDT(l.t)}</span></div><ul class="pts" style="margin-top:6px">${l.changes.map(c => `<li>${esc(c)}</li>`).join('')}${l.more ? `<li class="faint">and ${l.more} more</li>` : ''}</ul></div>`).join('') || '<p class="small muted">No changes yet.</p>'}
+    ${irl.suppressed.length ? `<div class="card pad"><b class="small">Removed by the auditor — not asked for again</b>${irl.suppressed.map(k => `<div class="row small" style="margin-top:5px"><span class="muted">${esc(k.replace(/^[a-z]+:/, ''))}</span><span class="sp"></span>${btn('Restore', 'req-restore', { cls: 'ghost sm', data: { k } })}</div>`).join('')}</div>` : ''}</div>`;
+  return `<div class="page-head"><div><h1>Information request list</h1><div class="sub">A living list. It is rebuilt from the scope, the recorded process and the controls, and re-checked every time a document arrives.</div></div><div class="acts">${btn('Review with the agent', 'ag-run', { cls: 'sm', icon: IC.bolt, data: { what: 'requests' } })}${btn('Add request', 'add-req', { cls: 'sm', icon: IC.plus })}</div></div>
+    <div class="card pad" style="margin-bottom:12px"><div class="row"><span class="tag">Version ${irl.v}</span>${Object.entries(REQ_ST).map(([k, v]) => chip(v[0], `${cnt(k)} ${v[1].toLowerCase()}`)).join('')}<span class="sp"></span><span class="xs faint">${last ? 'Last updated ' + fmtDT(last.t) : ''}</span></div>
+      ${last ? `<div class="xs muted" style="margin-top:7px">Latest change: ${esc(last.changes.slice(0, 2).join(' · '))}${last.changes.length + (last.more || 0) > 2 ? ` · and ${last.changes.length + (last.more || 0) - 2} more` : ''}</div>` : ''}
+      ${pend || unapp ? `<div class="row small" style="margin-top:9px">${pend ? chip('warn', `${pend} document${pend === 1 ? '' : 's'} pending allocation`) : ''}${unapp ? chip('info', `${unapp} automatic allocation${unapp === 1 ? '' : 's'} to approve`) : ''}${btn('Open the allocation queue', 'goto-alloc', { cls: 'sm' })}</div>` : ''}</div>
+    <div class="agentbar" data-then="requests"><span class="ab-ic">${IC.up}</span><div class="ab-t">Drop what the client sent anywhere on this bar. Each file is read, matched to its request and checked against the required form and period.</div><div class="row"><label class="btn sm primary" for="file-inp">${IC.up}Upload documents</label><input type="file" id="file-inp" data-then="requests" multiple hidden>${btn('Load sample files', 'sample-files', { cls: 'ghost sm' })}</div></div>
+    ${tabs('req', [['list', `List (${eng.requests.length})`], ['history', `History (${irl.log.length})`]], 'list')}${t === 'history' ? hist : list}`;
 };
+Act['goto-alloc'] = () => { UI.tab.lib = 'alloc'; go('eng', 'library'); };
+Act['req-override'] = d => ask({ title: 'Override the status', text: 'The platform works the status out from what arrived. Your override stands until you clear it, and the reason is recorded.', fields: [{ id: 's', label: 'Status', type: 'select', options: [['received', 'Received — accept as it is'], ['incomplete', 'Not usable'], ['pending', 'Pending']] }, { id: 'r', label: 'Reason', type: 'textarea' }], ok: 'Override' },
+  v => { const eng = E(), q = eng.requests.find(x => x.id === d.id); q.override = { status: v.s, reason: v.r, by: me().name, at: new Date().toISOString() }; Ops.refreshRequest(eng, q); Ops.log(eng, 'Request status overridden', `${q.item}: ${v.s} — ${v.r}`); });
+Act['req-clear'] = d => { const eng = E(), q = eng.requests.find(x => x.id === d.id); q.override = null; Ops.refreshRequest(eng, q); Ops.log(eng, 'Request override cleared', q.item); commit(); };
+Act['req-restore'] = d => { const eng = E(); eng.irl.suppressed = eng.irl.suppressed.filter(k => k !== d.k); Ops.log(eng, 'Request restored to the list', d.k.replace(/^[a-z]+:/, '')); commit(); };
 Act['req-na'] = d => ask({ title: 'Mark as not applicable', text: 'Not applicable means the item does not exist for this entity. An item that was requested and has not arrived stays Pending.', fields: [{ id: 'r', label: 'Why does this item not exist here?', type: 'textarea' }], ok: 'Mark not applicable' },
   v => { const eng = E(), q = eng.requests.find(x => x.id === d.id); q.status = 'na'; q.naReason = v.r; eng.docs.forEach(x => { if (x.requestId === q.id) x.requestId = ''; }); Ops.log(eng, 'Request marked not applicable', `${q.item}: ${v.r}`); });
 Act['req-reinstate'] = d => { const eng = E(), q = eng.requests.find(x => x.id === d.id); q.status = 'pending'; q.naReason = ''; Ops.refreshRequest(eng, q); Ops.log(eng, 'Request reinstated', q.item); commit(); };
-Act['req-del'] = d => { const eng = E(); eng.docs.forEach(x => { if (x.requestId === d.id) x.requestId = ''; }); eng.requests = eng.requests.filter(q => q.id !== d.id); commit(); };
+Act['req-del'] = d => ask({ title: 'Remove this request?', text: 'It is taken off the list and will not be asked for again. You can restore it from the history.', fields: [{ id: 'r', label: 'Reason', type: 'textarea' }], ok: 'Remove', danger: true }, v => { const eng = E(), q = eng.requests.find(x => x.id === d.id); eng.docs.forEach(x => { if (x.requestId === q.id) { x.requestId = ''; x.alloc = 'pending'; } }); if (q.key && !eng.irl.suppressed.includes(q.key)) eng.irl.suppressed.push(q.key); eng.requests = eng.requests.filter(x => x !== q); Ops.log(eng, 'Request removed by the auditor', `${q.item}: ${v.r}`); });
 Act['add-req'] = () => ask({ title: 'Add a request', fields: [{ id: 'item', label: 'Item' }, { id: 'form', label: 'Required form', ph: 'e.g. System export, full period' }, { id: 'fields', label: 'Required fields', required: false, hint: 'comma-separated; checked against CSV headers', ph: 'invoice_no, date, amount' }, { id: 'feeds', label: 'Feeds which work', required: false }], ok: 'Add request' },
-  v => { const eng = E(); eng.requests.push({ id: Ops.id(eng, 'Q'), item: v.item, form: v.form, fields: v.fields ? v.fields.split(',').map(x => x.trim()).filter(Boolean) : [], feeds: v.feeds || 'Testing', sub: '', owner: '', due: new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10), status: 'pending', naReason: '', missing: [], derived: false }); Ops.log(eng, 'Request added', v.item); });
+  v => { const eng = E(); eng.requests.push({ id: Ops.id(eng, 'Q'), key: 'man:' + v.item, origin: 'manual', why: '', issue: '', item: v.item, form: v.form, fields: v.fields ? v.fields.split(',').map(x => x.trim()).filter(Boolean) : [], feeds: v.feeds || 'Testing', sub: '', owner: '', due: new Date(Date.now() + 7 * 864e5).toISOString().slice(0, 10), status: 'pending', naReason: '', missing: [], derived: false }); Ops.log(eng, 'Request added', v.item); });
 Act['tie-doc'] = (d, el) => { const eng = E(); Ops.tie(eng, eng.docs.find(x => x.id === d.id), el.value); };
 Act['doc-del'] = d => { Ops.removeDoc(E(), d.id); commit(); };
-Act['sample-files'] = async () => { UI.busy = 'Loading sample files…'; render(); await Seed.loadFiles(E()); UI.busy = ''; commit(); toast('Sample files received and classified'); };
+Act['sample-files'] = async () => { const eng = E(), had = new Set(eng.docs.map(d => d.id)); UI.busy = 'Loading sample files…'; render(); await Seed.loadFiles(eng); UI.busy = ''; await Agent.files(eng, eng.docs.filter(d => !had.has(d.id)), ''); };
 Act.preview = d => { const doc = E().docs.find(x => x.id === d.id); ask({ title: doc.name, ok: false, html: `<div class="tbl-wrap"><table><thead><tr>${doc.headers.map(h => `<th>${esc(h)}</th>`).join('')}</tr></thead><tbody>${doc.rows.slice(0, 12).map(r => `<tr>${doc.headers.map(h => `<td class="mono xs">${esc(r[h])}</td>`).join('')}</tr>`).join('')}</tbody></table></div><p class="xs muted">First ${Math.min(12, doc.rows.length)} of ${fmtNum(doc.rows.length)} rows.</p>` }); };
 
 /* ---------- process understanding ---------- */
@@ -1869,17 +2476,24 @@ const curSub = eng => (eng.scope.processes.includes(S.ui.sub) ? S.ui.sub : (S.ui
 Views.understanding = eng => {
   const sub = curSub(eng), m = eng.subs[sub] || (eng.subs[sub] = { noProcedure: false, confirmedBy: '', confirmedAt: '', walkthrough: '' });
   const steps = eng.steps.filter(s => s.sub === sub).sort((a, b) => a.n - b.n), c = (id, f, v, ph) => inp('steps', id, f, v, { cls: 'cell', ph });
-  return `<div class="page-head"><div><h1>Process understanding</h1><div class="sub">Record what each role actually does, who checks it, who approves it and what is kept.</div></div></div>
+  const N = Agent.notes(eng), drafts = steps.filter(s => s.draft).length, to = steps.map(s => [s.id, `${s.n}. ${(s.action || s.actor || 'step').slice(0, 26)}`]).concat([['end', 'End of process']]);
+  const route = s => s.type === 'decision' ? `<div class="row" style="flex-wrap:nowrap;gap:4px"><span class="xs" style="color:var(--good);font-weight:700">Yes</span>${sel('steps', s.id, 'yes', s.yes, to.filter(x => x[0] !== s.id), { cls: 'cell', ph: 'next step' })}</div><div class="row" style="flex-wrap:nowrap;gap:4px"><span class="xs" style="color:var(--crit);font-weight:700">No&nbsp;</span>${sel('steps', s.id, 'no', s.no, to.filter(x => x[0] !== s.id), { cls: 'cell', ph: 'not recorded' })}</div>` : sel('steps', s.id, 'next', s.next, to.filter(x => x[0] !== s.id), { cls: 'cell', ph: 'next step' });
+  return `<div class="page-head"><div><h1>Process understanding</h1><div class="sub">Who does what, who checks it, who approves it and what is kept — recorded by hand, or built by the agent from the meeting notes.</div></div></div>
     <div class="split">${subList(eng, sub, 'understanding', id => { const n = eng.steps.filter(s => s.sub === id).length, ok = n && (eng.subs[id] || {}).confirmedBy; return [ok ? 'done' : n ? 'active' : 'open', n ? `${n} steps${ok ? ' · confirmed' : ' · not confirmed'}` : 'No steps yet']; })}
-    <div class="stack"><div class="row"><h2 style="font-size:16px">${esc(subName(sub))}</h2><span class="tag">${esc(KB.sub(sub).processName)}</span><span class="sp"></span>${Cap.sample ? btn('Draft steps from meeting notes', 'ai-steps', { cls: 'sm', icon: IC.bolt }) : ''}${btn('Add step', 'add-step', { cls: 'sm primary', icon: IC.plus })}</div>
-      ${steps.length ? `<div class="tbl-wrap"><table><thead><tr><th>#</th><th>Performed by (role)</th><th>Action</th><th>System</th><th>Reviewed by</th><th>Approved by</th><th>Evidence retained</th><th></th></tr></thead><tbody>
-      ${steps.map((s, i) => { const fl = Ops.stepFlags(s); return `<tr class="${fl.some(f => f.startsWith('Same') || f.startsWith('No reviewer')) ? 'flag' : ''}"><td class="mono">${s.n}</td><td class="tight" style="min-width:140px">${c(s.id, 'actor', s.actor, 'Role')}</td><td class="tight" style="min-width:240px">${c(s.id, 'action', s.action, 'What they do')}</td><td class="tight" style="min-width:110px">${c(s.id, 'system', s.system, '—')}</td><td class="tight" style="min-width:130px">${c(s.id, 'review', s.review, '—')}</td><td class="tight" style="min-width:130px">${c(s.id, 'approval', s.approval, '—')}</td><td class="tight" style="min-width:150px">${c(s.id, 'evidence', s.evidence, '—')}</td>
+    <div class="stack"><div class="row"><h2 style="font-size:16px">${esc(subName(sub))}</h2><span class="tag">${esc(KB.sub(sub).processName)}</span><span class="sp"></span>${btn('Add step', 'add-step', { cls: 'sm', icon: IC.plus })}</div>
+      <div class="agentbar" data-then="walkthrough"><span class="ab-ic">${IC.bolt}</span><div class="ab-t">${N.length ? `<b>${N.length} set${N.length === 1 ? '' : 's'} of meeting notes</b> in the library: ${esc(N.map(d => d.name).join(', '))}.` : 'No meeting notes in the library yet. Drop them on this bar, upload them, paste them, or describe the process to the agent.'}</div>
+        <div class="row">${N.length ? btn('Build this walkthrough', 'ag-run', { cls: 'sm primary', icon: IC.bolt, data: { what: 'walk', sub }, dis: !!Agent.busy }) : ''}<label class="btn sm" for="walk-file">${IC.up}Upload notes</label><input type="file" id="walk-file" data-then="walkthrough" multiple hidden>${btn('Paste notes', 'ag-paste', { cls: 'sm', data: { sub } })}</div></div>
+      ${drafts ? banner('info', `<b>${drafts} step${drafts === 1 ? '' : 's'} drafted by the agent.</b> Check them against what the process owner said, edit anything that is wrong, then accept them. <span class="row" style="margin-top:7px">${btn('Accept the drafts', 'accept-drafts', { cls: 'sm primary', data: { sub } })}</span>`) : ''}
+      ${steps.length ? `<div class="tbl-wrap"><table><thead><tr><th>#</th><th>Kind</th><th>Performed by (role)</th><th>Action or decision</th><th>System</th><th>Reviewed by</th><th>Approved by</th><th>Evidence retained</th><th>Then</th><th></th></tr></thead><tbody>
+      ${steps.map((s, i) => { const fl = Ops.stepFlags(s), bad = fl.some(f => !f.startsWith('No evidence'));
+        return `<tr class="${bad ? 'flag' : ''}"><td class="mono">${s.n}</td><td class="tight" style="min-width:104px">${sel('steps', s.id, 'type', s.type, [['task', 'Task'], ['decision', 'Decision'], ['system', 'Automated']], { cls: 'cell' })}</td><td class="tight" style="min-width:150px">${c(s.id, 'actor', s.actor, 'Role')}</td><td class="tight" style="min-width:250px">${c(s.id, 'action', s.action, s.type === 'decision' ? 'The question decided' : 'What they do')}</td><td class="tight" style="min-width:120px">${c(s.id, 'system', s.system, '—')}</td><td class="tight" style="min-width:130px">${c(s.id, 'review', s.review, '—')}</td><td class="tight" style="min-width:130px">${c(s.id, 'approval', s.approval, '—')}</td><td class="tight" style="min-width:150px">${c(s.id, 'evidence', s.evidence, '—')}</td><td class="tight" style="min-width:170px">${route(s)}</td>
         <td class="tight" style="white-space:nowrap"><button class="icon-btn sm" data-act="step-move" data-id="${s.id}" data-dir="-1" ${i ? '' : 'disabled'} aria-label="Move up">${IC.arrowUp}</button> <button class="icon-btn sm" data-act="step-move" data-id="${s.id}" data-dir="1" ${i < steps.length - 1 ? '' : 'disabled'} aria-label="Move down">${IC.arrowDn}</button> <button class="icon-btn sm" data-act="step-del" data-id="${s.id}" aria-label="Delete step">${IC.x}</button></td></tr>
-        ${fl.length ? `<tr class="${fl.some(f => f.startsWith('Same') || f.startsWith('No reviewer')) ? 'flag' : ''}"><td></td><td colspan="7" class="xs" style="padding-top:0">${fl.map(f => chip(f.startsWith('No evidence') ? 'warn' : 'crit', f)).join(' ')}</td></tr>` : ''}`; }).join('')}</tbody></table></div>`
-      : empty('No steps recorded', 'Add the steps as the process owner describes them. Risks can only be identified once the process is recorded.', btn('Add step', 'add-step', { cls: 'primary', icon: IC.plus }))}
-      ${steps.length ? `<div class="card pad stack"><div class="row"><h3 style="font-size:14px">Process flow</h3><span class="xs faint">drawn from the steps above</span><span class="sp"></span>${chip(steps.every(s => s.walked) ? 'good' : 'warn', `${steps.filter(s => s.walked).length} of ${steps.length} steps seen in the walkthrough`)}</div>
-        ${flowSVG(eng, sub, { interactive: true })}${flowLegend}
-        <div class="tbl-wrap" style="box-shadow:none"><table><thead><tr><th>Step</th><th>Seen in the walkthrough</th><th>Document seen</th></tr></thead><tbody>${steps.map(s => `<tr><td class="small"><span class="mono">${s.n}</span> ${esc(s.action || '—')}</td><td>${chk('steps', s.id, 'walked', s.walked, s.walked ? 'Seen happening' : 'Described only')}</td><td class="tight" style="min-width:220px">${sel('steps', s.id, 'docId', s.docId, eng.docs.map(x => [x.id, x.name]), { cls: 'cell', ph: 'None linked' })}</td></tr>`).join('')}</tbody></table></div></div>` : ''}
+        ${fl.length || s.draft ? `<tr class="${bad ? 'flag' : ''}"><td></td><td colspan="9" class="xs" style="padding-top:0">${draftChip(s)} ${fl.map(f => chip(f.startsWith('No evidence') ? 'warn' : 'crit', f)).join(' ')}</td></tr>` : ''}`; }).join('')}</tbody></table></div>`
+      : empty('No steps recorded', 'Build the walkthrough from the meeting notes, or add the steps by hand. Risks can only be identified once the process is recorded.', (N.length ? btn('Build this walkthrough', 'ag-run', { cls: 'primary', icon: IC.bolt, data: { what: 'walk', sub } }) : '') + btn('Add step', 'add-step', { icon: IC.plus }))}
+      ${steps.length ? `<div class="card pad stack"><div class="row"><h3 style="font-size:14px">Process flow</h3>${flowStats(eng, sub).map(x => chip(/without/.test(x) ? 'crit' : 'mut', x, false)).join('')}<span class="sp"></span>${chip(steps.every(s => s.walked) ? 'good' : 'warn', `${steps.filter(s => s.walked).length} of ${steps.length} steps seen in the walkthrough`)}</div>
+        <div class="row"><span class="xs muted">Drawn from the steps above. Click a step to mark it as seen happening.</span><span class="sp"></span><button class="btn sm ghost" data-act="flow-zoom" data-z="-0.1" aria-label="Zoom out">−</button><span class="xs mono muted">${Math.round(UI.flowZoom * 100)}%</span><button class="btn sm ghost" data-act="flow-zoom" data-z="0.1" aria-label="Zoom in">+</button>${btn('Export', 'flow-export', { cls: 'sm ghost', icon: IC.down, data: { sub } })}</div>
+        ${flowSVG(eng, sub, { interactive: true, zoom: UI.flowZoom })}${flowLegend}
+        <details class="fold"><summary>Walkthrough trace — what was seen, step by step</summary><div class="tbl-wrap" style="box-shadow:none"><table><thead><tr><th>Step</th><th>Seen in the walkthrough</th><th>Document seen</th></tr></thead><tbody>${steps.map(s => `<tr><td class="small"><span class="mono">${s.n}</span> ${esc(s.action || '—')}</td><td>${chk('steps', s.id, 'walked', s.walked, s.walked ? 'Seen happening' : 'Described only')}</td><td class="tight" style="min-width:220px">${sel('steps', s.id, 'docId', s.docId, eng.docs.map(x => [x.id, x.name]), { cls: 'cell', ph: 'None linked' })}</td></tr>`).join('')}</tbody></table></div></details></div>` : ''}
       <div class="card pad stack">${chk('subs', sub, 'noProcedure', m.noProcedure, 'No documented, approved procedure exists for this sub-process', { change: 'noproc' })}
         ${m.noProcedure ? `<div class="xs muted">Recorded as a gap in its own right (${esc((eng.gaps.find(g => g.key === 'noproc:' + sub) || {}).id || '')}).</div>` : ''}
         ${fld('Walkthrough — one real transaction followed end to end', ta('subs', sub, 'walkthrough', m.walkthrough, { rows: 3, ph: 'Which transaction, which documents were seen, who approved, and the dates in order' }))}
@@ -1892,14 +2506,6 @@ Act['step-move'] = d => { const eng = E(), s = eng.steps.find(x => x.id === d.id
 Act.noproc = (d, el) => { const eng = E(), sub = d.id;
   if (el.checked) Ops.ensureGap(eng, 'noproc:' + sub, { title: `No documented procedure — ${subName(sub)}`, desc: `There is no documented and approved policy or procedure for ${lower1(subName(sub))}. The process cannot be operated consistently or held to account against an undocumented standard.`, cause: KB.rootCauses[0], criterion: 'COSO Principle 12 — ' + KB.coso.principles[12] });
   else Ops.dropGap(eng, 'noproc:' + sub); };
-Act['ai-steps'] = () => ask({ title: 'Draft steps from meeting notes', text: 'Paste the notes from the process-owner meeting. The draft is added for you to check line by line.', fields: [{ id: 'n', label: 'Meeting notes', type: 'textarea' }], ok: 'Draft steps' }, async v => {
-  const eng = E(), sub = curSub(eng);
-  const out = await askAI(`You are structuring internal audit process notes for the sub-process "${subName(sub)}". From the notes below, reply with only a JSON array of steps in order. Each step is {"actor": role that performs it (a role, never a person's name), "action": what they do, "system": application used or "", "review": role that checks it or "", "approval": role that approves it or "", "evidence": document or record retained or ""}. Use only what the notes state; leave a field "" when the notes do not say.\n\nNOTES:\n${v.n.slice(0, 6000)}`, 'Drafting steps…');
-  if (!Array.isArray(out) || !out.length) return;
-  out.slice(0, 20).forEach(x => Ops.addStep(eng, sub, { actor: String(x.actor || ''), action: String(x.action || ''), system: String(x.system || ''), review: String(x.review || ''), approval: String(x.approval || ''), evidence: String(x.evidence || '') }));
-  Ops.log(eng, 'Steps drafted by the assistant from meeting notes', `${subName(sub)}: ${out.length} steps — to be checked by the auditor`); commit(); toast(`${out.length} steps drafted — check each one`);
-});
-
 /* ---------- knowledge base ---------- */
 Views.kb = () => {
   const t = curTab('kb', 'lib');
@@ -1938,14 +2544,14 @@ Views.risks = eng => {
   const dism = eng.dismissed.filter(x => x.sub === sub);
   const lik = S.meth.likelihood.map((l, i) => [i + 1, `${i + 1} — ${l}`]), imp = S.meth.impact.map((l, i) => [i + 1, `${i + 1} — ${l}`]);
   const ctlHTML = c => { const r = riskOf(eng, c);
-    if (c.absent) return `<div class="ctl"><div class="row"><span class="tag">${c.id}</span>${chip('crit', 'No control exists')}<span class="small muted">Absence recorded as ${esc((eng.gaps.find(g => g.key === 'absence:' + c.id) || {}).id || 'a gap')} — the inherent rating stands.</span><span class="sp"></span>${lock ? '' : `<button class="icon-btn sm" data-act="ctl-del" data-id="${c.id}" aria-label="Remove">${IC.x}</button>`}</div></div>`;
-    return `<div class="ctl"><div class="row"><span class="tag">${c.id}</span><b class="small">Control as it operates today</b><span class="sp"></span>${chk('controls', c.id, 'key', c.key, 'Key control', o)}${chk('controls', c.id, 'itDep', c.itDep, 'Depends on IT general controls', o)}${lock ? '' : `<button class="icon-btn sm" data-act="ctl-del" data-id="${c.id}" aria-label="Remove control">${IC.x}</button>`}</div>
+    if (c.absent) return `<div class="ctl"><div class="row"><span class="tag">${c.id}</span>${chip('crit', 'No control exists')}${draftChip(c)}<span class="small muted">Absence recorded as ${esc((eng.gaps.find(g => g.key === 'absence:' + c.id) || {}).id || 'a gap')} — the inherent rating stands.</span><span class="sp"></span>${lock ? '' : `<button class="icon-btn sm" data-act="ctl-del" data-id="${c.id}" aria-label="Remove">${IC.x}</button>`}</div></div>`;
+    return `<div class="ctl"><div class="row"><span class="tag">${c.id}</span><b class="small">Control as it operates today</b>${draftChip(c)}<span class="sp"></span>${chk('controls', c.id, 'key', c.key, 'Key control', o)}${chk('controls', c.id, 'itDep', c.itDep, 'Depends on IT general controls', o)}${lock ? '' : `<button class="icon-btn sm" data-act="ctl-del" data-id="${c.id}" aria-label="Remove control">${IC.x}</button>`}</div>
       ${ta('controls', c.id, 'desc', c.desc, { dis: lock, rows: 3, ph: 'Describe the control as performed — who does what, how often, and what evidences it' })}
       <div class="form-grid" style="grid-template-columns:repeat(auto-fit,minmax(150px,1fr))">${fld('Owner (role)', inp('controls', c.id, 'owner', c.owner, o))}${fld('Nature', sel('controls', c.id, 'nature', c.nature, KB.natures, o))}${fld('Type', sel('controls', c.id, 'type', c.type, KB.ctlTypes, o))}${fld('Frequency', sel('controls', c.id, 'freq', c.freq, FREQS, { dis: lock, ph: 'Select…' }))}${fld('COSO principle', sel('controls', c.id, 'principle', c.principle, Object.keys(KB.coso.principles).map(n => [n, `P${n} ${KB.coso.principles[n]}`]), { dis: lock, num: true }))}${fld('Assertions', inp('controls', c.id, 'assertion', c.assertion, o))}</div>
       <div><div class="row" style="margin-bottom:5px"><span class="small" style="font-weight:600;color:var(--ink-2)">Test attributes</span><span class="xs faint">each a yes/no check that names who or what</span><span class="sp"></span>${lock ? '' : btn('Add attribute', 'attr-add', { cls: 'ghost sm', icon: IC.plus, data: { id: c.id } })}</div>
         ${c.attrs.map((a, i) => `<div class="attr-row" style="margin-bottom:5px"><span class="mono xs faint">A${i + 1}</span>${inp('controls', c.id, `attrs.${i}`, a, { dis: lock, ph: 'e.g. The sheet is approved by the finance director' })}${lock ? '' : `<button class="icon-btn sm" data-act="attr-del" data-id="${c.id}" data-i="${i}" aria-label="Remove attribute">${IC.x}</button>`}</div>`).join('')}</div></div>`; };
   const riskHTML = r => { const cs = eng.controls.filter(c => c.riskId === r.id), L = r.libId ? KB.libRisk(r.libId) : null;
-    return `<div class="risk-card"><div class="risk-head"><div class="row" style="flex-wrap:nowrap"><span class="tag">${r.id}</span>${inp('risks', r.id, 'title', r.title, { dis: lock, ph: 'Risk title', cls: 'cell' })}${chip(r.source === 'library' ? 'mut' : r.source === 'ai' ? 'info' : 'prim', r.source === 'library' ? r.libId : r.source === 'ai' ? 'Drafted' : 'Auditor', false)}${lock ? '' : `<button class="icon-btn sm" data-act="risk-del" data-id="${r.id}" aria-label="Remove risk">${IC.trash}</button>`}</div>
+    return `<div class="risk-card"><div class="risk-head"><div class="row" style="flex-wrap:nowrap"><span class="tag">${r.id}</span>${inp('risks', r.id, 'title', r.title, { dis: lock, ph: 'Risk title', cls: 'cell' })}${chip(r.source === 'library' ? 'mut' : r.source === 'ai' || r.source === 'agent' ? 'info' : 'prim', r.source === 'library' ? r.libId : r.source === 'ai' || r.source === 'agent' ? 'Agent' : 'Auditor', false)}${draftChip(r)}${lock ? '' : `<button class="icon-btn sm" data-act="risk-del" data-id="${r.id}" aria-label="Remove risk">${IC.trash}</button>`}</div>
       ${ta('risks', r.id, 'desc', r.desc, { dis: lock, rows: 2, ph: 'The condition in this process, and what it results in' })}
       <div class="form-grid" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))">${fld('Root cause', inp('risks', r.id, 'cause', r.cause, { dis: lock, list: 'rc-list' }))}${fld('Impact', inp('risks', r.id, 'impact', r.impact, { dis: lock, ph: 'In the organisation\'s terms' }))}${fld('Category', sel('risks', r.id, 'cat', r.cat, KB.categories, o))}${fld('Risk owner (role)', inp('risks', r.id, 'owner', r.owner, o))}
         ${fld('Arises at step', sel('risks', r.id, 'stepId', r.stepId, steps.map(s => [s.id, `${s.n}. ${s.action.slice(0, 42) || s.actor}`]), { dis: lock, ph: 'Not linked' }))}${fld('Likelihood', sel('risks', r.id, 'L', r.L, lik, { dis: lock, ph: 'Rate…', num: true }))}${fld('Impact rating', sel('risks', r.id, 'I', r.I, imp, { dis: lock, ph: 'Rate…', num: true }))}
@@ -1955,7 +2561,9 @@ Views.risks = eng => {
     ${lock ? banner('info', `<b>The procedure plan is approved.</b> Risks and controls are fixed. Reopen the plan to change them.`) : ''}
     <datalist id="rc-list">${KB.rootCauses.map(x => `<option value="${esc(x)}">`).join('')}</datalist>
     <div class="split" style="margin-top:${lock ? 12 : 0}px">${subList(eng, sub, 'risks', id => { const n = eng.risks.filter(r => r.sub === id), st = eng.steps.some(s => s.sub === id); const ok = n.length && n.every(r => r.L && r.I && (!cfg.controls || eng.controls.some(c => c.riskId === r.id))); return [ok ? 'done' : n.length ? 'active' : 'open', st ? `${n.length} risk${n.length === 1 ? '' : 's'}` : 'Process not recorded']; })}
-    <div class="stack"><div class="row"><h2 style="font-size:16px">${esc(subName(sub))}</h2><span class="sp"></span>${steps.length && !lock ? `${Cap.sample ? btn('Propose risks from the steps', 'ai-risks', { cls: 'sm', icon: IC.bolt }) : ''}${btn('Add risk', 'risk-add', { cls: 'sm primary', icon: IC.plus })}` : ''}</div>
+    <div class="stack"><div class="row"><h2 style="font-size:16px">${esc(subName(sub))}</h2><span class="sp"></span>${steps.length && !lock ? btn('Add risk', 'risk-add', { cls: 'sm', icon: IC.plus }) : ''}</div>
+      ${steps.length && !lock ? agentBar(`Built from the ${steps.length} recorded step${steps.length === 1 ? '' : 's'} and whatever the document library holds for this sub-process. The agent drafts each risk and the control as it operates, and lists the extra data it needs.`, btn('Build risks and controls here', 'ag-run', { cls: 'sm primary', icon: IC.bolt, data: { what: 'matrix', sub }, dis: !!Agent.busy }) + btn('Build the whole matrix', 'ag-run', { cls: 'sm', data: { what: 'matrix' }, dis: !!Agent.busy })) : ''}
+      ${!lock && (risks.some(r => r.draft) || eng.controls.some(c => c.draft && risks.some(r => r.id === c.riskId))) ? banner('info', `<b>Drafted by the agent.</b> Check each risk and control against the walkthrough, rate likelihood and impact with the process owner, then accept. The plan cannot be approved while drafts are open. <span class="row" style="margin-top:7px">${btn('Accept the drafts here', 'accept-drafts', { cls: 'sm primary', data: { sub } })}</span>`) : ''}
       ${!steps.length ? banner('lock', `<b>Process before risk.</b> Record the steps of this sub-process first; risks are derived from how it actually runs. ${btn('Go to process understanding', 'stage', { cls: 'sm', data: { stage: 'understanding', sub } })}`) : `
       ${props.length && !lock ? `<div class="card pad stack" style="gap:9px"><div class="row"><h3 style="font-size:13.5px">Proposed from the library</h3><span class="xs faint">accept what applies here and rewrite it in this organisation's terms</span></div>
         ${props.map(L => `<div class="proposal"><div class="row"><span class="tag">${L.id}</span><b class="small">${esc(L.title)}</b>${L.fraud ? chip('crit', 'Fraud', false) : ''}<span class="sp"></span>${btn('Accept', 'lib-accept', { cls: 'sm primary', data: { lib: L.id } })}${btn('Does not apply', 'lib-dismiss', { cls: 'sm ghost', data: { lib: L.id } })}</div><div class="small muted">${esc(L.desc)}</div><div class="xs faint">Criterion: COSO Principle ${L.principle} — ${esc(KB.coso.principles[L.principle])}</div></div>`).join('')}</div>` : ''}
@@ -1973,12 +2581,6 @@ Act['ctl-absent'] = d => { const g = Ops.recordAbsence(E(), d.id); commit(); toa
 Act['ctl-del'] = d => { Ops.removeControl(E(), d.id); commit(); };
 Act['attr-add'] = d => { E().controls.find(c => c.id === d.id).attrs.push(''); commit(); };
 Act['attr-del'] = d => { const eng = E(), c = eng.controls.find(x => x.id === d.id); c.attrs.splice(+d.i, 1); const t = eng.etests[c.id]; if (t) t.items.forEach(it => it.res && it.res.splice(+d.i, 1)); commit(); };
-Act['ai-risks'] = async () => { const eng = E(), sub = curSub(eng), steps = eng.steps.filter(s => s.sub === sub).sort((a, b) => a.n - b.n);
-  const out = await askAI(`You are an internal auditor identifying risks in the sub-process "${subName(sub)}" of ${eng.scope.client || 'an organisation'}. Below are the process steps exactly as recorded. Propose up to 4 risks that arise from THESE steps (a missing review, one role performing and approving, no evidence, a manual hand-off). Do not repeat these existing risks: ${eng.risks.filter(r => r.sub === sub).map(r => r.title).join('; ') || 'none'}. Reply with only a JSON array of {"title": short, "desc": "condition in this process, resulting in consequence", "cause": root cause distinct from the risk, "impact": consequence in business terms, "category": one of ${KB.categories.join('/')}, "fraud": true|false, "step": step number it arises at}.\n\nSTEPS:\n${JSON.stringify(steps.map(s => ({ n: s.n, role: s.actor, action: s.action, system: s.system, reviewed_by: s.review, approved_by: s.approval, evidence: s.evidence })))}`, 'Proposing risks…');
-  if (!Array.isArray(out)) return;
-  out.slice(0, 4).forEach(x => Ops.addRisk(eng, sub, { title: String(x.title || ''), desc: String(x.desc || ''), cause: String(x.cause || ''), impact: String(x.impact || ''), cat: KB.categories.includes(x.category) ? x.category : 'Operational', fraud: !!x.fraud, source: 'ai', stepId: (steps.find(s => s.n === +x.step) || {}).id || '' }));
-  commit(); toast(`${out.length} risks proposed — review, rate and keep only what applies`); };
-
 /* ---------- procedure plan (Checkpoint 2) ---------- */
 Views.plan = eng => {
   const cfg = Engine.typeCfg(eng.scope.type), lock = !!eng.cp2, g = Engine.guards.cp2(eng), itg = Engine.itgc(eng), live = eng.controls.filter(c => !c.absent), abs = eng.controls.filter(c => c.absent);
@@ -2251,6 +2853,8 @@ Views.trail = eng => `<div class="page-head"><div><h1>Audit trail</h1><div class
   <div class="tbl-wrap"><table><thead><tr><th>When</th><th>Who</th><th>Action</th><th>Detail</th></tr></thead><tbody>${eng.trail.slice().reverse().map(t => `<tr><td class="mono xs" style="white-space:nowrap">${esc(t.t.replace('T', ' ').slice(0, 19))}</td><td class="small" style="white-space:nowrap">${esc(t.u)}</td><td class="small" style="font-weight:600;white-space:nowrap">${esc(t.a)}</td><td class="small muted">${esc(t.d)}</td></tr>`).join('')}</tbody></table></div>`;
 Act['x-trail'] = () => saveFile('audit-trail.csv', toCSV([['when', 'who', 'action', 'detail'], ...E().trail.map(t => [t.t, t.u, t.a, t.d])]));
 
+/* a handle for automated tests and the browser console */
+window.Throughline = { Seed, Agent, Ops, Engine, get S() { return S; }, render };
 boot();
 
 })();

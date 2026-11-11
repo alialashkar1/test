@@ -62,6 +62,7 @@ const KB = {
     ['Investigation threshold & follow-up', 'When the performer acts, and what happens next'],
   ],
   docTypes: [
+    { t: 'Engagement letter / scope', kw: ['engagement', 'proposal', 'terms of reference', 'scope of work', 'statement of work'], hd: [] },
     { t: 'Payroll register', kw: ['payroll', 'salary', 'register'], hd: ['gross', 'net'] },
     { t: 'Bank transfer file', kw: ['transfer', 'bank', 'wps'], hd: ['amount', 'value_date', 'account'] },
     { t: 'Employee master data', kw: ['employee', 'headcount', 'staff'], hd: ['join_date', 'employee_code'] },
@@ -81,7 +82,7 @@ const KB = {
     { t: 'Bank statement / confirmation', kw: ['statement', 'confirmation', 'swift', 'advice'], hd: [] },
     { t: 'Signed approval / form', kw: ['approval', 'approved', 'signed', 'form'], hd: [] },
     { t: 'Reconciliation', kw: ['recon', 'reconciliation'], hd: [] },
-    { t: 'Meeting notes / minutes', kw: ['minutes', 'notes', 'meeting', 'walkthrough'], hd: [] },
+    { t: 'Meeting notes / minutes', kw: ['minutes', 'notes', 'meeting', 'walkthrough', 'transcript', 'interview', 'onboarding', 'kickoff', 'kick-off'], hd: [] },
     { t: 'Screenshot', kw: ['screenshot', 'screen', 'capture'], hd: [] },
   ],
   topical: {

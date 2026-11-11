@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 SRC = ROOT / "src"
-JS = ["kb", "engine", "store", "seed", "ui", "library", "flow", "views-a", "views-b", "views-c"]
+JS = ["kb", "engine", "store", "seed", "ui", "library", "flow", "agent", "views-a", "views-b", "views-c"]
 FONTS = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">'
 
 css = (SRC / "styles.css").read_text()

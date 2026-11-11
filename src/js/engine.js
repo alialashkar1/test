@@ -126,6 +126,8 @@ const Engine = {
     },
     cp2(eng) {
       const cfg = Engine.typeCfg(eng.scope.type), r = [];
+      const drafts = eng.steps.filter(x => x.draft).length + eng.risks.filter(x => x.draft).length + eng.controls.filter(x => x.draft).length;
+      if (drafts) r.push(`${drafts} agent draft(s) not yet accepted — review and accept them`);
       if (!eng.risks.length) r.push('No risks identified yet');
       eng.risks.forEach(x => {
         if (!x.L || !x.I) r.push(`${x.id}: likelihood and impact not rated`);
@@ -174,8 +176,8 @@ const Engine = {
     add('scope', 'Scope', cp1 ? 'done' : 'active', cp1 ? [] : g1, cp1 ? `Confirmed ${eng.cp1.at.slice(0, 10)}` : 'Checkpoint 1');
     const pend = eng.requests.filter(q => q.status === 'pending' || q.status === 'incomplete').length;
     add('requests', 'Requests & documents', !cp1 ? 'locked' : pend ? 'active' : eng.requests.length ? 'done' : 'active', !cp1 ? needCp1 : [], cp1 ? `${eng.requests.length - pend}/${eng.requests.length} received · ${eng.docs.length} documents` : '');
-    const loose = eng.docs.filter(d => !d.requestId).length;
-    add('library', 'Document library', !eng.docs.length || !cp1 ? 'open' : loose ? 'active' : 'done', cp1 && loose ? [`${loose} document(s) not filed against a request`] : [], `${eng.docs.length} documents`);
+    const loose = eng.docs.filter(d => d.alloc === 'pending').length, unapp = eng.docs.filter(d => d.alloc === 'auto').length;
+    add('library', 'Document library', !eng.docs.length || !cp1 ? 'open' : (loose || unapp) ? 'active' : 'done', !cp1 ? [] : [loose ? `${loose} document(s) pending allocation` : '', unapp ? `${unapp} automatic allocation(s) to approve` : ''].filter(Boolean), `${eng.docs.length} documents`);
     const gu = G.understanding(eng);
     add('understanding', 'Process understanding', !cp1 ? 'locked' : gu.length ? 'active' : 'done', !cp1 ? needCp1 : gu, cp1 ? `${eng.steps.length} steps` : '');
     const anySteps = eng.steps.length > 0, g2 = G.cp2(eng);
@@ -240,21 +242,47 @@ const Engine = {
   },
   fieldMatch(field, headers) { const f = Engine.norm(field); return headers.some(h => h === f || (f.length > 3 && (h.includes(f) || f.includes(h)) && h.length > 3)); },
   missingFields: (fields, headers) => (fields || []).filter(f => !Engine.fieldMatch(f, headers || [])),
-  suggestRequest(doc, requests) {
-    let best = { id: '', score: 0 };
+  /* Every open request scored against a document, best first. */
+  rankRequests(doc, requests) {
     const words = s => String(s).toLowerCase().split(/[^a-z0-9]+/).filter(w => w.length > 3);
     const has = (set, w) => set.has(w) || [...set].some(d => d.startsWith(w.slice(0, 5)));
     const dw = new Set(words(doc.name + ' ' + doc.docType)), tw = new Set(words(String(doc.text || '').slice(0, 400))), tabular = !!(doc.headers && doc.headers.length);
-    requests.forEach(q => {
+    return requests.map(q => {
       // what the file is called counts in full; a word that only appears in its body counts half
       const qw = words(q.item), kw = qw.length ? qw.reduce((n, w) => n + (has(dw, w) ? 1 : has(tw, w) ? 0.5 : 0), 0) / qw.length : 0;
       let s;
       if (q.fields.length && tabular) s = 0.75 * (q.fields.length - Engine.missingFields(q.fields, doc.headers).length) / q.fields.length + 0.25 * kw;
       else if (q.fields.length) s = 0.4 * kw;        // the request wants a data set and this is not one
       else s = (tabular ? 0.6 : 0.9) * kw;           // a document request is matched on what the file says it is
-      if (s > best.score) best = { id: q.id, score: s };
-    });
-    return { id: best.id, conf: Math.min(0.99, Math.round(best.score * 100) / 100) };
+      return { id: q.id, conf: Math.min(0.99, Math.round(s * 100) / 100) };
+    }).filter(x => x.conf > 0).sort((x, y) => y.conf - x.conf);
+  },
+  suggestRequest(doc, requests) { return Engine.rankRequests(doc, requests)[0] || { id: '', conf: 0 }; },
+  /* Does what arrived cover the period under review? Only judged where the data carries a month column or the file states its period. */
+  periodCheck(eng, docs) {
+    const from = (eng.scope.periodFrom || '').slice(0, 7), to = (eng.scope.periodTo || '').slice(0, 7); if (!from || !to) return null;
+    const months = [];
+    docs.filter(d => d.rows).forEach(d => { const h = d.headers.find(x => /^(month|period|year_month)$/.test(x)); if (h) d.rows.forEach(r => { const v = String(r[h] || ''); if (/^\d{4}-\d{2}/.test(v)) months.push(v.slice(0, 7)); }); });
+    if (months.length) { months.sort(); const a = months[0], b = months[months.length - 1];
+      if (b < from || a > to) return { k: 'crit', t: `Wrong period — covers ${a} to ${b}; the period under review is ${from} to ${to}` };
+      if (a > from || b < to) return { k: 'crit', t: `Covers ${a} to ${b} only — the period under review is ${from} to ${to}` };
+      return { k: 'good', t: 'Covers the whole period' }; }
+    const stated = docs.map(d => d.period).filter(p => /^\d{4}/.test(p || ''));
+    if (stated.length && stated.every(p => p.slice(0, 4) < from.slice(0, 4) || p.slice(0, 4) > to.slice(0, 4))) return { k: 'crit', t: `Wrong period — the file is for ${stated[0]}; the period under review is ${from} to ${to}` };
+    return null;
+  },
+  /* What came, what did not, and what is wrong with it — one line per finding, for the living request list. */
+  requestChecks(eng, q) {
+    if (q.status === 'na') return [{ k: 'mut', t: `Not applicable — ${q.naReason}` }];
+    const docs = eng.docs.filter(d => d.requestId === q.id), out = [];
+    if (!docs.length) return [{ k: 'warn', t: q.due && q.due < Engine.today() ? 'Nothing received — overdue' : 'Nothing received yet' }];
+    const tab = docs.filter(d => d.rows);
+    if (q.fields.length) out.push(!tab.length ? { k: 'crit', t: 'Wrong form — a data export is required and a document arrived' } : q.missing.length ? { k: 'crit', t: `Missing fields: ${q.missing.join(', ')}` } : { k: 'good', t: 'Required fields present' });
+    else out.push({ k: 'good', t: `${docs.length} document${docs.length === 1 ? '' : 's'} received` });
+    const pc = Engine.periodCheck(eng, docs); if (pc) out.push(pc);
+    if (docs.some(d => d.alloc === 'auto')) out.push({ k: 'warn', t: 'Linked automatically — allocation not yet approved' });
+    if (docs.some(d => !d.strength)) out.push({ k: 'warn', t: 'Source strength not recorded' });
+    return out;
   },
   async hash(buf) {
     try { const d = await crypto.subtle.digest('SHA-256', buf); return [...new Uint8Array(d)].map(b => b.toString(16).padStart(2, '0')).join(''); }
@@ -297,6 +325,7 @@ const Engine = {
     const rule = (name, stage, applicable, bad) => { if (applicable) out.push({ name, stage, ok: !bad.length, items: bad }); };
     rule('Scope names its exclusions', 'scope', true, (eng.scope.exclusions.length || eng.scope.noExclusions) ? [] : ['No exclusions recorded']);
     rule('Received requests have a document tied to them', 'requests', eng.requests.length > 0, eng.requests.filter(q => q.status === 'received' && !eng.docs.some(d => d.requestId === q.id)).map(q => q.item));
+    rule('Document allocations are approved by the auditor', 'library', eng.docs.length > 0 && !!eng.cp1, eng.docs.filter(d => d.alloc === 'auto' || d.alloc === 'pending').map(d => d.name));
     rule('Every document records its source strength', 'requests', eng.docs.length > 0, eng.docs.filter(d => !d.strength).map(d => d.name));
     rule('Every in-scope sub-process is understood and confirmed', 'understanding', !!eng.cp1, Engine.guards.understanding(eng));
     rule('Process steps name a role and an evidence trail', 'understanding', eng.steps.length > 0, eng.steps.filter(s => !s.actor.trim() || !s.evidence.trim()).map(s => `${KB.sub(s.sub).name} step ${s.n}`));

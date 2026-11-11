@@ -11,15 +11,32 @@ To work on the source, open `src/index.html` directly, and rebuild the single-fi
 
     python3 build.py
 
+## How it works: the agent is the engine
+
+Every page sits beside an agent panel. Each stage of the engagement can be produced four ways, and they can be mixed:
+
+1. **From the document library.** Click *Build the scope from it*, *Build this walkthrough* or *Build the whole matrix*; the agent finds the engagement letter or the meeting notes among the documents already received and builds from them.
+2. **By dropping the document on the page.** Each page has a bar that accepts the file it needs and builds straight from it.
+3. **By talking to the agent.** Describe the scope or the process in the chat, or give an instruction.
+4. **By hand.** Every field the agent fills can be typed, edited or removed.
+
+Everything the agent writes is marked *Agent draft* until the auditor accepts it, every action is reported in the thread with
+what was done, what is for the auditor to settle and what data is still needed, and the last actions can be undone.
+The two checkpoints, the sample sizes, the ordering rules and the test conclusions stay with the code and the auditor: the agent
+cannot confirm the scope, approve the plan or conclude a test, and the plan cannot be approved while drafts are open.
+
+The agent runs on Claude when the page is opened as a claude.ai artifact. Anywhere else it runs on a built-in rules
+engine that reads the same documents (structured letters and notes work best) and cannot follow free-form instructions.
+
 ## What it does
 
 | Stage | What the platform does |
 | --- | --- |
-| Scope (Checkpoint 1) | Refuses to derive anything until client, type, period, sub-processes and exclusions are recorded |
-| Requests & documents | Derives the request list from the sub-processes in scope, each with its required form and fields. Uploaded files are hashed, classified, tied to the request they satisfy, and CSV headers are checked against the required fields |
-| Document library | Everything dumped in is read (CSV, Excel, PDF text, Word, plain text), classified and filed. Each document gets an item card with main points computed from its contents, and the whole set is drawn as a hierarchy by process and request, document type, period or source strength |
-| Process understanding | Step-by-step capture per sub-process; flags steps with no reviewer, no evidence, or one role performing and approving. The steps are drawn as a swimlane flow, and each step is marked as seen in the walkthrough or described only |
-| Risks & controls | Proposes library risks per sub-process (accept, rewrite or set aside with a reason); scores likelihood × impact; documents the control as-is or records an absence, which raises a gap directly |
+| Scope (Checkpoint 1) | Drafted from the engagement letter: client, period, type, sub-processes, exclusions, addressee. Nothing is derived until the auditor confirms it |
+| Information request list | A living, versioned list. Rebuilt from the scope, the evidence named in the walkthroughs and the key controls, and re-checked whenever a document arrives: received, wrong form, missing fields, wrong or partial period, source not recorded. The auditor can override a status with a reason, remove an item for good, or restore it; every version is kept in the history |
+| Document library | Everything dumped in is read (CSV, Excel, PDF text, Word, plain text), classified and given an item card with its main points. Each file links itself to the request it satisfies or waits as pending; the allocation queue is where links are approved, changed, or marked reference only. The set is drawn as a hierarchy by process and request, type, period or source |
+| Process understanding | Built from the meeting notes: tasks, automated steps and decisions with their branches, who reviews and approves, the system used and the evidence kept. Drawn as a swimlane with loops, a systems band with hand-offs, and the risks and controls pinned to their steps. Steps with no independent check are flagged |
+| Risks & controls | Built from the recorded steps and the library: each risk with the control as the steps show it operating, or an absence where they show none (raised as a gap). One role performing and approving is raised as a risk. The agent lists what extra data it needs |
 | Procedure plan (Checkpoint 2) | Sizes every effectiveness test from the control's frequency using the methodology table; overrides require a reason |
 | Testing | Design first (walkthrough + five factors). Effectiveness only if design passes: population, completeness basis, seeded sample selection, attribute grid. One failed attribute makes the control ineffective — there is no override |
 | Data analysis | Two- and three-way reconciliation across the whole population, duplicate detection, near-threshold test |
@@ -37,12 +54,14 @@ Every change is written to an append-only audit trail, and the file is scored co
     src/js/seed.js      sample data, loaded through the same intake path as a real upload
     src/js/ui.js        render loop, data binding, dialogs, uploads, shell
     src/js/library.js   file readers, item cards, main points, document hierarchy
-    src/js/flow.js      swimlane flow diagram drawn from the recorded steps
+    src/js/flow.js      swimlane flow: decisions, loops, systems, risks and controls, drawn from the recorded steps
+    src/js/agent.js     the agent: builders, prompts, rules fallback, chat, undo, and the panel
     src/vendor/         SheetJS, pdf.js and JSZip, shipped with the app so no CDN is needed
     src/js/views-*.js   screens
     build.py            bundles src/ into dist/
+    tests/              browser tests (Playwright): `node tests/<file>.js "$PWD/dist/index.html" <screenshot dir> [tests/files]`
 
 ## Not built yet
 
-A server, database, sign-in and multi-user access; reading scanned PDFs and images without the assistant (text PDFs, Word and Excel are read); engines for the
+A server, database, sign-in and multi-user access; a backend that calls the Claude API so the agent runs on the model outside claude.ai; reading scanned PDFs and images without the assistant (text PDFs, Word and Excel are read); engines for the
 non-assurance engagement types (policies and procedures, physical verification, expenditure verification and others).
