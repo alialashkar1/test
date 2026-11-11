@@ -18,9 +18,35 @@ assert "</script" not in js.lower(), "a script-closing tag inside the bundle wou
 body = f'<div id="app"></div>\n<div id="toasts" aria-live="polite"></div>\n<script>\n(function(){{\n"use strict";\n{js}\n}})();\n</script>\n'
 head = f"<title>Throughline Audit</title>\n{FONTS}\n<style>\n{css}</style>\n"
 
-import shutil
-(ROOT / "dist").mkdir(exist_ok=True)
-shutil.copytree(SRC / "vendor", ROOT / "dist" / "vendor", dirs_exist_ok=True)
+import re
+
+
+def ascii_only(code: str) -> str:
+    """Rewrite every control and non-ASCII character as a \\xNN or \\uNNNN escape.
+
+    Minified libraries embed such characters inside string literals (codepage tables,
+    binary signatures). An escape denotes the same character, and the published files
+    then contain nothing but printable ASCII.
+    """
+    def esc(ch):
+        o = ord(ch)
+        if o < 0x100:
+            return "\\x%02x" % o
+        if o < 0x10000:
+            return "\\u%04x" % o
+        o -= 0x10000
+        return "\\u%04x\\u%04x" % (0xD800 + (o >> 10), 0xDC00 + (o & 0x3FF))
+
+    def sub(m):
+        slashes, ch = m.group(1), m.group(2)
+        # an odd run of backslashes already escapes the character: drop that one backslash
+        return slashes[: len(slashes) - (len(slashes) % 2)] + esc(ch)
+    return re.sub(r"(\\*)([^\x09\x0a\x0d\x20-\x7e])", sub, code)
+
+
+(ROOT / "dist" / "vendor").mkdir(parents=True, exist_ok=True)
+for lib in sorted((SRC / "vendor").glob("*.js")):
+    (ROOT / "dist" / "vendor" / lib.name).write_text(ascii_only(lib.read_text(encoding="utf-8")), encoding="ascii")
 (ROOT / "dist" / "index.html").write_text(
     '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
     '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
