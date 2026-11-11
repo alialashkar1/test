@@ -88,6 +88,7 @@ Views.testing = eng => {
 
   const design = `<div class="card pad stack"><div class="row"><h3 style="font-size:14.5px">Test of design</h3>${chip(...D_ST[st.design])}</div>
     ${c.itDep ? banner(itg.status === 'failed' ? 'crit' : itg.status === 'effective' ? 'good' : 'warn', `This control depends on IT general controls — conclusion: <b>${esc(itg.status)}</b>${eng.itgc.note && !itg.auto ? ` (${esc(eng.itgc.note)})` : ''}.`) : ''}
+    ${eng.steps.some(s => s.sub === r.sub) ? `<details class="fold"><summary>Process flow — ${esc(subName(r.sub))}</summary>${flowSVG(eng, r.sub, { hi: r.stepId })}${flowLegend}</details>` : ''}
     ${fld('What will be obtained and checked', ta('dtests', c.id, 'plan', d.plan, { dis: dl, rows: 2 }))}
     ${fld('Walkthrough performed', ta('dtests', c.id, 'walkthrough', d.walkthrough, { dis: dl, rows: 3, ph: 'The single instance examined: documents, roles and dates in sequence' }), 'one real instance')}
     <div class="form-grid">${fld('Walkthrough date', inp('dtests', c.id, 'date', d.date, { type: 'date', dis: dl }))}

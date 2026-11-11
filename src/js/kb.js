@@ -64,7 +64,7 @@ const KB = {
   docTypes: [
     { t: 'Payroll register', kw: ['payroll', 'salary', 'register'], hd: ['gross', 'net'] },
     { t: 'Bank transfer file', kw: ['transfer', 'bank', 'wps'], hd: ['amount', 'value_date', 'account'] },
-    { t: 'Employee master data', kw: ['master', 'employee', 'headcount', 'staff'], hd: ['join_date', 'employee_code'] },
+    { t: 'Employee master data', kw: ['employee', 'headcount', 'staff'], hd: ['join_date', 'employee_code'] },
     { t: 'User access listing', kw: ['access', 'users', 'roles'], hd: ['role', 'user'] },
     { t: 'Purchase order listing', kw: ['purchase', 'po_'], hd: ['po_no', 'vendor'] },
     { t: 'Invoice listing', kw: ['invoice'], hd: ['invoice_no'] },
@@ -76,6 +76,7 @@ const KB = {
     { t: 'Leavers listing', kw: ['leaver', 'termination', 'resign'], hd: ['leave_date'] },
     { t: 'Contract / job offer', kw: ['contract', 'offer', 'agreement'], hd: [] },
     { t: 'Policy / procedure', kw: ['policy', 'procedure', 'manual', 'sop'], hd: [] },
+    { t: 'Bank mandate', kw: ['mandate', 'signator'], hd: [] },
     { t: 'Authority matrix', kw: ['authority', 'delegation', 'doa'], hd: [] },
     { t: 'Bank statement / confirmation', kw: ['statement', 'confirmation', 'swift', 'advice'], hd: [] },
     { t: 'Signed approval / form', kw: ['approval', 'approved', 'signed', 'form'], hd: [] },

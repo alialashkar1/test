@@ -8,7 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 SRC = ROOT / "src"
-JS = ["kb", "engine", "store", "seed", "ui", "views-a", "views-b", "views-c"]
+JS = ["kb", "engine", "store", "seed", "ui", "library", "flow", "views-a", "views-b", "views-c"]
 FONTS = '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">'
 
 css = (SRC / "styles.css").read_text()
@@ -18,7 +18,9 @@ assert "</script" not in js.lower(), "a script-closing tag inside the bundle wou
 body = f'<div id="app"></div>\n<div id="toasts" aria-live="polite"></div>\n<script>\n(function(){{\n"use strict";\n{js}\n}})();\n</script>\n'
 head = f"<title>Throughline Audit</title>\n{FONTS}\n<style>\n{css}</style>\n"
 
+import shutil
 (ROOT / "dist").mkdir(exist_ok=True)
+shutil.copytree(SRC / "vendor", ROOT / "dist" / "vendor", dirs_exist_ok=True)
 (ROOT / "dist" / "index.html").write_text(
     '<!doctype html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n'
     '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'

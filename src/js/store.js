@@ -16,7 +16,7 @@ const Store = {
     const snap = Object.assign({}, S, { ui });
     try { localStorage.setItem(STORE_KEY, JSON.stringify(snap)); Store.memOnly = false; }
     catch (e) {
-      try { const slim = JSON.parse(JSON.stringify(snap)); slim.engs.forEach(en => en.docs.forEach(d => { if (d.rows && d.rows.length > 400) { d.rowsDropped = d.rows.length; d.rows = d.rows.slice(0, 400); } })); localStorage.setItem(STORE_KEY, JSON.stringify(slim)); } catch (e2) {}
+      try { const slim = JSON.parse(JSON.stringify(snap)); slim.engs.forEach(en => en.docs.forEach(d => { if (d.rows && d.rows.length > 400) { d.rowsDropped = d.rows.length; d.rows = d.rows.slice(0, 400); } if (d.text && d.text.length > 3000) d.text = d.text.slice(0, 3000); })); localStorage.setItem(STORE_KEY, JSON.stringify(slim)); } catch (e2) {}
       Store.memOnly = true;
     }
   },
@@ -48,6 +48,7 @@ const Ops = {
     const itIn = eng.scope.processes.some(id => KB.sub(id).process === 'itgc');
     if (itIn && !eng.topical.length) eng.topical = KB.topical.cyber.items.map(i => ({ id: i.id, status: '', note: '' }));
     if (!itIn) eng.topical = [];
+    Lib.refile(eng);
     Ops.log(eng, 'Checkpoint 1 — scope confirmed', `${eng.scope.processes.length} sub-processes in scope · ${eng.requests.length} requests derived`);
     return true;
   },
@@ -61,10 +62,11 @@ const Ops = {
   },
 
   /* ----- documents ----- */
-  async ingest(eng, name, size, mime, text, buf) {
+  async ingest(eng, name, size, mime, text, buf, extra) {
     const doc = { id: Ops.id(eng, 'D'), name, size, mime: mime || '', uploadedAt: new Date().toISOString(), by: me().name, headers: [], rows: null, strength: '', requestId: '', tieConf: 0 };
     if (text != null) { const p = Engine.parseCSV(text); if (p.headers.length > 1 && p.rows.length) { doc.headers = p.headers; doc.rows = p.rows; } }
-    Object.assign(doc, Engine.classify(name, doc.headers));
+    if (extra) { if (extra.text && !doc.rows) doc.text = extra.text.slice(0, 15000); ['pages', 'sheets', 'sheet', 'note'].forEach(k => { if (extra[k]) doc[k] = extra[k]; }); }
+    Object.assign(doc, Engine.classify(name, doc.headers, doc.text));
     doc.hash = buf ? await Engine.hash(buf) : '';
     const sug = Engine.suggestRequest(doc, eng.requests.filter(q => q.status !== 'na'));
     doc.tieConf = sug.conf;
@@ -93,7 +95,7 @@ const Ops = {
   /* ----- understanding ----- */
   addStep(eng, sub, init) {
     const n = eng.steps.filter(s => s.sub === sub).length + 1;
-    const st = Object.assign({ id: Ops.id(eng, 'S'), sub, n, actor: '', action: '', system: '', review: '', approval: '', evidence: '' }, init || {});
+    const st = Object.assign({ id: Ops.id(eng, 'S'), sub, n, actor: '', action: '', system: '', review: '', approval: '', evidence: '', walked: false, docId: '' }, init || {});
     eng.steps.push(st); return st;
   },
   renumber(eng, sub) { eng.steps.filter(s => s.sub === sub).sort((a, b) => a.n - b.n).forEach((s, i) => { s.n = i + 1; }); },

@@ -39,10 +39,10 @@ function ask(o, cb) { UI.modal = o; UI.cb = cb; render(); const f = $('.modal .i
 function closeModal() { UI.modal = null; UI.cb = null; }
 function modalHTML() {
   const m = UI.modal; if (!m) return '';
-  return `<div class="overlay" data-act="modal-bg"><div class="modal" role="dialog" aria-modal="true"><div class="mh">${esc(m.title)}</div><div class="mb">${m.text ? `<p class="muted">${esc(m.text)}</p>` : ''}${m.html || ''}
+  return `<div class="overlay" data-act="modal-bg"><div class="modal ${m.wide ? 'wide' : ''}" role="dialog" aria-modal="true"><div class="mh">${esc(m.title)}</div><div class="mb">${m.text ? `<p class="muted">${esc(m.text)}</p>` : ''}${m.render ? m.render() : (m.html || '')}
     ${(m.fields || []).map(f => fld(f.label, f.type === 'textarea' ? `<textarea class="inp" id="m-${f.id}" rows="3" placeholder="${esc(f.ph || '')}">${esc(f.value || '')}</textarea>` : f.type === 'select' ? `<select class="inp" id="m-${f.id}">${f.options.map(x => `<option value="${esc(Array.isArray(x) ? x[0] : x)}">${esc(Array.isArray(x) ? x[1] : x)}</option>`).join('')}</select>` : `<input class="inp" id="m-${f.id}" type="${f.type || 'text'}" value="${esc(f.value || '')}" placeholder="${esc(f.ph || '')}">`, f.hint)).join('')}
     <div id="m-err" class="small" style="color:var(--crit)" hidden></div></div>
-    <div class="mf"><button class="btn ghost" data-act="modal-cancel">Cancel</button>${m.ok === false ? '' : `<button class="btn ${m.danger ? 'danger' : 'primary'}" data-act="modal-ok">${esc(m.ok || 'Confirm')}</button>`}</div></div></div>`;
+    <div class="mf"><button class="btn ghost" data-act="modal-cancel">${m.ok === false ? 'Close' : 'Cancel'}</button>${m.ok === false ? '' : `<button class="btn ${m.danger ? 'danger' : 'primary'}" data-act="modal-ok">${esc(m.ok || 'Confirm')}</button>`}</div></div></div>`;
 }
 Act['modal-cancel'] = () => { closeModal(); render(); };
 Act['modal-bg'] = (d, el, ev) => { if (ev.target === el) { closeModal(); render(); } };
@@ -63,18 +63,18 @@ async function takeFiles(files) {
   let n = 0;
   for (const f of files) {
     try {
-      const isText = /\.(csv|tsv|txt)$/i.test(f.name) || /^text\//.test(f.type);
       const buf = await f.slice(0, 8e6).arrayBuffer();
-      const text = isText && f.size < 6e6 ? await f.text() : null;
-      await Ops.ingest(eng, f.name, f.size, f.type, text, buf); n++;
+      const c = f.size < 25e6 ? await readContent(f) : { note: 'Too large to read here — filed by name only' };
+      const doc = await Ops.ingest(eng, f.name, f.size, f.type, c.csv != null ? c.csv : null, buf, c); n++;
+      if (/^image\//.test(f.type) && f.size < 15e6) Blobs.set(doc.id, f);
     } catch (e) { toast(`Could not read ${f.name}`); }
   }
-  UI.busy = ''; commit(); toast(`${n} document${n === 1 ? '' : 's'} received and classified`);
+  UI.busy = ''; commit(); toast(`${n} document${n === 1 ? '' : 's'} read, classified and filed`);
 }
-async function askAI(prompt, label) {
+async function askAI(prompt, label, opts) {
   if (!Cap.sample) return null;
   UI.busy = label || 'Working…'; render();
-  try { return await Cap.sample.json(prompt, { cache: false }); }
+  try { return await Cap.sample.json(prompt, Object.assign({ cache: false }, opts || {})); }
   catch (e) { const c = e && e.code; toast(c === 'not_granted' ? 'Assistant access was declined.' : c === 'rate_limited' ? 'Usage limit reached — try again later.' : c === 'invalid_json' ? 'The draft could not be read — try again.' : 'The assistant is unavailable right now.'); return null; }
   finally { UI.busy = ''; render(); }
 }
@@ -127,7 +127,7 @@ function render() {
 }
 function go(view, stage, extra) { S.ui.view = view; if (stage) S.ui.stage = stage; Object.assign(S.ui, extra || {}); Store.save(); render(); }
 Act.nav = d => { if (d.view === 'home') S.ui.engId = S.ui.engId; go(d.view, d.stage); };
-const resetView = () => { UI.tab = {}; S.ui.sub = ''; S.ui.ctl = ''; Object.assign(UI.an, { src: ['', '', ''], keys: [['', ''], ['', ''], ['', '']], amt: ['', '', ''], tol: 0, open: '', dup: { ds: '', c1: '', c2: '' }, thr: { ds: '', col: '', thr: '', pct: 5 } }); };
+const resetView = () => { UI.tab = {}; S.ui.sub = ''; S.ui.ctl = ''; if (UI.lib) Object.assign(UI.lib, { mode: '', closed: {}, q: '', type: '' }); Object.assign(UI.an, { src: ['', '', ''], keys: [['', ''], ['', ''], ['', '']], amt: ['', '', ''], tol: 0, open: '', dup: { ds: '', c1: '', c2: '' }, thr: { ds: '', col: '', thr: '', pct: 5 } }); };
 Act.open = d => { S.ui.engId = d.id; resetView(); go('eng', 'overview'); };
 Act.stage = d => go('eng', d.stage, d.sub ? { sub: d.sub } : d.ctl ? { ctl: d.ctl } : {});
 Act.tab = d => { UI.tab[d.group] = d.tab; render(); };
@@ -187,6 +187,6 @@ function boot() {
   document.addEventListener('dragleave', ev => { const z = ev.target.closest && ev.target.closest('.dropzone'); if (z) z.classList.remove('hot'); });
   document.addEventListener('drop', ev => { const z = ev.target.closest && ev.target.closest('.dropzone'); if (z) { ev.preventDefault(); takeFiles([...ev.dataTransfer.files]); } });
   document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && UI.modal) { closeModal(); render(); } });
-  if (window.claude && window.claude.use) { ['sample', 'downloads'].forEach(n => window.claude.use(n).then(x => { Cap[n] = x || null; if (x && n === 'sample') render(); }).catch(() => {})); }
+  if (window.claude && window.claude.use) { ['sample', 'downloads'].forEach(n => window.claude.use(n).then(x => { Cap[n] = x || null; if (x && n === 'sample') { render(); x.limits().then(l => { Cap.sampleImages = !!(l && l.images); render(); }).catch(() => {}); } }).catch(() => {})); }
   if (first) { render(); Seed.engagement().then(() => { Store.save(); render(); }); } else render();
 }

@@ -174,6 +174,8 @@ const Engine = {
     add('scope', 'Scope', cp1 ? 'done' : 'active', cp1 ? [] : g1, cp1 ? `Confirmed ${eng.cp1.at.slice(0, 10)}` : 'Checkpoint 1');
     const pend = eng.requests.filter(q => q.status === 'pending' || q.status === 'incomplete').length;
     add('requests', 'Requests & documents', !cp1 ? 'locked' : pend ? 'active' : eng.requests.length ? 'done' : 'active', !cp1 ? needCp1 : [], cp1 ? `${eng.requests.length - pend}/${eng.requests.length} received · ${eng.docs.length} documents` : '');
+    const loose = eng.docs.filter(d => !d.requestId).length;
+    add('library', 'Document library', !eng.docs.length || !cp1 ? 'open' : loose ? 'active' : 'done', cp1 && loose ? [`${loose} document(s) not filed against a request`] : [], `${eng.docs.length} documents`);
     const gu = G.understanding(eng);
     add('understanding', 'Process understanding', !cp1 ? 'locked' : gu.length ? 'active' : 'done', !cp1 ? needCp1 : gu, cp1 ? `${eng.steps.length} steps` : '');
     const anySteps = eng.steps.length > 0, g2 = G.cp2(eng);
@@ -220,12 +222,13 @@ const Engine = {
     const headers = data[0].map((h, i) => Engine.norm(h) || 'col_' + (i + 1));
     return { headers, rows: data.slice(1).map(r => { const o = {}; headers.forEach((h, i) => { o[h] = (r[i] ?? '').trim(); }); return o; }) };
   },
-  classify(name, headers) {
-    const n = name.toLowerCase(), hs = headers || [];
+  classify(name, headers, text) {
+    const n = name.toLowerCase(), hs = headers || [], body = String(text || '').slice(0, 2500).toLowerCase();
     let best = { t: 'Unclassified', score: 0 };
     KB.docTypes.forEach(d => {
-      let s = 0;
-      d.kw.forEach(k => { if (n.includes(k)) s += 0.35; });
+      let s = 0, inBody = 0;
+      d.kw.forEach(k => { if (n.includes(k)) s += 0.35; else if (body.includes(k)) inBody += 0.1; });
+      s += Math.min(0.2, inBody);   // contents support the name; they do not outvote it
       if (d.hd.length && hs.length) s += 0.6 * d.hd.filter(h => hs.some(x => x === h || x.includes(h))).length / d.hd.length;
       if (d.hd.length && !hs.length) s *= 0.4;   // a tabular type is unlikely for a file with no columns
       if (s > best.score) best = { t: d.t, score: s };
@@ -240,13 +243,15 @@ const Engine = {
   suggestRequest(doc, requests) {
     let best = { id: '', score: 0 };
     const words = s => String(s).toLowerCase().split(/[^a-z0-9]+/).filter(w => w.length > 3);
-    const dw = new Set(words(doc.name + ' ' + doc.docType));
+    const has = (set, w) => set.has(w) || [...set].some(d => d.startsWith(w.slice(0, 5)));
+    const dw = new Set(words(doc.name + ' ' + doc.docType)), tw = new Set(words(String(doc.text || '').slice(0, 400))), tabular = !!(doc.headers && doc.headers.length);
     requests.forEach(q => {
-      let s = 0;
-      if (q.fields.length && doc.headers && doc.headers.length) s += 0.75 * (q.fields.length - Engine.missingFields(q.fields, doc.headers).length) / q.fields.length;
-      const qw = words(q.item); const hit = qw.filter(w => dw.has(w) || [...dw].some(d => d.startsWith(w.slice(0, 5)))).length;
-      if (qw.length) s += 0.45 * hit / qw.length;
-      if (q.fields.length && !(doc.headers && doc.headers.length)) s *= 0.6;
+      // what the file is called counts in full; a word that only appears in its body counts half
+      const qw = words(q.item), kw = qw.length ? qw.reduce((n, w) => n + (has(dw, w) ? 1 : has(tw, w) ? 0.5 : 0), 0) / qw.length : 0;
+      let s;
+      if (q.fields.length && tabular) s = 0.75 * (q.fields.length - Engine.missingFields(q.fields, doc.headers).length) / q.fields.length + 0.25 * kw;
+      else if (q.fields.length) s = 0.4 * kw;        // the request wants a data set and this is not one
+      else s = (tabular ? 0.6 : 0.9) * kw;           // a document request is matched on what the file says it is
       if (s > best.score) best = { id: q.id, score: s };
     });
     return { id: best.id, conf: Math.min(0.99, Math.round(best.score * 100) / 100) };
@@ -295,6 +300,8 @@ const Engine = {
     rule('Every document records its source strength', 'requests', eng.docs.length > 0, eng.docs.filter(d => !d.strength).map(d => d.name));
     rule('Every in-scope sub-process is understood and confirmed', 'understanding', !!eng.cp1, Engine.guards.understanding(eng));
     rule('Process steps name a role and an evidence trail', 'understanding', eng.steps.length > 0, eng.steps.filter(s => !s.actor.trim() || !s.evidence.trim()).map(s => `${KB.sub(s.sub).name} step ${s.n}`));
+    const traced = eng.steps.filter(s => (eng.subs[s.sub] || {}).confirmedBy);
+    rule('Confirmed process steps were traced in a walkthrough', 'understanding', traced.length > 0, traced.filter(s => !s.walked).map(s => `${KB.sub(s.sub).name} step ${s.n}`));
     rule('Every risk has a distinct root cause, an impact and an owner', 'risks', eng.risks.length > 0, eng.risks.filter(r => !r.cause || !String(r.impact).trim() || !String(r.owner).trim() || Engine.norm(r.cause) === Engine.norm(r.desc)).map(r => r.id));
     rule('Every risk is rated', 'risks', eng.risks.length > 0, eng.risks.filter(r => !r.L || !r.I).map(r => r.id));
     const live = eng.controls.filter(c => !c.absent);

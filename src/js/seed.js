@@ -67,6 +67,7 @@ const Seed = {
       ['Group controller', 'Approves the transfer request and releases it with the finance director', 'Banking portal', '', 'Finance director', 'Bank confirmation'],
     ]);
     ['pay-access', 'pay-sheet', 'pay-transfer'].forEach(s => { eng.subs[s].confirmedBy = 'Payroll director'; eng.subs[s].confirmedAt = Engine.today(); });
+    eng.steps.filter(s => s.sub === 'pay-sheet').forEach(s => { s.walked = true; });
     eng.subs['pay-sheet'].walkthrough = 'Followed the February 2024 payroll sheet from extraction to approval: signed by the administration manager, reviewed by the payroll manager and group controller, approved by the finance director.';
 
     const acc = (sub, lib, L, I, owner) => { const r = Ops.acceptLib(eng, sub, lib); r.L = L; r.I = I; r.owner = owner; return Ops.addControl(eng, r.id, true); };
